@@ -20,7 +20,7 @@ Route::get('/', function () {
 // Authentication Routes
 Route::middleware('guest')->group(function () {
     Route::get('/login', function () {
-        return view('auth.login');
+        return view('auth.login-custom');
     })->name('login');
     
     Route::post('/login', [App\Http\Controllers\Auth\LoginController::class, 'login']);
@@ -53,11 +53,11 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('nilai/santri/{santriId}', [NilaiController::class, 'bySantri'])->name('nilai.santri');
     
     // Reports
-    Route::prefix('laporan')->name('laporan.')->group(function () {
-        Route::get('/kehadiran', [App\Http\Controllers\LaporanController::class, 'kehadiran'])->name('kehadiran');
-        Route::get('/pembayaran', [App\Http\Controllers\LaporanController::class, 'pembayaran'])->name('pembayaran');
-        Route::get('/nilai', [App\Http\Controllers\LaporanController::class, 'nilai'])->name('nilai');
-    });
+    // Route::prefix('laporan')->name('laporan.')->group(function () {
+    //     Route::get('/kehadiran', [App\Http\Controllers\LaporanController::class, 'kehadiran'])->name('kehadiran');
+    //     Route::get('/pembayaran', [App\Http\Controllers\LaporanController::class, 'pembayaran'])->name('pembayaran');
+    //     Route::get('/nilai', [App\Http\Controllers\LaporanController::class, 'nilai'])->name('nilai');
+    // });
 });
 
 // API Routes (untuk AJAX calls)
@@ -65,6 +65,6 @@ Route::middleware(['auth'])->prefix('api')->name('api.')->group(function () {
     Route::get('santri/search', [SantriController::class, 'search'])->name('santri.search');
     Route::get('santri/{id}/detail', [SantriController::class, 'detail'])->name('santri.detail');
 });
-Auth::routes();
+// Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

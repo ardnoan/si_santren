@@ -8,4 +8,18 @@ use Illuminate\Database\Eloquent\Model;
 class MataPelajaran extends Model
 {
     use HasFactory;
+
+    protected $table = 'mata_pelajarans';
+
+    protected $fillable = [
+        'kode_mapel',
+        'nama_mapel',
+        'deskripsi',
+    ];
+
+    // Relationships
+    public function nilai()
+    {
+        return $this->hasMany(Nilai::class);
+    }
 }

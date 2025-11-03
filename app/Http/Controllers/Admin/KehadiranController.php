@@ -7,6 +7,7 @@ use App\Models\Kehadiran;
 use App\Models\Santri;
 use App\Http\Requests\KehadiranRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class KehadiranController extends Controller
 {
@@ -95,7 +96,7 @@ class KehadiranController extends Controller
         ]);
 
         try {
-            \DB::beginTransaction();
+            DB::beginTransaction();
             
             foreach ($request->kehadiran as $data) {
                 Kehadiran::updateOrCreate(
@@ -110,12 +111,12 @@ class KehadiranController extends Controller
                 );
             }
             
-            \DB::commit();
+            DB::commit();
             
             return redirect()->route('admin.kehadiran.index')
                 ->with('success', 'Kehadiran berhasil disimpan!');
         } catch (\Exception $e) {
-            \DB::rollBack();
+            DB::rollBack();
             return redirect()->back()
                 ->with('error', 'Gagal menyimpan kehadiran: ' . $e->getMessage());
         }
