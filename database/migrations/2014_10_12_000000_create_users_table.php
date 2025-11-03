@@ -11,14 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // Drop existing table if exists
+        Schema::dropIfExists('users');
+        
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
+            $table->string('username', 64)->unique();
+            $table->string('email')->unique()->nullable();
             $table->string('password');
+            $table->enum('role', ['admin', 'ustadz', 'santri'])->default('santri');
+            $table->boolean('is_active')->default(true);
+            $table->timestamp('last_login')->nullable();
             $table->rememberToken();
             $table->timestamps();
+            
+            $table->index('role');
+            $table->index('is_active');
         });
     }
 

@@ -3,63 +3,121 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Kehadiran;
+use App\Models\Santri;
+use App\Http\Requests\KehadiranRequest;
 use Illuminate\Http\Request;
 
 class KehadiranController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $query = Kehadiran::with(['santri']);
+        
+        if ($request->has('tanggal')) {
+            $query->byTanggal($request->tanggal);
+        } else {
+            $query->byTanggal(today());
+        }
+        
+        $kehadiran = $query->orderBy('created_at', 'desc')->paginate(20);
+        
+        return view('admin.kehadiran.index', compact('kehadiran'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        $santri = Santri::aktif()->orderBy('nama_lengkap')->get();
+        return view('admin.kehadiran.create', compact('santri'));
+    }
+
+    public function store(KehadiranRequest $request)
+    {
+        try {
+            Kehadiran::create($request->validated());
+            
+            return redirect()->route('admin.kehadiran.index')
+                ->with('success', 'Kehadiran berhasil disimpan!');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Gagal menyimpan kehadiran: ' . $e->getMessage());
+        }
+    }
+
+    public function edit(int $id)
+    {
+        $kehadiran = Kehadiran::findOrFail($id);
+        $santri = Santri::aktif()->orderBy('nama_lengkap')->get();
+        
+        return view('admin.kehadiran.edit', compact('kehadiran', 'santri'));
+    }
+
+    public function update(KehadiranRequest $request, int $id)
+    {
+        try {
+            $kehadiran = Kehadiran::findOrFail($id);
+            $kehadiran->update($request->validated());
+            
+            return redirect()->route('admin.kehadiran.index')
+                ->with('success', 'Kehadiran berhasil diupdate!');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Gagal update kehadiran: ' . $e->getMessage());
+        }
+    }
+
+    public function destroy(int $id)
+    {
+        try {
+            Kehadiran::findOrFail($id)->delete();
+            
+            return redirect()->route('admin.kehadiran.index')
+                ->with('success', 'Kehadiran berhasil dihapus!');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Gagal hapus kehadiran: ' . $e->getMessage());
+        }
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Bulk create kehadiran untuk satu kelas
      */
-    public function store(Request $request)
+    public function bulkCreate(Request $request)
     {
-        //
-    }
+        $request->validate([
+            'kelas_id' => 'required|exists:kelas,id',
+            'tanggal' => 'required|date',
+            'kehadiran' => 'required|array',
+            'kehadiran.*.santri_id' => 'required|exists:santris,id',
+            'kehadiran.*.status' => 'required|in:hadir,izin,sakit,alpa',
+        ]);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        try {
+            \DB::beginTransaction();
+            
+            foreach ($request->kehadiran as $data) {
+                Kehadiran::updateOrCreate(
+                    [
+                        'santri_id' => $data['santri_id'],
+                        'tanggal' => $request->tanggal,
+                    ],
+                    [
+                        'status' => $data['status'],
+                        'keterangan' => $data['keterangan'] ?? null,
+                    ]
+                );
+            }
+            
+            \DB::commit();
+            
+            return redirect()->route('admin.kehadiran.index')
+                ->with('success', 'Kehadiran berhasil disimpan!');
+        } catch (\Exception $e) {
+            \DB::rollBack();
+            return redirect()->back()
+                ->with('error', 'Gagal menyimpan kehadiran: ' . $e->getMessage());
+        }
     }
 }
