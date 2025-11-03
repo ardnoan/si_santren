@@ -1,0 +1,66 @@
+<?php
+
+namespace App\Providers;
+
+use Illuminate\Support\ServiceProvider;
+
+/**
+ * Class AppServiceProvider
+ * Implementasi: Dependency Inversion Principle
+ * Binding semua dependencies
+ */
+class AppServiceProvider extends ServiceProvider
+{
+    /**
+     * Register any application services.
+     */
+    public function register(): void
+    {
+        // Register Repositories
+        $this->app->bind(
+            \App\Repositories\SantriRepository::class,
+            function ($app) {
+                return new \App\Repositories\SantriRepository(
+                    new \App\Models\Santri()
+                );
+            }
+        );
+
+        $this->app->bind(
+            \App\Repositories\PembayaranRepository::class,
+            function ($app) {
+                return new \App\Repositories\PembayaranRepository(
+                    new \App\Models\Pembayaran()
+                );
+            }
+        );
+
+        // Register Services
+        $this->app->bind(
+            \App\Services\SantriService::class,
+            function ($app) {
+                return new \App\Services\SantriService(
+                    $app->make(\App\Repositories\SantriRepository::class)
+                );
+            }
+        );
+
+        $this->app->bind(
+            \App\Services\PembayaranService::class,
+            function ($app) {
+                return new \App\Services\PembayaranService(
+                    $app->make(\App\Repositories\PembayaranRepository::class),
+                    $app->make(\App\Repositories\SantriRepository::class)
+                );
+            }
+        );
+    }
+
+    /**
+     * Bootstrap any application services.
+     */
+    public function boot(): void
+    {
+        //
+    }
+}
