@@ -1,65 +1,79 @@
 <?php
+// FILE: app/Http/Controllers/Admin/PembayaranController.php
 
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Services\PembayaranService;
+use App\Http\Requests\PembayaranRequest;
+use App\Models\Pembayaran;
 use Illuminate\Http\Request;
 
 class PembayaranController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    protected $pembayaranService;
+
+    public function __construct(PembayaranService $pembayaranService)
+    {
+        $this->pembayaranService = $pembayaranService;
+    }
+
     public function index()
     {
-        //
+        return view('admin.pembayaran.index');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        return view('admin.pembayaran.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(PembayaranRequest $request)
     {
-        //
+        try {
+            $this->pembayaranService->createPembayaran($request->validated());
+            return redirect()->route('admin.pembayaran.index')
+                ->with('success', 'Pembayaran berhasil disimpan!');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Gagal menyimpan pembayaran: ' . $e->getMessage());
+        }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function edit($id)
     {
-        //
+        $pembayaran = Pembayaran::findOrFail($id);
+        return view('admin.pembayaran.edit', compact('pembayaran'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function update(PembayaranRequest $request, $id)
     {
-        //
+        try {
+            $this->pembayaranService->updatePembayaran($id, $request->validated());
+            return redirect()->route('admin.pembayaran.index')
+                ->with('success', 'Pembayaran berhasil diupdate!');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Gagal update pembayaran: ' . $e->getMessage());
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function destroy($id)
     {
-        //
+        try {
+            $this->pembayaranService->deletePembayaran($id);
+            return redirect()->route('admin.pembayaran.index')
+                ->with('success', 'Pembayaran berhasil dihapus!');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Gagal hapus pembayaran: ' . $e->getMessage());
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function laporan()
     {
-        //
+        return view('admin.pembayaran.laporan');
     }
 }
