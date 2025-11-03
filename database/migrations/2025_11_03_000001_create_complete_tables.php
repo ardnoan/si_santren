@@ -77,7 +77,7 @@ return new class extends Migration
             $table->enum('jenis_pembayaran', ['spp', 'pendaftaran', 'seragam', 'lainnya']);
             $table->decimal('jumlah', 12, 2);
             $table->date('tanggal_bayar');
-            $table->string('bulan_bayar', 7)->nullable();
+            $table->string('bulan_bayar', 20)->nullable();
             $table->enum('metode_pembayaran', ['tunai', 'transfer', 'qris']);
             $table->enum('status', ['pending', 'lunas', 'dibatalkan'])->default('pending');
             $table->string('bukti_transfer')->nullable();
