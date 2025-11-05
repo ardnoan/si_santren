@@ -8,6 +8,8 @@ use App\Services\PembayaranService;
 use App\Http\Requests\PembayaranRequest;
 use App\Models\Pembayaran;
 use Illuminate\Http\Request;
+use App\Exports\PembayaranExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PembayaranController extends Controller
 {
@@ -75,5 +77,15 @@ class PembayaranController extends Controller
     public function laporan()
     {
         return view('admin.pembayaran.laporan');
+    }
+
+    public function export(Request $request)
+    {
+        $filters = $request->only(['dari', 'sampai', 'jenis', 'status']);
+
+        return Excel::download(
+            new PembayaranExport($filters),
+            'laporan-pembayaran-' . date('Y-m-d') . '.xlsx'
+        );
     }
 }

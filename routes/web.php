@@ -73,6 +73,11 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         Route::get('nilai/santri/{santriId}', [NilaiController::class, 'bySantri'])
             ->name('nilai.by-santri');
     });
+    Route::get('nilai/santri/{santriId}', [NilaiController::class, 'bySantri'])
+        ->name('nilai.santri');
+
+    Route::get('pembayaran/export', [PembayaranController::class, 'export'])
+        ->name('pembayaran.export');
 
     // Kelas Management (Full CRUD)
     Route::resource('kelas', KelasController::class);
@@ -101,9 +106,12 @@ Route::middleware(['auth', 'role:ustadz'])->prefix('ustadz')->name('ustadz.')->g
     Route::get('nilai/create', [NilaiController::class, 'create'])->name('nilai.create');
     Route::post('nilai', [NilaiController::class, 'store'])->name('nilai.store');
     Route::middleware(['auth', 'role:ustadz'])->prefix('ustadz')->name('ustadz.')->group(function () {
+        Route::get('nilai/santri/{santriId}', [NilaiController::class, 'bySantri'])
+            ->name('nilai.by-santri'); // ✅ Sama, tapi di namespace ustadz
+    });
+
     Route::get('nilai/santri/{santriId}', [NilaiController::class, 'bySantri'])
-        ->name('nilai.by-santri'); // ✅ Sama, tapi di namespace ustadz
-});
+        ->name('nilai.santri');
 
     // Kelas (Read Only)
     Route::get('kelas', [KelasController::class, 'index'])->name('kelas.index');
@@ -119,9 +127,9 @@ Route::middleware(['auth', 'role:santri'])->prefix('santri')->name('santri.')->g
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Profile
-    Route::get('/profile', function () {
+    Route::get('/profil', function () {
         $santri = auth()->user()->santri;
-        return view('santri.profile', compact('santri'));
+        return view('santri.profil', compact('santri'));
     })->name('profile');
 
     // Kehadiran (View Own)
