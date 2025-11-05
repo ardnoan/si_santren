@@ -1,6 +1,6 @@
 <!-- ============================================ -->
 <!-- FILE 1: resources/views/admin/nilai/index.blade.php -->
-@extends('layouts.admin')
+@extends('layouts.dashboard')
 
 @section('title', 'Data Nilai')
 @section('page-title', 'Data Nilai Akademik')

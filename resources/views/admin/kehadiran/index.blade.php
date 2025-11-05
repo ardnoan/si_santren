@@ -1,6 +1,6 @@
 <!-- ============================================ -->
 <!-- FILE 1: resources/views/admin/kehadiran/index.blade.php -->
-@extends('layouts.admin')
+@extends('layouts.dashboard')
 
 @section('title', 'Data Kehadiran')
 @section('page-title', 'Data Kehadiran')
@@ -105,15 +105,15 @@
                         </thead>
                         <tbody>
                             @php
-                            $data = App\Models\Kehadiran::with(['santri.kelas'])
+                            $kehadiranData = App\Models\Kehadiran::with(['santri.kelas'])
                             ->whereDate('tanggal', $tanggal)
                             ->orderBy('created_at', 'desc')
-                            ->get();
+                            ->paginate(20);
                             @endphp
 
-                            @forelse($kehadiran as $k)
+                            @forelse($kehadiranData as $index => $k)
                             <tr>
-                                <td>{{ $i + 1 }}</td>
+                                <td>{{ $kehadiranData->firstItem() + $index }}</td>
                                 <td>
                                     <strong>{{ $k->santri->nama_lengkap }}</strong><br>
                                     <small class="text-muted">{{ $k->santri->nomor_induk }}</small>

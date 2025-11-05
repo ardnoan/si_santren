@@ -1,7 +1,7 @@
 
 <!-- ============================================ -->
 <!-- FILE 3: resources/views/admin/nilai/show.blade.php -->
-@extends('layouts.admin')
+@extends('layouts.dashboard')
 
 @section('title', 'Detail Nilai Santri')
 @section('page-title', 'Detail Nilai')

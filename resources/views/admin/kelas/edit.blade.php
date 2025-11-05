@@ -1,7 +1,7 @@
 
 <!-- ============================================ -->
 <!-- FILE 3: resources/views/admin/kelas/edit.blade.php -->
-@extends('layouts.admin')
+@extends('layouts.dashboard')
 
 @section('title', 'Edit Kelas')
 @section('page-title', 'Edit Kelas')
@@ -82,7 +82,7 @@
 
 <!-- ============================================ -->
 <!-- FILE 4: resources/views/admin/kelas/show.blade.php -->
-@extends('layouts.admin')
+@extends('layouts.dashboard')
 
 @section('title', 'Detail Kelas')
 @section('page-title', 'Detail Kelas')

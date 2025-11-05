@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.dashboard')
 
 @section('title', 'Input Pembayaran')
 @section('page-title', 'Input Pembayaran')

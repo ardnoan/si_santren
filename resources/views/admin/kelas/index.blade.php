@@ -1,6 +1,6 @@
 <!-- ============================================ -->
 <!-- FILE 1: resources/views/admin/kelas/index.blade.php -->
-@extends('layouts.admin')
+@extends('layouts.dashboard')
 
 @section('title', 'Data Kelas')
 @section('page-title', 'Data Kelas')

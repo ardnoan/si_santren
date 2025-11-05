@@ -1,5 +1,5 @@
 <!-- FILE 1: resources/views/admin/pembayaran/edit.blade.php -->
-@extends('layouts.admin')
+@extends('layouts.dashboard')
 
 @section('title', 'Edit Pembayaran')
 @section('page-title', 'Edit Pembayaran')
@@ -55,7 +55,7 @@
 
 <!-- ============================================ -->
 <!-- FILE 2: resources/views/admin/pembayaran/laporan.blade.php -->
-@extends('layouts.admin')
+@extends('layouts.dashboard')
 
 @section('title', 'Laporan Pembayaran')
 @section('page-title', 'Laporan Pembayaran')

@@ -1,7 +1,7 @@
 
 <!-- ============================================ -->
 <!-- FILE 3: resources/views/admin/kehadiran/edit.blade.php -->
-@extends('layouts.admin')
+@extends('layouts.dashboard')
 
 @section('title', 'Edit Kehadiran')
 @section('page-title', 'Edit Kehadiran')

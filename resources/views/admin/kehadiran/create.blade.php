@@ -1,7 +1,7 @@
 
 <!-- ============================================ -->
 <!-- FILE 2: resources/views/admin/kehadiran/create.blade.php -->
-@extends('layouts.admin')
+@extends('layouts.dashboard')
 
 @section('title', 'Input Kehadiran')
 @section('page-title', 'Input Kehadiran')

@@ -1,7 +1,7 @@
 
 <!-- ============================================ -->
 <!-- FILE 2: resources/views/admin/kelas/create.blade.php -->
-@extends('layouts.admin')
+@extends('layouts.dashboard')
 
 @section('title', 'Tambah Kelas')
 @section('page-title', 'Tambah Kelas')

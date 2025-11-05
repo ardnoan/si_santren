@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.dashboard')
 
 @section('title', 'Edit Santri')
 @section('page-title', 'Edit Data Santri')
