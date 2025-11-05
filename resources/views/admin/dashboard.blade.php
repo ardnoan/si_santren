@@ -1,290 +1,341 @@
-@extends('layouts.admin')
-
-@section('title', 'Dashboard')
-@section('page-title', 'Dashboard Admin')
-@section('page-subtitle', 'Ringkasan informasi sistem')
-
-@section('content')
-<!-- Statistics Cards -->
-<div class="row g-3 mb-4">
-    <div class="col-md-3">
-        <div class="card stat-card border-0 shadow-sm">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <p class="text-muted mb-1">Total Santri</p>
-                        <h3 class="mb-0">{{ $santriStats['total_aktif'] ?? 0 }}</h3>
-                        <small class="text-success">
-                            <i class="bi bi-arrow-up"></i> {{ $santriStats['santri_baru'] ?? 0 }} santri baru
-                        </small>
-                    </div>
-                    <div class="icon bg-primary rounded">
-                        <i class="bi bi-people text-white"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+<!DOCTYPE html>
+<html lang="id" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>@yield('title', 'Dashboard') - SI Santren</title>
     
-    <div class="col-md-3">
-        <div class="card stat-card border-0 shadow-sm">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <p class="text-muted mb-1">Total Pemasukan</p>
-                        <h3 class="mb-0">Rp {{ number_format($pembayaranStats['total_pembayaran'] ?? 0, 0, ',', '.') }}</h3>
-                        <small class="text-info">
-                            {{ $pembayaranStats['lunas_bulan_ini'] ?? 0 }} transaksi bulan ini
-                        </small>
-                    </div>
-                    <div class="icon bg-success rounded">
-                        <i class="bi bi-cash-stack text-white"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     
-    <div class="col-md-3">
-        <div class="card stat-card border-0 shadow-sm">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <p class="text-muted mb-1">Hadir Hari Ini</p>
-                        <h3 class="mb-0">{{ $kehadiranToday['hadir'] ?? 0 }}</h3>
-                        <small class="text-warning">
-                            {{ ($kehadiranToday['izin'] ?? 0) + ($kehadiranToday['sakit'] ?? 0) }} izin/sakit
-                        </small>
-                    </div>
-                    <div class="icon bg-info rounded">
-                        <i class="bi bi-calendar-check text-white"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="col-md-3">
-        <div class="card stat-card border-0 shadow-sm">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <p class="text-muted mb-1">Total Kelas</p>
-                        <h3 class="mb-0">{{ $totalKelas ?? 0 }}</h3>
-                        <small class="text-muted">
-                            Tahun ajaran aktif
-                        </small>
-                    </div>
-                    <div class="icon bg-warning rounded">
-                        <i class="bi bi-building text-white"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Charts Row -->
-<div class="row mb-4">
-    <div class="col-md-8">
-        <div class="card">
-            <div class="card-header bg-white">
-                <h6 class="mb-0"><i class="bi bi-bar-chart me-2"></i>Santri per Kelas</h6>
-            </div>
-            <div class="card-body">
-                <canvas id="santriPerKelasChart" height="80"></canvas>
-            </div>
-        </div>
-    </div>
-    
-    <div class="col-md-4">
-        <div class="card">
-            <div class="card-header bg-white">
-                <h6 class="mb-0"><i class="bi bi-pie-chart me-2"></i>Kehadiran Hari Ini</h6>
-            </div>
-            <div class="card-body">
-                <canvas id="kehadiranChart" height="150"></canvas>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Recent Activities & Alerts -->
-<div class="row">
-    <div class="col-md-8">
-        <div class="card">
-            <div class="card-header bg-white">
-                <h6 class="mb-0"><i class="bi bi-clock-history me-2"></i>Pembayaran Terbaru</h6>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-sm table-hover">
-                        <thead>
-                            <tr>
-                                <th>Tanggal</th>
-                                <th>Santri</th>
-                                <th>Jenis</th>
-                                <th>Jumlah</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse($recentPembayaran as $p)
-                            <tr>
-                                <td>{{ $p->tanggal_bayar->format('d/m/Y H:i') }}</td>
-                                <td>{{ $p->santri->nama_lengkap }}</td>
-                                <td><span class="badge bg-info">{{ $p->jenis_pembayaran_label }}</span></td>
-                                <td><strong>{{ $p->jumlah_format }}</strong></td>
-                                <td>
-                                    <span class="badge bg-{{ $p->status == 'lunas' ? 'success' : 'warning' }}">
-                                        {{ ucfirst($p->status) }}
-                                    </span>
-                                </td>
-                            </tr>
-                            @empty
-                            <tr>
-                                <td colspan="5" class="text-center text-muted">Belum ada data pembayaran</td>
-                            </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
-                <div class="text-center mt-3">
-                    <a href="{{ route('admin.pembayaran.index') }}" class="btn btn-sm btn-outline-primary">
-                        Lihat Semua Pembayaran <i class="bi bi-arrow-right"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="col-md-4">
-        <div class="card">
-            <div class="card-header bg-white">
-                <h6 class="mb-0"><i class="bi bi-exclamation-triangle me-2"></i>Notifikasi</h6>
-            </div>
-            <div class="card-body">
-                @php
-                    $belumBayarSPP = $santriStats['belum_bayar_spp'] ?? 0;
-                    $pendingPembayaran = $pembayaranStats['pending'] ?? 0;
-                @endphp
-                
-                @if($belumBayarSPP > 0)
-                <div class="alert alert-warning">
-                    <i class="bi bi-exclamation-circle"></i>
-                    <strong>{{ $belumBayarSPP }}</strong> santri belum bayar SPP bulan ini
-                    <a href="{{ route('admin.pembayaran.index') }}" class="alert-link">Lihat</a>
-                </div>
-                @endif
-                
-                @if($pendingPembayaran > 0)
-                <div class="alert alert-info">
-                    <i class="bi bi-clock"></i>
-                    <strong>{{ $pendingPembayaran }}</strong> pembayaran pending
-                    <a href="{{ route('admin.pembayaran.index') }}" class="alert-link">Lihat</a>
-                </div>
-                @endif
-                
-                @if($belumBayarSPP == 0 && $pendingPembayaran == 0)
-                <div class="alert alert-success">
-                    <i class="bi bi-check-circle"></i>
-                    Semua pembayaran lancar!
-                </div>
-                @endif
-                
-                <div class="d-grid gap-2 mt-3">
-                    <a href="{{ route('admin.santri.index') }}" class="btn btn-outline-primary btn-sm">
-                        <i class="bi bi-people"></i> Kelola Santri
-                    </a>
-                    <a href="{{ route('admin.kehadiran.index') }}" class="btn btn-outline-info btn-sm">
-                        <i class="bi bi-calendar-check"></i> Input Kehadiran
-                    </a>
-                    <a href="{{ route('admin.pembayaran.create') }}" class="btn btn-outline-success btn-sm">
-                        <i class="bi bi-cash"></i> Input Pembayaran
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-@endsection
-
-@section('scripts')
-<script>
-// Chart: Santri per Kelas
-const santriData = {!! json_encode($santriPerKelas) !!};
-const kelasLabels = santriData.map(item => item.kelas);
-const kelasValues = santriData.map(item => item.jumlah);
-
-new Chart(document.getElementById('santriPerKelasChart'), {
-    type: 'bar',
-    data: {
-        labels: kelasLabels,
-        datasets: [{
-            label: 'Jumlah Santri',
-            data: kelasValues,
-            backgroundColor: 'rgba(54, 162, 235, 0.5)',
-            borderColor: 'rgba(54, 162, 235, 1)',
-            borderWidth: 2
-        }]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: true,
-        plugins: {
-            legend: {
-                display: false
+    <style>
+        :root {
+            --sidebar-width: 260px;
+        }
+        
+        body {
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: var(--sidebar-width);
+            z-index: 1000;
+            overflow-y: auto;
+            border-right: 1px solid var(--bs-border-color);
+        }
+        
+        [data-bs-theme="light"] .sidebar {
+            background-color: #fff;
+        }
+        
+        [data-bs-theme="dark"] .sidebar {
+            background-color: var(--bs-dark);
+            border-right-color: var(--bs-gray-dark);
+        }
+        
+        .sidebar .brand {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--bs-border-color);
+        }
+        
+        .sidebar .nav-link {
+            padding: 0.75rem 1.25rem;
+            margin: 0.25rem 0.75rem;
+            border-radius: 0.375rem;
+            color: var(--bs-body-color);
+            transition: all 0.2s;
+        }
+        
+        .sidebar .nav-link:hover {
+            background-color: var(--bs-secondary-bg);
+        }
+        
+        .sidebar .nav-link.active {
+            background-color: var(--bs-primary);
+            color: white;
+        }
+        
+        .sidebar .nav-link i {
+            margin-right: 0.75rem;
+            width: 1.25rem;
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 1.5rem;
+            min-height: 100vh;
+            background-color: var(--bs-body-bg);
+        }
+        
+        /* Top Navbar */
+        .navbar-top {
+            margin: -1.5rem -1.5rem 1.5rem -1.5rem;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--bs-border-color);
+            background-color: var(--bs-body-bg);
+        }
+        
+        /* Cards */
+        .card {
+            border: 1px solid var(--bs-border-color);
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Table */
+        .table {
+            --bs-table-bg: var(--bs-body-bg);
+        }
+        
+        /* Theme Toggle Button */
+        .theme-toggle {
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 0.375rem;
+            transition: background-color 0.2s;
+        }
+        
+        .theme-toggle:hover {
+            background-color: var(--bs-secondary-bg);
+        }
+        
+        /* Badge Role */
+        .role-badge {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s;
             }
-        },
-        scales: {
-            y: {
-                beginAtZero: true,
-                ticks: {
-                    stepSize: 1
-                }
+            
+            .sidebar.show {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
             }
         }
-    }
-});
-
-// Chart: Kehadiran Pie
-const kehadiranData = {!! json_encode($kehadiranToday) !!};
-new Chart(document.getElementById('kehadiranChart'), {
-    type: 'doughnut',
-    data: {
-        labels: ['Hadir', 'Izin', 'Sakit', 'Alpa'],
-        datasets: [{
-            data: [
-                kehadiranData.hadir || 0,
-                kehadiranData.izin || 0,
-                kehadiranData.sakit || 0,
-                kehadiranData.alpa || 0
-            ],
-            backgroundColor: [
-                'rgba(75, 192, 192, 0.8)',
-                'rgba(54, 162, 235, 0.8)',
-                'rgba(255, 206, 86, 0.8)',
-                'rgba(255, 99, 132, 0.8)'
-            ]
-        }]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: true
-    }
-});
-</script>
-@endsection
-
-@section('styles')
-<style>
-.stat-card .icon {
-    width: 60px;
-    height: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-}
-</style>
-@endsection
+    </style>
+    
+    @yield('styles')
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="brand text-center">
+            <i class="bi bi-book fs-1 text-primary"></i>
+            <h5 class="mb-0 mt-2">SI SANTREN</h5>
+            <small class="text-muted">Sistem Informasi Pesantren</small>
+            
+            @auth
+                <div class="mt-2">
+                    <span class="badge role-badge 
+                        @if(auth()->user()->isAdmin()) bg-danger
+                        @elseif(auth()->user()->isUstadz()) bg-success
+                        @else bg-info
+                        @endif">
+                        {{ auth()->user()->role_name }}
+                    </span>
+                </div>
+            @endauth
+        </div>
+        
+        <nav class="nav flex-column py-3">
+            <!-- Dashboard - All Roles -->
+            <a href="{{ auth()->user()->isAdmin() ? route('admin.dashboard') : (auth()->user()->isUstadz() ? route('ustadz.dashboard') : route('santri.dashboard')) }}" 
+               class="nav-link {{ request()->routeIs('*.dashboard') ? 'active' : '' }}">
+                <i class="bi bi-speedometer2"></i> Dashboard
+            </a>
+            
+            <!-- Data Santri - Admin & Ustadz -->
+            @if(auth()->user()->isAdmin() || auth()->user()->isUstadz())
+                <a href="{{ auth()->user()->isAdmin() ? route('admin.santri.index') : route('ustadz.santri.index') }}" 
+                   class="nav-link {{ request()->routeIs('*.santri.*') ? 'active' : '' }}">
+                    <i class="bi bi-people"></i> Data Santri
+                </a>
+            @endif
+            
+            <!-- Pembayaran - Admin Only -->
+            @if(auth()->user()->isAdmin())
+                <a href="{{ route('admin.pembayaran.index') }}" 
+                   class="nav-link {{ request()->routeIs('admin.pembayaran.*') ? 'active' : '' }}">
+                    <i class="bi bi-cash-coin"></i> Pembayaran
+                </a>
+            @endif
+            
+            <!-- Kehadiran - Admin & Ustadz -->
+            @if(auth()->user()->isAdmin() || auth()->user()->isUstadz())
+                <a href="{{ auth()->user()->isAdmin() ? route('admin.kehadiran.index') : route('ustadz.kehadiran.index') }}" 
+                   class="nav-link {{ request()->routeIs('*.kehadiran.*') ? 'active' : '' }}">
+                    <i class="bi bi-calendar-check"></i> Kehadiran
+                </a>
+            @endif
+            
+            <!-- Nilai - Admin & Ustadz -->
+            @if(auth()->user()->isAdmin() || auth()->user()->isUstadz())
+                <a href="{{ auth()->user()->isAdmin() ? route('admin.nilai.index') : route('ustadz.nilai.index') }}" 
+                   class="nav-link {{ request()->routeIs('*.nilai.*') ? 'active' : '' }}">
+                    <i class="bi bi-journal-text"></i> Nilai
+                </a>
+            @endif
+            
+            <!-- Kelas - Admin & Ustadz -->
+            @if(auth()->user()->isAdmin() || auth()->user()->isUstadz())
+                <a href="{{ auth()->user()->isAdmin() ? route('admin.kelas.index') : route('ustadz.kelas.index') }}" 
+                   class="nav-link {{ request()->routeIs('*.kelas.*') ? 'active' : '' }}">
+                    <i class="bi bi-building"></i> Kelas
+                </a>
+            @endif
+            
+            <hr class="mx-3">
+            
+            <!-- Menu Santri -->
+            @if(auth()->user()->isSantri())
+                <a href="{{ route('santri.profile') }}" 
+                   class="nav-link {{ request()->routeIs('santri.profile') ? 'active' : '' }}">
+                    <i class="bi bi-person"></i> Profil Saya
+                </a>
+                <a href="{{ route('santri.kehadiran') }}" 
+                   class="nav-link {{ request()->routeIs('santri.kehadiran') ? 'active' : '' }}">
+                    <i class="bi bi-calendar-check"></i> Kehadiran Saya
+                </a>
+                <a href="{{ route('santri.nilai') }}" 
+                   class="nav-link {{ request()->routeIs('santri.nilai') ? 'active' : '' }}">
+                    <i class="bi bi-journal-text"></i> Nilai Saya
+                </a>
+                <a href="{{ route('santri.pembayaran') }}" 
+                   class="nav-link {{ request()->routeIs('santri.pembayaran') ? 'active' : '' }}">
+                    <i class="bi bi-cash-coin"></i> Pembayaran Saya
+                </a>
+                <hr class="mx-3">
+            @endif
+            
+            <!-- Pengaturan - Admin Only -->
+            @if(auth()->user()->isAdmin())
+                <a href="#" class="nav-link">
+                    <i class="bi bi-gear"></i> Pengaturan
+                </a>
+            @endif
+            
+            <!-- Logout - All -->
+            <a href="#" class="nav-link text-danger" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                <i class="bi bi-box-arrow-right"></i> Logout
+            </a>
+        </nav>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Navbar -->
+        <div class="navbar-top d-flex justify-content-between align-items-center">
+            <div>
+                <h5 class="mb-0">@yield('page-title', 'Dashboard')</h5>
+                <small class="text-muted">@yield('page-subtitle', 'Selamat datang')</small>
+            </div>
+            <div class="d-flex align-items-center gap-3">
+                <!-- Theme Toggle -->
+                <div class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark Mode">
+                    <i class="bi bi-moon-fill" id="theme-icon"></i>
+                </div>
+                
+                <span class="badge bg-primary">
+                    <i class="bi bi-calendar3"></i> {{ \Carbon\Carbon::now()->isoFormat('D MMM Y') }}
+                </span>
+                
+                <div class="dropdown">
+                    <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        <i class="bi bi-person-circle"></i> {{ Auth::user()->username }}
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li class="px-3 py-2 border-bottom">
+                            <small class="text-muted d-block">Logged in as</small>
+                            <strong>{{ Auth::user()->role_name }}</strong>
+                        </li>
+                        @if(auth()->user()->isSantri())
+                            <li><a class="dropdown-item" href="{{ route('santri.profile') }}"><i class="bi bi-person"></i> Profil</a></li>
+                        @endif
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <a class="dropdown-item text-danger" href="#" 
+                               onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                <i class="bi bi-box-arrow-right"></i> Logout
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Alert Messages -->
+        @if(session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle me-2"></i>
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        @endif
+        
+        @if(session('error'))
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle me-2"></i>
+                {{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        @endif
+        
+        <!-- Page Content -->
+        @yield('content')
+    </div>
+    
+    <!-- Logout Form -->
+    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+        @csrf
+    </form>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Theme Toggle Script -->
+    <script>
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-bs-theme', savedTheme);
+        updateThemeIcon(savedTheme);
+        
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-bs-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            html.setAttribute('data-bs-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon(newTheme);
+        }
+        
+        function updateThemeIcon(theme) {
+            const icon = document.getElementById('theme-icon');
+            if (icon) {
+                icon.className = theme === 'light' ? 'bi bi-moon-fill' : 'bi bi-sun-fill';
+            }
+        }
+    </script>
+    
+    @yield('scripts')
+</body>
+</html>

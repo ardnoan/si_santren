@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-
+use Illuminate\Support\Facades\Blade;
 /**
  * Class AppServiceProvider
  * Implementasi: Dependency Inversion Principle
@@ -62,5 +62,29 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         //
+         // @admin ... @endadmin
+        Blade::if('admin', function () {
+            return auth()->check() && auth()->user()->isAdmin();
+        });
+        
+        // @ustadz ... @endust adz
+        Blade::if('ustadz', function () {
+            return auth()->check() && auth()->user()->isUstadz();
+        });
+        
+        // @santri ... @endsantri
+        Blade::if('santri', function () {
+            return auth()->check() && auth()->user()->isSantri();
+        });
+        
+        // @adminOrUstadz ... @endadminOrUstadz
+        Blade::if('adminOrUstadz', function () {
+            return auth()->check() && (auth()->user()->isAdmin() || auth()->user()->isUstadz());
+        });
+        
+        // @role('admin') ... @endrole
+        Blade::if('role', function ($role) {
+            return auth()->check() && auth()->user()->role === $role;
+        });
     }
 }

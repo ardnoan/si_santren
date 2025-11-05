@@ -19,15 +19,15 @@
                         <i class="bi bi-plus-circle me-2"></i>Input Kehadiran
                     </a>
                 </div>
-                
+
                 <!-- Date Filter -->
                 <form method="GET" class="mb-3">
                     <div class="row g-2">
                         <div class="col-md-3">
-                            <input type="date" 
-                                   name="tanggal" 
-                                   class="form-control" 
-                                   value="{{ request('tanggal', date('Y-m-d')) }}">
+                            <input type="date"
+                                name="tanggal"
+                                class="form-control"
+                                value="{{ request('tanggal', date('Y-m-d')) }}">
                         </div>
                         <div class="col-md-2">
                             <button type="submit" class="btn btn-primary">
@@ -36,59 +36,59 @@
                         </div>
                         <div class="col-md-7 text-end">
                             <div class="btn-group">
-                                <a href="?tanggal={{ date('Y-m-d', strtotime('-1 day', strtotime(request('tanggal', date('Y-m-d'))))) }}" 
-                                   class="btn btn-outline-secondary">
+                                <a href="?tanggal={{ date('Y-m-d', strtotime('-1 day', strtotime(request('tanggal', date('Y-m-d'))))) }}"
+                                    class="btn btn-outline-secondary">
                                     <i class="bi bi-chevron-left"></i> Kemarin
                                 </a>
                                 <a href="?tanggal={{ date('Y-m-d') }}" class="btn btn-outline-primary">
                                     Hari Ini
                                 </a>
-                                <a href="?tanggal={{ date('Y-m-d', strtotime('+1 day', strtotime(request('tanggal', date('Y-m-d'))))) }}" 
-                                   class="btn btn-outline-secondary">
+                                <a href="?tanggal={{ date('Y-m-d', strtotime('+1 day', strtotime(request('tanggal', date('Y-m-d'))))) }}"
+                                    class="btn btn-outline-secondary">
                                     Besok <i class="bi bi-chevron-right"></i>
                                 </a>
                             </div>
                         </div>
                     </div>
                 </form>
-                
+
                 <!-- Statistics -->
                 @php
-                    $tanggal = request('tanggal', date('Y-m-d'));
-                    $kehadiran = App\Models\Kehadiran::whereDate('tanggal', $tanggal)->get();
-                    $hadir = $kehadiran->where('status', 'hadir')->count();
-                    $izin = $kehadiran->where('status', 'izin')->count();
-                    $sakit = $kehadiran->where('status', 'sakit')->count();
-                    $alpa = $kehadiran->where('status', 'alpa')->count();
+                $tanggal = request('tanggal', date('Y-m-d'));
+                $kehadiran = App\Models\Kehadiran::whereDate('tanggal', $tanggal)->get();
+                $hadir = $kehadiran->where('status', 'hadir')->count();
+                $izin = $kehadiran->where('status', 'izin')->count();
+                $sakit = $kehadiran->where('status', 'sakit')->count();
+                $alpa = $kehadiran->where('status', 'alpa')->count();
                 @endphp
-                
+
                 <div class="row g-3 mb-3">
                     <div class="col-md-3">
                         <div class="alert alert-success mb-0">
                             <strong><i class="bi bi-check-circle"></i> Hadir:</strong>
-                            <h4 class="mb-0">{{ $hadir }}</h4>
+                            <h4 class="mb-0">{{ $stats['hadir'] }}</h4>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="alert alert-info mb-0">
                             <strong><i class="bi bi-envelope"></i> Izin:</strong>
-                            <h4 class="mb-0">{{ $izin }}</h4>
+                            <h4 class="mb-0">{{ $stats['izin'] }}</h4>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="alert alert-warning mb-0">
                             <strong><i class="bi bi-heart-pulse"></i> Sakit:</strong>
-                            <h4 class="mb-0">{{ $sakit }}</h4>
+                            <h4 class="mb-0">{{ $stats['sakit'] }}</h4>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="alert alert-danger mb-0">
                             <strong><i class="bi bi-x-circle"></i> Alpa:</strong>
-                            <h4 class="mb-0">{{ $alpa }}</h4>
+                            <h4 class="mb-0">{{ $stats['alpa'] }}</h4>
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Table -->
                 <div class="table-responsive">
                     <table class="table table-hover align-middle">
@@ -105,13 +105,13 @@
                         </thead>
                         <tbody>
                             @php
-                                $data = App\Models\Kehadiran::with(['santri.kelas'])
-                                    ->whereDate('tanggal', $tanggal)
-                                    ->orderBy('created_at', 'desc')
-                                    ->get();
+                            $data = App\Models\Kehadiran::with(['santri.kelas'])
+                            ->whereDate('tanggal', $tanggal)
+                            ->orderBy('created_at', 'desc')
+                            ->get();
                             @endphp
-                            
-                            @forelse($data as $i => $k)
+
+                            @forelse($kehadiran as $k)
                             <tr>
                                 <td>{{ $i + 1 }}</td>
                                 <td>
@@ -120,28 +120,28 @@
                                 </td>
                                 <td>
                                     @if($k->santri->kelas)
-                                        <span class="badge bg-info">{{ $k->santri->kelas->nama_kelas }}</span>
+                                    <span class="badge bg-info">{{ $k->santri->kelas->nama_kelas }}</span>
                                     @else
-                                        <span class="badge bg-secondary">-</span>
+                                    <span class="badge bg-secondary">-</span>
                                     @endif
                                 </td>
                                 <td>
                                     @if($k->status == 'hadir')
-                                        <span class="badge bg-success">Hadir</span>
+                                    <span class="badge bg-success">Hadir</span>
                                     @elseif($k->status == 'izin')
-                                        <span class="badge bg-info">Izin</span>
+                                    <span class="badge bg-info">Izin</span>
                                     @elseif($k->status == 'sakit')
-                                        <span class="badge bg-warning">Sakit</span>
+                                    <span class="badge bg-warning">Sakit</span>
                                     @else
-                                        <span class="badge bg-danger">Alpa</span>
+                                    <span class="badge bg-danger">Alpa</span>
                                     @endif
                                 </td>
                                 <td>
                                     @if($k->jam_masuk)
-                                        <small><i class="bi bi-box-arrow-in-right text-success"></i> {{ $k->jam_masuk }}</small>
+                                    <small><i class="bi bi-box-arrow-in-right text-success"></i> {{ $k->jam_masuk }}</small>
                                     @endif
                                     @if($k->jam_keluar)
-                                        <br><small><i class="bi bi-box-arrow-left text-danger"></i> {{ $k->jam_keluar }}</small>
+                                    <br><small><i class="bi bi-box-arrow-left text-danger"></i> {{ $k->jam_keluar }}</small>
                                     @endif
                                 </td>
                                 <td>
@@ -149,15 +149,15 @@
                                 </td>
                                 <td>
                                     <div class="btn-group btn-group-sm">
-                                        <a href="{{ route('admin.kehadiran.edit', $k->id) }}" 
-                                           class="btn btn-warning"
-                                           title="Edit">
+                                        <a href="{{ route('admin.kehadiran.edit', $k->id) }}"
+                                            class="btn btn-warning"
+                                            title="Edit">
                                             <i class="bi bi-pencil"></i>
                                         </a>
-                                        <form action="{{ route('admin.kehadiran.destroy', $k->id) }}" 
-                                              method="POST" 
-                                              class="d-inline"
-                                              onsubmit="return confirm('Yakin hapus data ini?')">
+                                        <form action="{{ route('admin.kehadiran.destroy', $k->id) }}"
+                                            method="POST"
+                                            class="d-inline"
+                                            onsubmit="return confirm('Yakin hapus data ini?')">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger btn-sm">

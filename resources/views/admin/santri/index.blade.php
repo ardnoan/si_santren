@@ -1,3 +1,4 @@
+{{-- FILE: resources/views/admin/santri/index.blade.php --}}
 @extends('layouts.admin')
 
 @section('title', 'Data Santri')
@@ -15,15 +16,19 @@
                             <i class="bi bi-people-fill me-2"></i>Daftar Santri
                         </h5>
                     </div>
-                    <a href="{{ route('admin.santri.create') }}" class="btn btn-primary">
-                        <i class="bi bi-plus-circle me-2"></i>Tambah Santri
-                    </a>
+                    
+                    {{-- Tombol Tambah hanya untuk Admin --}}
+                    @if(auth()->user()->isAdmin())
+                        <a href="{{ route('admin.santri.create') }}" class="btn btn-primary">
+                            <i class="bi bi-plus-circle me-2"></i>Tambah Santri
+                        </a>
+                    @endif
                 </div>
                 
                 <!-- Search & Filter -->
                 <div class="row g-3 mb-3">
                     <div class="col-md-4">
-                        <form action="{{ route('admin.santri.index') }}" method="GET">
+                        <form action="{{ auth()->user()->isAdmin() ? route('admin.santri.index') : route('ustadz.santri.index') }}" method="GET">
                             <div class="input-group">
                                 <input type="text" 
                                        class="form-control" 
@@ -136,7 +141,7 @@
                                     </small>
                                 </td>
                                 <td>
-                                    <span class="badge {{ $s->jenis_kelamin == 'L' ? 'bg-primary' : 'bg-pink' }}">
+                                    <span class="badge {{ $s->jenis_kelamin == 'L' ? 'bg-primary' : 'bg-danger' }}">
                                         {{ $s->jenis_kelamin_label }}
                                     </span>
                                 </td>
@@ -158,41 +163,48 @@
                                 </td>
                                 <td>
                                     <div class="btn-group btn-group-sm" role="group">
-                                        <a href="{{ route('admin.santri.show', $s->id) }}" 
+                                        {{-- View - Semua Role --}}
+                                        <a href="{{ auth()->user()->isAdmin() ? route('admin.santri.show', $s->id) : route('ustadz.santri.show', $s->id) }}" 
                                            class="btn btn-info"
                                            title="Detail">
                                             <i class="bi bi-eye"></i>
                                         </a>
-                                        <a href="{{ route('admin.santri.edit', $s->id) }}" 
-                                           class="btn btn-warning"
-                                           title="Edit">
-                                            <i class="bi bi-pencil"></i>
-                                        </a>
-                                        @if($s->status === 'aktif')
-                                            <form action="{{ route('admin.santri.graduate', $s->id) }}" 
+                                        
+                                        {{-- Edit & Delete - Hanya Admin --}}
+                                        @if(auth()->user()->isAdmin())
+                                            <a href="{{ route('admin.santri.edit', $s->id) }}" 
+                                               class="btn btn-warning"
+                                               title="Edit">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            
+                                            @if($s->status === 'aktif')
+                                                <form action="{{ route('admin.santri.graduate', $s->id) }}" 
+                                                      method="POST" 
+                                                      class="d-inline"
+                                                      onsubmit="return confirm('Yakin meluluskan santri ini?')">
+                                                    @csrf
+                                                    <button type="submit" 
+                                                            class="btn btn-success"
+                                                            title="Luluskan">
+                                                        <i class="bi bi-mortarboard"></i>
+                                                    </button>
+                                                </form>
+                                            @endif
+                                            
+                                            <form action="{{ route('admin.santri.destroy', $s->id) }}" 
                                                   method="POST" 
                                                   class="d-inline"
-                                                  onsubmit="return confirm('Yakin meluluskan santri ini?')">
+                                                  onsubmit="return confirm('Yakin hapus data santri ini?')">
                                                 @csrf
+                                                @method('DELETE')
                                                 <button type="submit" 
-                                                        class="btn btn-success"
-                                                        title="Luluskan">
-                                                    <i class="bi bi-mortarboard"></i>
+                                                        class="btn btn-danger"
+                                                        title="Hapus">
+                                                    <i class="bi bi-trash"></i>
                                                 </button>
                                             </form>
                                         @endif
-                                        <form action="{{ route('admin.santri.destroy', $s->id) }}" 
-                                              method="POST" 
-                                              class="d-inline"
-                                              onsubmit="return confirm('Yakin hapus data santri ini?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" 
-                                                    class="btn btn-danger"
-                                                    title="Hapus">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </form>
                                     </div>
                                 </td>
                             </tr>
@@ -201,9 +213,11 @@
                                 <td colspan="8" class="text-center py-5">
                                     <i class="bi bi-inbox fs-1 d-block mb-3 text-muted"></i>
                                     <h5 class="text-muted">Belum ada data santri</h5>
-                                    <a href="{{ route('admin.santri.create') }}" class="btn btn-primary mt-3">
-                                        <i class="bi bi-plus-circle me-2"></i>Tambah Santri Pertama
-                                    </a>
+                                    @if(auth()->user()->isAdmin())
+                                        <a href="{{ route('admin.santri.create') }}" class="btn btn-primary mt-3">
+                                            <i class="bi bi-plus-circle me-2"></i>Tambah Santri Pertama
+                                        </a>
+                                    @endif
                                 </td>
                             </tr>
                             @endforelse
@@ -226,7 +240,8 @@
     </div>
 </div>
 
-<!-- Quick Actions -->
+{{-- Quick Actions - Hanya Admin --}}
+@if(auth()->user()->isAdmin())
 <div class="row">
     <div class="col-md-12">
         <div class="card">
@@ -258,28 +273,7 @@
         </div>
     </div>
 </div>
-@endsection
-
-@section('styles')
-<style>
-    .bg-pink {
-        background-color: #e91e63 !important;
-    }
-    
-    .table th {
-        font-weight: 600;
-        font-size: 14px;
-    }
-    
-    .badge {
-        font-size: 12px;
-        padding: 5px 10px;
-    }
-    
-    .btn-group-sm .btn {
-        padding: 4px 8px;
-    }
-</style>
+@endif
 @endsection
 
 @section('scripts')
@@ -287,33 +281,11 @@
     function resetFilter() {
         document.getElementById('filterStatus').value = '';
         document.getElementById('filterKelas').value = '';
-        window.location.href = '{{ route("admin.santri.index") }}';
+        window.location.href = '{{ auth()->user()->isAdmin() ? route("admin.santri.index") : route("ustadz.santri.index") }}';
     }
     
     function exportData() {
         alert('Fitur export akan segera tersedia!');
-        // TODO: Implement export functionality
-    }
-    
-    // Auto-reload on filter change
-    document.getElementById('filterStatus').addEventListener('change', function() {
-        applyFilters();
-    });
-    
-    document.getElementById('filterKelas').addEventListener('change', function() {
-        applyFilters();
-    });
-    
-    function applyFilters() {
-        const status = document.getElementById('filterStatus').value;
-        const kelas = document.getElementById('filterKelas').value;
-        
-        let url = '{{ route("admin.santri.index") }}?';
-        
-        if (status) url += 'status=' + status + '&';
-        if (kelas) url += 'kelas=' + kelas + '&';
-        
-        window.location.href = url;
     }
 </script>
 @endsection

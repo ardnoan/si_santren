@@ -1,5 +1,10 @@
 # 📖 SI SANTREN - Sistem Informasi Pesantren
 
+[![Laravel](https://img.shields.io/badge/Laravel-10.x-red.svg)](https://laravel.com)
+[![PHP](https://img.shields.io/badge/PHP-8.1+-blue.svg)](https://php.net)
+[![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3-purple.svg)](https://getbootstrap.com)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+
 Sistem Informasi Manajemen Pesantren berbasis web menggunakan Laravel 10 dengan implementasi **SOLID Principles** dan **Clean Architecture**.
 
 ---
@@ -14,110 +19,55 @@ Sistem Informasi Manajemen Pesantren berbasis web menggunakan Laravel 10 dengan 
 5. **Dashboard Interaktif** - Statistik real-time dengan Chart.js
 6. **Authentication** - Login/Logout dengan role-based access
 7. **Database Migration** - Schema lengkap siap pakai
+8. **Dark Mode Support** - Toggle tema light/dark
 
-### 🚧 Yang Perlu Ditambahkan (Opsional)
+### 🚧 Fitur Tambahan (Opsional)
 - Export PDF/Excel untuk laporan
 - Notifikasi email/SMS
 - Calendar view untuk jadwal
 - Cetak kartu santri
+- Bulk import data santri
 
 ---
 
-## 📁 STRUKTUR FILE YANG SUDAH DIBUAT
+## 📋 REQUIREMENTS
 
-### 1. **Models** (`app/Models/`)
-```
-✅ User.php (Complete)
-✅ Santri.php (Complete)
-✅ Kelas.php (Complete)
-✅ Pembayaran.php (Complete)
-✅ Kehadiran.php (Complete)
-✅ Nilai.php (Complete)
-✅ MataPelajaran.php (Complete)
-✅ JadwalPelajaran.php (Complete)
-```
-
-### 2. **Repositories** (`app/Repositories/`)
-```
-✅ BaseRepository.php
-✅ SantriRepository.php
-✅ PembayaranRepository.php
-```
-
-### 3. **Services** (`app/Services/`)
-```
-✅ SantriService.php
-✅ PembayaranService.php
-```
-
-### 4. **Controllers** (`app/Http/Controllers/`)
-```
-✅ DashboardController.php
-✅ Admin/SantriController.php (Complete)
-✅ Admin/PembayaranController.php (Complete)
-⚠️ Admin/KehadiranController.php (Perlu dilengkapi)
-⚠️ Admin/NilaiController.php (Perlu dilengkapi)
-⚠️ Admin/KelasController.php (Perlu dilengkapi)
-```
-
-### 5. **Form Requests** (`app/Http/Requests/`)
-```
-✅ SantriRequest.php
-✅ PembayaranRequest.php
-✅ KehadiranRequest.php
-```
-
-### 6. **Migrations** (`database/migrations/`)
-```
-✅ create_users_table_complete.php
-✅ create_kelas_table_complete.php
-✅ create_santris_table_complete.php
-✅ create_mata_pelajarans_table_complete.php
-✅ create_kehadirans_table_complete.php
-✅ create_pembayarans_table_complete.php
-✅ create_nilais_table_complete.php
-✅ create_jadwal_pelajarans_table_complete.php
-```
-
-### 7. **Views** (`resources/views/`)
-```
-✅ layouts/admin.blade.php (Complete)
-✅ admin/dashboard.blade.php (Complete dengan Chart)
-✅ auth/login-custom.blade.php (Beautiful Login Page)
-⚠️ admin/santri/* (Perlu dibuat)
-⚠️ admin/pembayaran/* (Perlu dibuat)
-⚠️ admin/kehadiran/* (Perlu dibuat)
-⚠️ admin/nilai/* (Perlu dibuat)
-```
-
-### 8. **Routes** (`routes/web.php`)
-```
-✅ Sudah lengkap dengan semua route
-```
+- PHP >= 8.1
+- Composer
+- MySQL >= 5.7 / MariaDB >= 10.3
+- Node.js >= 16.x & NPM
+- Web Server (Apache/Nginx)
 
 ---
 
-## 🔧 INSTALASI & SETUP
+## 🔧 INSTALASI
 
-### Step 1: Clone & Install Dependencies
+### 1. Clone Repository
 ```bash
-# Clone repository
-git clone <your-repo-url>
+git clone https://github.com/username/sisantren.git
 cd sisantren
+```
 
-# Install dependencies
+### 2. Install Dependencies
+```bash
+# Install PHP dependencies
 composer install
-npm install
 
-# Copy environment file
+# Install Node dependencies
+npm install
+```
+
+### 3. Environment Configuration
+```bash
+# Copy file environment
 cp .env.example .env
 
-# Generate app key
+# Generate application key
 php artisan key:generate
 ```
 
-### Step 2: Database Configuration
-Edit `.env`:
+### 4. Database Setup
+Edit file `.env`:
 ```env
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
@@ -127,93 +77,134 @@ DB_USERNAME=root
 DB_PASSWORD=
 ```
 
-### Step 3: Run Migrations & Seeders
+Buat database:
 ```bash
-# Create database
-mysql -u root -e "CREATE DATABASE sisantren_db"
+mysql -u root -p -e "CREATE DATABASE sisantren_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+```
 
+### 5. Run Migrations & Seeders
+```bash
 # Run migrations
-php artisan migrate:fresh
+php artisan migrate
 
-# Run seeder
+# Run seeder (data dummy)
 php artisan db:seed
 ```
 
-### Step 4: Storage Link
+### 6. Storage Link
 ```bash
 php artisan storage:link
 ```
 
-### Step 5: Run Development Server
+### 7. Compile Assets (Opsional)
 ```bash
-# Laravel server
-php artisan serve
-
-# NPM (if using Vite)
+# Development
 npm run dev
+
+# Production
+npm run build
 ```
 
-Buka: `http://localhost:8000`
+### 8. Run Application
+```bash
+php artisan serve
+```
+
+Buka browser: `http://localhost:8000`
 
 ---
 
 ## 👤 AKUN DEMO
 
-| Role | Username | Password |
-|------|----------|----------|
-| Admin | admin | admin123 |
-| Ustadz | ustadz1 | ustadz123 |
-| Santri | santri1-10 | santri123 |
+| Role | Username | Password | Akses |
+|------|----------|----------|-------|
+| Admin | admin | admin123 | Full access |
+| Ustadz | ustadz1 | ustadz123 | Terbatas |
+| Santri | santri1-50 | santri123 | Dashboard santri |
 
 ---
 
-## 📂 IMPLEMENTASI SOLID PRINCIPLES
+## 📂 STRUKTUR PROYEK
 
-### 1. **Single Responsibility Principle (SRP)**
-- Setiap class memiliki satu tanggung jawab
-- Controller hanya handle HTTP request/response
-- Service layer untuk business logic
-- Repository untuk data access
-
-### 2. **Open/Closed Principle (OCP)**
-- BaseRepository dapat di-extend tanpa modifikasi
-- Service dapat ditambahkan fitur baru
-
-### 3. **Liskov Substitution Principle (LSP)**
-- Semua repository implement RepositoryInterface
-- Dapat diganti tanpa error
-
-### 4. **Interface Segregation Principle (ISP)**
-- RepositoryInterface hanya method yang diperlukan
-- Tidak ada method yang tidak terpakai
-
-### 5. **Dependency Inversion Principle (DIP)**
-- Controller depend on abstraction (Service)
-- Service depend on abstraction (Repository)
-- Dependency Injection via constructor
+```
+sisantren/
+├── app/
+│   ├── Console/
+│   ├── Contracts/          # Interfaces
+│   │   └── RepositoryInterface.php
+│   ├── Exceptions/
+│   ├── Http/
+│   │   ├── Controllers/
+│   │   │   ├── Admin/
+│   │   │   │   ├── SantriController.php
+│   │   │   │   ├── PembayaranController.php
+│   │   │   │   ├── KehadiranController.php
+│   │   │   │   ├── NilaiController.php
+│   │   │   │   └── KelasController.php
+│   │   │   └── DashboardController.php
+│   │   ├── Middleware/
+│   │   └── Requests/
+│   │       ├── SantriRequest.php
+│   │       ├── PembayaranRequest.php
+│   │       └── KehadiranRequest.php
+│   ├── Models/
+│   │   ├── User.php
+│   │   ├── Santri.php
+│   │   ├── Kelas.php
+│   │   ├── Pembayaran.php
+│   │   ├── Kehadiran.php
+│   │   ├── Nilai.php
+│   │   └── MataPelajaran.php
+│   ├── Repositories/
+│   │   ├── BaseRepository.php
+│   │   ├── SantriRepository.php
+│   │   └── PembayaranRepository.php
+│   └── Services/
+│       ├── SantriService.php
+│       └── PembayaranService.php
+├── database/
+│   ├── migrations/
+│   └── seeders/
+│       └── DatabaseSeeder.php
+├── resources/
+│   └── views/
+│       ├── admin/
+│       │   ├── dashboard.blade.php
+│       │   ├── santri/
+│       │   ├── pembayaran/
+│       │   ├── kehadiran/
+│       │   ├── nilai/
+│       │   └── kelas/
+│       ├── auth/
+│       │   └── login-custom.blade.php
+│       └── layouts/
+│           └── admin.blade.php
+└── routes/
+    └── web.php
+```
 
 ---
 
-## 🎨 CLEAN CODE PATTERNS
+## 🏗️ ARSITEKTUR & DESIGN PATTERNS
 
-### Repository Pattern
+### 1. Repository Pattern
 ```php
-// Data access layer
+// Separasi data access dari business logic
 class SantriRepository extends BaseRepository {
     public function getAllAktifWithKelas() {
-        return $this->model->with('kelas')->aktif()->paginate();
+        return $this->model->with('kelas')->aktif()->paginate(15);
     }
 }
 ```
 
-### Service Layer
+### 2. Service Layer
 ```php
-// Business logic layer
+// Business logic terpisah dari controller
 class SantriService {
     public function createSantri(array $data) {
         DB::beginTransaction();
         try {
-            // Business logic here
+            // Complex business logic here
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
@@ -223,9 +214,9 @@ class SantriService {
 }
 ```
 
-### Form Request Validation
+### 3. Form Request Validation
 ```php
-// Validation logic separated
+// Validation logic terpisah
 class SantriRequest extends FormRequest {
     public function rules(): array {
         return [
@@ -238,111 +229,169 @@ class SantriRequest extends FormRequest {
 
 ---
 
-## 🛠️ FILE YANG PERLU DILENGKAPI
+## 💾 DATABASE SCHEMA
 
-### Priority 1: Controllers (Urgent)
+### Tables Overview
+- `users` - User authentication & authorization
+- `santris` - Data santri (soft deletes)
+- `kelas` - Kelas & tingkatan
+- `mata_pelajarans` - Mata pelajaran
+- `kehadirans` - Rekam kehadiran
+- `pembayarans` - Transaksi keuangan
+- `nilais` - Nilai akademik
+- `jadwal_pelajarans` - Jadwal pelajaran
 
-#### 1. `app/Http/Controllers/Admin/KehadiranController.php`
-```php
-// Tambahkan method:
-- index() -> Tampilkan daftar kehadiran
-- create() -> Form input kehadiran
-- store() -> Simpan kehadiran
-- bulkCreate() -> Input kehadiran massal per kelas
+### Entity Relationship
 ```
-
-#### 2. `app/Http/Controllers/Admin/NilaiController.php`
-```php
-// Tambahkan method:
-- index() -> Daftar nilai
-- create() -> Form input nilai
-- store() -> Simpan nilai
-- bySantri() -> Nilai per santri
-```
-
-#### 3. `app/Http/Controllers/Admin/KelasController.php`
-```php
-// Lengkapi semua method CRUD
-```
-
-### Priority 2: Views (Urgent)
-
-#### Santri Views
-- `resources/views/admin/santri/index.blade.php` - Daftar santri dengan search & filter
-- `resources/views/admin/santri/create.blade.php` - Form tambah santri
-- `resources/views/admin/santri/edit.blade.php` - Form edit santri
-- `resources/views/admin/santri/show.blade.php` - Detail santri
-
-#### Pembayaran Views
-- `resources/views/admin/pembayaran/index.blade.php` - Daftar pembayaran
-- `resources/views/admin/pembayaran/create.blade.php` - Form input pembayaran
-- `resources/views/admin/pembayaran/laporan.blade.php` - Laporan pembayaran
-
-#### Kehadiran Views
-- `resources/views/admin/kehadiran/index.blade.php` - Daftar kehadiran
-- `resources/views/admin/kehadiran/create.blade.php` - Form input kehadiran
-- `resources/views/admin/kehadiran/bulk-create.blade.php` - Input massal
-
-#### Nilai Views
-- `resources/views/admin/nilai/index.blade.php` - Daftar nilai
-- `resources/views/admin/nilai/create.blade.php` - Form input nilai
-- `resources/views/admin/nilai/show.blade.php` - Detail nilai santri
-
-### Priority 3: Additional Features (Optional)
-
-#### Laporan PDF
-```bash
-composer require barryvdh/laravel-dompdf
-```
-
-#### Export Excel
-```bash
-composer require maatwebsite/excel
+User (1) ─── (1) Santri
+Santri (N) ─── (1) Kelas
+Santri (1) ─── (N) Kehadiran
+Santri (1) ─── (N) Pembayaran
+Santri (1) ─── (N) Nilai
 ```
 
 ---
 
-## 🎯 CARA MELANJUTKAN DEVELOPMENT
+## 🎨 UI/UX FEATURES
 
-### 1. Lengkapi Controller yang Kosong
-Template untuk KehadiranController:
-```php
-public function index() {
-    $kehadiran = Kehadiran::with(['santri'])
-        ->orderBy('tanggal', 'desc')
-        ->paginate(20);
-    return view('admin.kehadiran.index', compact('kehadiran'));
-}
+### Bootstrap 5.3 Implementation
+- Responsive design (mobile-first)
+- Bootstrap Icons
+- Card-based layout
+- Alert notifications
+- Modal dialogs
 
-public function create() {
-    $santri = Santri::aktif()->orderBy('nama_lengkap')->get();
-    return view('admin.kehadiran.create', compact('santri'));
-}
-
-public function store(KehadiranRequest $request) {
-    Kehadiran::create($request->validated());
-    return redirect()->route('admin.kehadiran.index')
-        ->with('success', 'Kehadiran berhasil disimpan');
-}
+### Dark Mode Support
+```javascript
+// Toggle dark mode
+localStorage.setItem('theme', 'dark');
+// atau
+localStorage.setItem('theme', 'light');
 ```
 
-### 2. Buat View dengan Copy-Paste dari Dashboard
-Gunakan layout dan style yang sama dengan dashboard.
+### Charts & Visualization
+- Chart.js untuk grafik
+- Real-time statistics
+- Interactive dashboard
 
-### 3. Testing
+---
+
+## 🔐 SECURITY FEATURES
+
+1. **CSRF Protection** - Token validation
+2. **SQL Injection Prevention** - Eloquent ORM
+3. **XSS Protection** - Blade escaping
+4. **Password Hashing** - bcrypt
+5. **Authentication** - Laravel Auth
+6. **Authorization** - Role-based access
+
+---
+
+## 🧪 TESTING (Coming Soon)
+
 ```bash
+# Run tests
 php artisan test
+
+# With coverage
+php artisan test --coverage
 ```
 
 ---
 
-## 📌 TIPS DEVELOPMENT
+## 📝 API ENDPOINTS (Internal)
 
-1. **Gunakan Soft Deletes** untuk data penting
-2. **Validation** di Form Request, bukan di Controller
-3. **Transaction** untuk operasi database kompleks
-4. **Eager Loading** untuk avoid N+1 query
-5. **Index** database untuk performa
+### Santri API
+```
+GET    /api/santri/search?q={keyword}
+GET    /api/santri/{id}/detail
+```
+
+### Admin Routes
+```
+GET    /admin/dashboard
+GET    /admin/santri
+POST   /admin/santri
+GET    /admin/santri/{id}
+PUT    /admin/santri/{id}
+DELETE /admin/santri/{id}
+
+GET    /admin/pembayaran
+POST   /admin/pembayaran
+GET    /admin/pembayaran/laporan
+
+GET    /admin/kehadiran
+POST   /admin/kehadiran
+POST   /admin/kehadiran/bulk-create
+
+GET    /admin/nilai
+POST   /admin/nilai
+GET    /admin/nilai/santri/{id}
+```
+
+---
+
+## 🚀 DEPLOYMENT
+
+### Production Setup
+```bash
+# Optimize autoload
+composer install --optimize-autoloader --no-dev
+
+# Cache config
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+
+# Run migrations
+php artisan migrate --force
+
+# Link storage
+php artisan storage:link
+```
+
+### Environment Production
+```env
+APP_ENV=production
+APP_DEBUG=false
+APP_URL=https://yourdomain.com
+
+DB_DATABASE=sisantren_prod
+DB_USERNAME=sisantren_user
+DB_PASSWORD=strong_password
+```
+
+### Web Server Config
+
+#### Nginx
+```nginx
+server {
+    listen 80;
+    server_name yourdomain.com;
+    root /var/www/sisantren/public;
+
+    add_header X-Frame-Options "SAMEORIGIN";
+    add_header X-Content-Type-Options "nosniff";
+
+    index index.php;
+
+    charset utf-8;
+
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location ~ \.php$ {
+        fastcgi_pass unix:/var/run/php/php8.1-fpm.sock;
+        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+        include fastcgi_params;
+    }
+
+    location ~ /\.(?!well-known).* {
+        deny all;
+    }
+}
+```
 
 ---
 
@@ -353,66 +402,107 @@ php artisan test
 composer dump-autoload
 ```
 
-### Error: Migration already exists
-```bash
-php artisan migrate:fresh --seed
-```
-
 ### Error: 500 Internal Server Error
 ```bash
 php artisan cache:clear
 php artisan config:clear
 php artisan view:clear
+php artisan route:clear
+```
+
+### Error: Permission denied (storage)
+```bash
+chmod -R 775 storage bootstrap/cache
+chown -R www-data:www-data storage bootstrap/cache
+```
+
+### Error: Migration already exists
+```bash
+php artisan migrate:fresh --seed
 ```
 
 ---
 
-## 📞 SUPPORT
+## 📚 RESOURCES & DOCUMENTATION
 
-Jika ada pertanyaan atau butuh bantuan:
-1. Check dokumentasi Laravel: https://laravel.com/docs
-2. Read source code comments
-3. Contact: [your-email@example.com]
+- [Laravel Documentation](https://laravel.com/docs/10.x)
+- [Bootstrap Documentation](https://getbootstrap.com/docs/5.3)
+- [Chart.js Documentation](https://www.chartjs.org/docs)
+- [PHP Best Practices](https://phptherightway.com)
 
 ---
 
-## 📝 CHANGELOG
+## 🤝 CONTRIBUTING
+
+1. Fork repository
+2. Create feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to branch (`git push origin feature/AmazingFeature`)
+5. Open Pull Request
+
+### Coding Standards
+- PSR-12 untuk PHP
+- Eloquent naming conventions
+- Meaningful commit messages
+- Comment untuk logic kompleks
+
+---
+
+## 📄 LICENSE
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 👨‍💻 AUTHOR & SUPPORT
+
+**Developer**: Your Name / Team Name  
+**Email**: your.email@example.com  
+**GitHub**: [@yourusername](https://github.com/yourusername)
+
+### Support
+- 📧 Email: support@sisantren.com
+- 💬 Issues: [GitHub Issues](https://github.com/username/sisantren/issues)
+- 📖 Wiki: [Documentation](https://github.com/username/sisantren/wiki)
+
+---
+
+## 🎓 CREDITS
+
+Aplikasi ini dibuat sebagai pembelajaran implementasi:
+- **SOLID Principles** dalam PHP/Laravel
+- **Repository Pattern** untuk data access
+- **Service Layer** untuk business logic
+- **Clean Architecture** untuk maintainability
+
+---
+
+## 📊 CHANGELOG
 
 ### Version 1.0.0 (Current)
-- ✅ Complete Models with relationships
-- ✅ Repository Pattern implementation
-- ✅ Service Layer for business logic
-- ✅ Dashboard with statistics & charts
-- ✅ Authentication system
-- ✅ Database migrations
-- ✅ Santri & Pembayaran controllers complete
-- ⚠️ Views need to be created
-- ⚠️ Some controllers need completion
+- ✅ Complete CRUD for Santri, Pembayaran, Kehadiran, Nilai
+- ✅ Dashboard with charts
+- ✅ Authentication & Authorization
+- ✅ Responsive UI with Bootstrap 5
+- ✅ Dark mode support
+- ✅ Database seeder with 50 dummy data
+- 🔄 API endpoints for future mobile app
+
+### Upcoming Features
+- 📱 Mobile app (Flutter/React Native)
+- 📧 Email notifications
+- 📄 PDF report generation
+- 📊 Advanced analytics
+- 🔔 Push notifications
 
 ---
 
-## 🎓 PEMBELAJARAN OOP
+## ⭐ STAR THIS REPO
 
-Aplikasi ini mengimplementasikan:
-- **Encapsulation**: Private properties, public methods
-- **Inheritance**: BaseRepository, Controllers
-- **Polymorphism**: Repository interfaces
-- **Abstraction**: Service layer, interfaces
-- **Dependency Injection**: Constructor injection
-- **Design Patterns**: Repository, Service, Factory
-
----
-
-## ⚡ NEXT STEPS
-
-1. ✅ Baca dokumentasi ini dengan seksama
-2. ✅ Run migration & seeder
-3. ✅ Test login dengan akun demo
-4. ⚠️ Lengkapi controllers yang kosong
-5. ⚠️ Buat views untuk setiap modul
-6. ⚠️ Test setiap fitur
-7. ⚠️ Deploy ke production
+If you find this project helpful, please consider giving it a ⭐ star on GitHub!
 
 ---
 
 **Happy Coding! 🚀**
+
+Made with ❤️ using Laravel & Bootstrap
