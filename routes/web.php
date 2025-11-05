@@ -109,14 +109,7 @@ Route::middleware(['auth', 'role:ustadz'])->prefix('ustadz')->name('ustadz.')->g
 Route::middleware(['auth', 'role:santri'])->prefix('santri')->name('santri.')->group(function () {
     
     // Dashboard
-    Route::get('/dashboard', function () {
-        $santri = auth()->user()->santri;
-        if (!$santri) {
-            return redirect()->route('login')->with('error', 'Data santri tidak ditemukan');
-        }
-        
-        return view('santri.dashboard', compact('santri'));
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
     // Profile
     Route::get('/profile', function () {

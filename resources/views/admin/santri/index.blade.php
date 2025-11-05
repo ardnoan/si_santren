@@ -1,5 +1,5 @@
 {{-- FILE: resources/views/admin/santri/index.blade.php --}}
-@extends('layouts.admin')
+@extends('layouts.dashboard')
 
 @section('title', 'Data Santri')
 @section('page-title', 'Data Santri')
