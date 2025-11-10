@@ -9,29 +9,16 @@ use App\Http\Controllers\Admin\NilaiController;
 use App\Http\Controllers\Admin\KelasController;
 use App\Http\Controllers\DashboardController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes - With Role-Based Access Control
-|--------------------------------------------------------------------------
-*/
-
+// Redirect root to appropriate dashboard
 Route::get('/', function () {
     if (auth()->check()) {
-        $role = auth()->user()->role;
-        switch ($role) {
-            case 'admin':
-                return redirect()->route('admin.dashboard');
-            case 'ustadz':
-                return redirect()->route('ustadz.dashboard');
-            case 'santri':
-                return redirect()->route('santri.dashboard');
-        }
+        return redirect()->route(auth()->user()->role . '.dashboard');
     }
     return redirect()->route('login');
 });
 
 // ============================================
-// AUTHENTICATION ROUTES
+// AUTHENTICATION
 // ============================================
 Route::middleware('guest')->group(function () {
     Route::get('/login', function () {
@@ -46,49 +33,98 @@ Route::post('/logout', [App\Http\Controllers\Auth\LoginController::class, 'logou
     ->middleware('auth');
 
 // ============================================
-// ADMIN ROUTES (Only Admin)
+// ADMIN ROUTES
 // ============================================
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
 
-    // Dashboard
+    // Unified Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // Santri Management (Full CRUD)
-    Route::resource('santri', SantriController::class);
+    // Santri Management - menggunakan form view untuk create dan edit
+    Route::get('santri', [SantriController::class, 'index'])->name('santri.index');
+    Route::get('santri/create', function () {
+        $kelas = \App\Models\Kelas::all();
+        return view('santri.form', compact('kelas'));
+    })->name('santri.create');
+    Route::post('santri', [SantriController::class, 'store'])->name('santri.store');
+    Route::get('santri/{id}', [SantriController::class, 'show'])->name('santri.show');
+    Route::get('santri/{id}/edit', function ($id) {
+        $santri = \App\Models\Santri::findOrFail($id);
+        $kelas = \App\Models\Kelas::all();
+        return view('santri.form', compact('santri', 'kelas'));
+    })->name('santri.edit');
+    Route::put('santri/{id}', [SantriController::class, 'update'])->name('santri.update');
+    Route::delete('santri/{id}', [SantriController::class, 'destroy'])->name('santri.destroy');
     Route::post('santri/{id}/graduate', [SantriController::class, 'graduate'])->name('santri.graduate');
 
-    // Pembayaran Management (Full CRUD)
-    Route::resource('pembayaran', PembayaranController::class);
+    // Pembayaran Management
+    Route::get('pembayaran', [PembayaranController::class, 'index'])->name('pembayaran.index');
+    Route::get('pembayaran/create', [PembayaranController::class, 'create'])->name('pembayaran.create');
+    Route::post('pembayaran', [PembayaranController::class, 'store'])->name('pembayaran.store');
+    Route::get('pembayaran/{id}/edit', function ($id) {
+        $pembayaran = \App\Models\Pembayaran::findOrFail($id);
+        return view('pembayaran.form', compact('pembayaran'));
+    })->name('pembayaran.edit');
+    Route::put('pembayaran/{id}', [PembayaranController::class, 'update'])->name('pembayaran.update');
+    Route::delete('pembayaran/{id}', [PembayaranController::class, 'destroy'])->name('pembayaran.destroy');
     Route::get('pembayaran/santri/{santriId}', [PembayaranController::class, 'bySantri'])->name('pembayaran.santri');
     Route::get('laporan/pembayaran', [PembayaranController::class, 'laporan'])->name('pembayaran.laporan');
+    Route::get('pembayaran/export', [PembayaranController::class, 'export'])->name('pembayaran.export');
 
-    // Kehadiran Management (Full CRUD)
-    Route::resource('kehadiran', KehadiranController::class);
+    // Kehadiran Management
+    Route::get('kehadiran', [KehadiranController::class, 'index'])->name('kehadiran.index');
+    Route::get('kehadiran/create', function () {
+        $santri = \App\Models\Santri::aktif()->orderBy('nama_lengkap')->get();
+        return view('kehadiran.form', compact('santri'));
+    })->name('kehadiran.create');
+    Route::post('kehadiran', [KehadiranController::class, 'store'])->name('kehadiran.store');
+    Route::get('kehadiran/{id}/edit', function ($id) {
+        $kehadiran = \App\Models\Kehadiran::findOrFail($id);
+        return view('kehadiran.form', compact('kehadiran'));
+    })->name('kehadiran.edit');
+    Route::put('kehadiran/{id}', [KehadiranController::class, 'update'])->name('kehadiran.update');
+    Route::delete('kehadiran/{id}', [KehadiranController::class, 'destroy'])->name('kehadiran.destroy');
     Route::post('kehadiran/bulk-create', [KehadiranController::class, 'bulkCreate'])->name('kehadiran.bulk-create');
 
-    // Nilai Management (Full CRUD)
-    Route::resource('nilai', NilaiController::class);
-    Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
-        Route::resource('nilai', NilaiController::class);
-        Route::get('nilai/santri/{santriId}', [NilaiController::class, 'bySantri'])
-            ->name('nilai.by-santri');
-    });
-    Route::get('nilai/santri/{santriId}', [NilaiController::class, 'bySantri'])
-        ->name('nilai.santri');
+    // Nilai Management
+    Route::get('nilai', [NilaiController::class, 'index'])->name('nilai.index');
+    Route::get('nilai/create', function () {
+        $santri = \App\Models\Santri::aktif()->orderBy('nama_lengkap')->get();
+        $mapel = \App\Models\MataPelajaran::orderBy('nama_mapel')->get();
+        return view('nilai.form', compact('santri', 'mapel'));
+    })->name('nilai.create');
+    Route::post('nilai', [NilaiController::class, 'store'])->name('nilai.store');
+    Route::get('nilai/{id}/edit', function ($id) {
+        $nilai = \App\Models\Nilai::findOrFail($id);
+        return view('nilai.form', compact('nilai'));
+    })->name('nilai.edit');
+    Route::put('nilai/{id}', [NilaiController::class, 'update'])->name('nilai.update');
+    Route::delete('nilai/{id}', [NilaiController::class, 'destroy'])->name('nilai.destroy');
+    Route::get('nilai/santri/{santriId}', [NilaiController::class, 'bySantri'])->name('nilai.santri');
 
-    Route::get('pembayaran/export', [PembayaranController::class, 'export'])
-        ->name('pembayaran.export');
-
-    // Kelas Management (Full CRUD)
-    Route::resource('kelas', KelasController::class);
+    // Kelas Management
+    Route::get('kelas', [KelasController::class, 'index'])->name('kelas.index');
+    Route::get('kelas/create', function () {
+        $ustadz = \App\Models\User::where('role', 'ustadz')->get();
+        return view('kelas.form', compact('ustadz'));
+    })->name('kelas.create');
+    Route::post('kelas', [KelasController::class, 'store'])->name('kelas.store');
+    Route::get('kelas/{id}', [KelasController::class, 'show'])->name('kelas.show');
+    Route::get('kelas/{id}/edit', function ($id) {
+        $kelas = \App\Models\Kelas::findOrFail($id);
+        $ustadz = \App\Models\User::where('role', 'ustadz')->get();
+        return view('kelas.form', compact('kelas', 'ustadz'));
+    })->name('kelas.edit');
+    Route::put('kelas/{id}', [KelasController::class, 'update'])->name('kelas.update');
+    Route::delete('kelas/{id}', [KelasController::class, 'destroy'])->name('kelas.destroy');
 });
 
 // ============================================
-// USTADZ ROUTES (Read Only + Input Nilai & Kehadiran)
+// USTADZ ROUTES
 // ============================================
 Route::middleware(['auth', 'role:ustadz'])->prefix('ustadz')->name('ustadz.')->group(function () {
 
-    // Dashboard
+    // Unified Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Santri (Read Only)
@@ -97,21 +133,22 @@ Route::middleware(['auth', 'role:ustadz'])->prefix('ustadz')->name('ustadz.')->g
 
     // Kehadiran (Create & Read)
     Route::get('kehadiran', [KehadiranController::class, 'index'])->name('kehadiran.index');
-    Route::get('kehadiran/create', [KehadiranController::class, 'create'])->name('kehadiran.create');
+    Route::get('kehadiran/create', function () {
+        $santri = \App\Models\Santri::aktif()->orderBy('nama_lengkap')->get();
+        return view('kehadiran.form', compact('santri'));
+    })->name('kehadiran.create');
     Route::post('kehadiran', [KehadiranController::class, 'store'])->name('kehadiran.store');
     Route::post('kehadiran/bulk-create', [KehadiranController::class, 'bulkCreate'])->name('kehadiran.bulk-create');
 
     // Nilai (Create & Read)
     Route::get('nilai', [NilaiController::class, 'index'])->name('nilai.index');
-    Route::get('nilai/create', [NilaiController::class, 'create'])->name('nilai.create');
+    Route::get('nilai/create', function () {
+        $santri = \App\Models\Santri::aktif()->orderBy('nama_lengkap')->get();
+        $mapel = \App\Models\MataPelajaran::orderBy('nama_mapel')->get();
+        return view('nilai.form', compact('santri', 'mapel'));
+    })->name('nilai.create');
     Route::post('nilai', [NilaiController::class, 'store'])->name('nilai.store');
-    Route::middleware(['auth', 'role:ustadz'])->prefix('ustadz')->name('ustadz.')->group(function () {
-        Route::get('nilai/santri/{santriId}', [NilaiController::class, 'bySantri'])
-            ->name('nilai.by-santri'); // ✅ Sama, tapi di namespace ustadz
-    });
-
-    Route::get('nilai/santri/{santriId}', [NilaiController::class, 'bySantri'])
-        ->name('nilai.santri');
+    Route::get('nilai/santri/{santriId}', [NilaiController::class, 'bySantri'])->name('nilai.santri');
 
     // Kelas (Read Only)
     Route::get('kelas', [KelasController::class, 'index'])->name('kelas.index');
@@ -119,17 +156,17 @@ Route::middleware(['auth', 'role:ustadz'])->prefix('ustadz')->name('ustadz.')->g
 });
 
 // ============================================
-// SANTRI ROUTES (View Own Data Only)
+// SANTRI ROUTES
 // ============================================
 Route::middleware(['auth', 'role:santri'])->prefix('santri')->name('santri.')->group(function () {
 
-    // Dashboard
+    // Unified Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Profile
     Route::get('/profil', function () {
         $santri = auth()->user()->santri;
-        return view('santri.profil', compact('santri'));
+        return view('santri.profile', compact('santri'));
     })->name('profile');
 
     // Kehadiran (View Own)
