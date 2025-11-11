@@ -66,13 +66,13 @@
 
       <!-- Pembayaran -->
       <a href="{{ route('admin.pembayaran.index') }}"
-        class="nav-link {{ request()->routeIs('admin.pembayaran.*') ? 'active' : '' }}">
+        class="nav-link {{ request()->routeIs('admin.pembayaran.index') || request()->routeIs('admin.pembayaran.create') || request()->routeIs('admin.pembayaran.edit') ? 'active' : '' }}">
         <i class="bi bi-cash-coin"></i> Pembayaran
       </a>
 
       <!-- Laporan -->
       <a href="{{ route('admin.pembayaran.laporan') }}"
-        class="nav-link {{ request()->routeIs('admin.pembayaran.laporan') ? 'active' : '' }}">
+        class="nav-link {{ request()->routeIs('admin.pembayaran.laporan') || request()->routeIs('admin.pembayaran.export') ? 'active' : '' }}">
         <i class="bi bi-file-earmark-text"></i> Laporan Keuangan
       </a>
     @endadmin

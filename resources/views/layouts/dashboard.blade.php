@@ -1,4 +1,3 @@
-{{-- FILE: resources/views/layouts/dashboard.blade.php --}}
 <!DOCTYPE html>
 <html lang="id" data-bs-theme="light">
 <head>
@@ -102,6 +101,24 @@
             padding: 0.25rem 0.5rem;
         }
         
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+        
+        .loading-overlay.show {
+            display: flex;
+        }
+        
         @media (max-width: 768px) {
             .sidebar {
                 transform: translateX(-100%);
@@ -121,6 +138,13 @@
     @yield('styles')
 </head>
 <body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner-border text-light" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
     <!-- Sidebar Component -->
     @include('components.sidebar')
     
@@ -141,6 +165,7 @@
         @csrf
     </form>
     
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
@@ -166,6 +191,49 @@
                 icon.className = theme === 'light' ? 'bi bi-moon-fill' : 'bi bi-sun-fill';
             }
         }
+    </script>
+    
+    <!-- Global Scripts -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // DELETE CONFIRMATION
+            const deleteForms = document.querySelectorAll('form[method="POST"]');
+            deleteForms.forEach(form => {
+                const methodInput = form.querySelector('input[name="_method"]');
+                if (methodInput && methodInput.value === 'DELETE') {
+                    form.addEventListener('submit', function(e) {
+                        e.preventDefault();
+                        
+                        if (confirm('⚠️ Apakah Anda yakin ingin menghapus data ini?\n\nData yang dihapus tidak dapat dikembalikan!')) {
+                            form.submit();
+                        }
+                    });
+                }
+            });
+            
+            // AUTO-DISMISS ALERTS
+            const alerts = document.querySelectorAll('.alert:not(.alert-permanent)');
+            alerts.forEach(function(alert) {
+                setTimeout(function() {
+                    const bsAlert = new bootstrap.Alert(alert);
+                    bsAlert.close();
+                }, 5000);
+            });
+            
+            // FORM VALIDATION FEEDBACK
+            const inputsWithErrors = document.querySelectorAll('.is-invalid');
+            if (inputsWithErrors.length > 0) {
+                inputsWithErrors[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                inputsWithErrors[0].focus();
+            }
+            
+            // TOOLTIPS INITIALIZATION
+            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        });
     </script>
     
     @yield('scripts')

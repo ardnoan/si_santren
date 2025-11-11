@@ -112,13 +112,6 @@
                         </tbody>
                     </table>
                 </div>
-
-                <div class="d-flex justify-content-between mt-3">
-                    <div>
-                        Menampilkan {{ $nilai->firstItem() ?? 0 }} - {{ $nilai->lastItem() ?? 0 }} dari {{ $nilai->total() }}
-                    </div>
-                    <div>{{ $nilai->links() }}</div>
-                </div>
             </div>
         </div>
     </div>

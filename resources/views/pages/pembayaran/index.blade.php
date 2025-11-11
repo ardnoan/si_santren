@@ -174,17 +174,6 @@
                         </tbody>
                     </table>
                 </div>
-
-                <!-- Pagination -->
-                <div class="d-flex justify-content-between align-items-center mt-3">
-                    <div>
-                        Menampilkan {{ $pembayaran->firstItem() ?? 0 }} - {{ $pembayaran->lastItem() ?? 0 }}
-                        dari {{ $pembayaran->total() }} data
-                    </div>
-                    <div>
-                        {{ $pembayaran->links() }}
-                    </div>
-                </div>
             </div>
         </div>
     </div>
