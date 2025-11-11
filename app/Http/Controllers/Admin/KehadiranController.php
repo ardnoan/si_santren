@@ -1,5 +1,9 @@
 <?php
 
+// =============================================
+// FILE 3: app/Http/Controllers/Admin/KehadiranController.php (Updated)
+// =============================================
+
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
@@ -28,13 +32,13 @@ class KehadiranController extends Controller
             'alpa' => Kehadiran::whereDate('tanggal', $tanggal)->where('status', 'alpa')->count(),
         ];
 
-        return view('admin.kehadiran.index', compact('kehadiran', 'stats', 'tanggal'));
+        return view('pages.kehadiran.index', compact('kehadiran', 'stats', 'tanggal'));
     }
 
     public function create()
     {
         $santri = Santri::aktif()->orderBy('nama_lengkap')->get();
-        return view('admin.kehadiran.create', compact('santri'));
+        return view('pages.kehadiran.form', compact('santri'));
     }
 
     public function store(KehadiranRequest $request)
@@ -56,7 +60,7 @@ class KehadiranController extends Controller
         $kehadiran = Kehadiran::findOrFail($id);
         $santri = Santri::aktif()->orderBy('nama_lengkap')->get();
 
-        return view('admin.kehadiran.edit', compact('kehadiran', 'santri'));
+        return view('pages.kehadiran.form', compact('kehadiran', 'santri'));
     }
 
     public function update(KehadiranRequest $request, int $id)
@@ -87,9 +91,6 @@ class KehadiranController extends Controller
         }
     }
 
-    /**
-     * Bulk create kehadiran untuk satu kelas
-     */
     public function bulkCreate(Request $request)
     {
         $request->validate([

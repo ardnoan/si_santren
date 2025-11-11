@@ -14,15 +14,20 @@
                         <i class="bi bi-cash-coin me-2"></i>Daftar Pembayaran
                     </h5>
                     <div>
-                        <a href="{{ route('admin.pembayaran.create') }}" class="btn btn-primary">
-                            <i class="bi bi-plus-circle me-2"></i>Input Pembayaran
-                        </a>
-                        <a href="{{ route('admin.pembayaran.laporan') }}" class="btn btn-success">
-                            <i class="bi bi-file-earmark-text me-2"></i>Laporan
-                        </a>
+                        <!-- Header Actions - ADMIN ONLY -->
+                        @canManagePembayaran
+                        <div>
+                            <a href="{{ route('admin.pembayaran.create') }}" class="btn btn-primary">
+                                <i class="bi bi-plus-circle me-2"></i>Input Pembayaran
+                            </a>
+                            <a href="{{ route('admin.pembayaran.laporan') }}" class="btn btn-success">
+                                <i class="bi bi-file-earmark-text me-2"></i>Laporan
+                            </a>
+                        </div>
+                        @endcanManagePembayaran
                     </div>
                 </div>
-                
+
                 <!-- Filter & Search -->
                 <div class="row g-3 mb-3">
                     <div class="col-md-3">
@@ -54,7 +59,7 @@
                         </button>
                     </div>
                 </div>
-                
+
                 <!-- Statistics Cards -->
                 <div class="row g-3 mb-3">
                     <div class="col-md-3">
@@ -82,7 +87,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Table -->
                 <div class="table-responsive">
                     <table class="table table-hover align-middle">
@@ -100,11 +105,11 @@
                         </thead>
                         <tbody>
                             @php
-                                $pembayaran = App\Models\Pembayaran::with(['santri', 'admin'])
-                                    ->orderBy('created_at', 'desc')
-                                    ->paginate(20);
+                            $pembayaran = App\Models\Pembayaran::with(['santri', 'admin'])
+                            ->orderBy('created_at', 'desc')
+                            ->paginate(20);
                             @endphp
-                            
+
                             @forelse($pembayaran as $index => $p)
                             <tr>
                                 <td>{{ $pembayaran->firstItem() + $index }}</td>
@@ -119,7 +124,7 @@
                                 <td>
                                     <span class="badge bg-info">{{ $p->jenis_pembayaran_label }}</span>
                                     @if($p->bulan_bayar)
-                                        <br><small class="text-muted">{{ \Carbon\Carbon::parse($p->bulan_bayar)->format('M Y') }}</small>
+                                    <br><small class="text-muted">{{ \Carbon\Carbon::parse($p->bulan_bayar)->format('M Y') }}</small>
                                     @endif
                                 </td>
                                 <td>
@@ -132,40 +137,29 @@
                                 </td>
                                 <td>
                                     @if($p->status == 'lunas')
-                                        <span class="badge bg-success">Lunas</span>
+                                    <span class="badge bg-success">Lunas</span>
                                     @elseif($p->status == 'pending')
-                                        <span class="badge bg-warning">Pending</span>
+                                    <span class="badge bg-warning">Pending</span>
                                     @else
-                                        <span class="badge bg-danger">Dibatalkan</span>
+                                    <span class="badge bg-danger">Dibatalkan</span>
                                     @endif
                                 </td>
                                 <td>
                                     <div class="btn-group btn-group-sm">
+                                        @canManagePembayaran
                                         @if($p->bukti_transfer)
-                                            <a href="{{ asset('storage/' . $p->bukti_transfer) }}" 
-                                               target="_blank"
-                                               class="btn btn-info"
-                                               title="Lihat Bukti">
-                                                <i class="bi bi-image"></i>
-                                            </a>
+                                        <a href="{{ asset('storage/' . $p->bukti_transfer) }}" target="_blank" class="btn btn-info">
+                                            <i class="bi bi-image"></i>
+                                        </a>
                                         @endif
-                                        <a href="{{ route('admin.pembayaran.edit', $p->id) }}" 
-                                           class="btn btn-warning"
-                                           title="Edit">
+                                        <a href="{{ route('admin.pembayaran.edit', $p->id) }}" class="btn btn-warning">
                                             <i class="bi bi-pencil"></i>
                                         </a>
-                                        <form action="{{ route('admin.pembayaran.destroy', $p->id) }}" 
-                                              method="POST" 
-                                              class="d-inline"
-                                              onsubmit="return confirm('Yakin hapus pembayaran ini?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" 
-                                                    class="btn btn-danger btn-sm"
-                                                    title="Hapus">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
+                                        <form action="{{ route('admin.pembayaran.destroy', $p->id) }}" method="POST">
+                                            @csrf @method('DELETE')
+                                            <button type="submit" class="btn btn-danger"><i class="bi bi-trash"></i></button>
                                         </form>
+                                        @endcanManagePembayaran
                                     </div>
                                 </td>
                             </tr>
@@ -180,11 +174,11 @@
                         </tbody>
                     </table>
                 </div>
-                
+
                 <!-- Pagination -->
                 <div class="d-flex justify-content-between align-items-center mt-3">
                     <div>
-                        Menampilkan {{ $pembayaran->firstItem() ?? 0 }} - {{ $pembayaran->lastItem() ?? 0 }} 
+                        Menampilkan {{ $pembayaran->firstItem() ?? 0 }} - {{ $pembayaran->lastItem() ?? 0 }}
                         dari {{ $pembayaran->total() }} data
                     </div>
                     <div>
@@ -199,11 +193,11 @@
 
 @section('scripts')
 <script>
-function resetFilter() {
-    document.getElementById('searchSantri').value = '';
-    document.getElementById('filterJenis').value = '';
-    document.getElementById('filterStatus').value = '';
-    document.getElementById('filterTanggal').value = '';
-}
+    function resetFilter() {
+        document.getElementById('searchSantri').value = '';
+        document.getElementById('filterJenis').value = '';
+        document.getElementById('filterStatus').value = '';
+        document.getElementById('filterTanggal').value = '';
+    }
 </script>
 @endsection

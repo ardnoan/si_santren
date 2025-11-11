@@ -13,11 +13,14 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between mb-3">
                     <h5><i class="bi bi-building"></i> Daftar Kelas</h5>
+                    <!-- Header Actions - ADMIN ONLY -->
+                    @admin
                     <a href="{{ route('admin.kelas.create') }}" class="btn btn-primary">
                         <i class="bi bi-plus-circle"></i> Tambah Kelas
                     </a>
+                    @endadmin
                 </div>
-                
+
                 <div class="table-responsive">
                     <table class="table table-hover">
                         <thead class="table-light">
@@ -41,16 +44,16 @@
                                 <td>{{ $k->tahun_ajaran }}</td>
                                 <td>
                                     @if($k->waliKelas)
-                                        {{ $k->waliKelas->username }}
+                                    {{ $k->waliKelas->username }}
                                     @else
-                                        <span class="text-muted">Belum ada</span>
+                                    <span class="text-muted">Belum ada</span>
                                     @endif
                                 </td>
                                 <td>{{ $k->santris_count }}</td>
                                 <td>
                                     <div class="progress" style="height: 20px;">
                                         @php
-                                            $persentase = $k->kapasitas > 0 ? ($k->santris_count / $k->kapasitas) * 100 : 0;
+                                        $persentase = $k->kapasitas > 0 ? ($k->santris_count / $k->kapasitas) * 100 : 0;
                                         @endphp
                                         <div class="progress-bar {{ $persentase >= 100 ? 'bg-danger' : ($persentase >= 80 ? 'bg-warning' : 'bg-success') }}">
                                             {{ $k->santris_count }}/{{ $k->kapasitas }}
@@ -59,21 +62,19 @@
                                 </td>
                                 <td>
                                     <div class="btn-group btn-group-sm">
-                                        <a href="{{ route('admin.kelas.show', $k->id) }}" class="btn btn-info">
+                                        <a href="{{ auth()->user()->isAdmin() ? route('admin.kelas.show', $k->id) : route('ustadz.kelas.show', $k->id) }}" class="btn btn-info">
                                             <i class="bi bi-eye"></i>
                                         </a>
+
+                                        @admin
                                         <a href="{{ route('admin.kelas.edit', $k->id) }}" class="btn btn-warning">
                                             <i class="bi bi-pencil"></i>
                                         </a>
-                                        <form action="{{ route('admin.kelas.destroy', $k->id) }}" 
-                                              method="POST" 
-                                              onsubmit="return confirm('Yakin hapus kelas ini?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-sm">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
+                                        <form action="{{ route('admin.kelas.destroy', $k->id) }}" method="POST">
+                                            @csrf @method('DELETE')
+                                            <button type="submit" class="btn btn-danger"><i class="bi bi-trash"></i></button>
                                         </form>
+                                        @endadmin
                                     </div>
                                 </td>
                             </tr>
@@ -81,7 +82,7 @@
                         </tbody>
                     </table>
                 </div>
-                
+
                 {{ $kelas->links() }}
             </div>
         </div>

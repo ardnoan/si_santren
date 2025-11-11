@@ -15,11 +15,14 @@
                     <h5 class="card-title mb-0">
                         <i class="bi bi-journal-text me-2"></i>Daftar Nilai
                     </h5>
-                    <a href="{{ route('admin.nilai.create') }}" class="btn btn-primary">
+                    <!-- Header Actions -->
+                    @canInputNilai
+                    <a href="{{ auth()->user()->isAdmin() ? route('admin.nilai.create') : route('ustadz.nilai.create') }}" class="btn btn-primary">
                         <i class="bi bi-plus-circle me-2"></i>Input Nilai
                     </a>
+                    @endcanInputNilai
                 </div>
-                
+
                 <!-- Filter -->
                 <form method="GET" class="mb-3">
                     <div class="row g-2">
@@ -38,7 +41,7 @@
                         </div>
                     </div>
                 </form>
-                
+
                 <!-- Table -->
                 <div class="table-responsive">
                     <table class="table table-hover align-middle">
@@ -56,12 +59,12 @@
                         </thead>
                         <tbody>
                             @php
-                                $query = App\Models\Nilai::with(['santri', 'mataPelajaran']);
-                                if(request('semester')) $query->where('semester', request('semester'));
-                                if(request('tahun_ajaran')) $query->where('tahun_ajaran', request('tahun_ajaran'));
-                                $nilai = $query->orderBy('created_at', 'desc')->paginate(20);
+                            $query = App\Models\Nilai::with(['santri', 'mataPelajaran']);
+                            if(request('semester')) $query->where('semester', request('semester'));
+                            if(request('tahun_ajaran')) $query->where('tahun_ajaran', request('tahun_ajaran'));
+                            $nilai = $query->orderBy('created_at', 'desc')->paginate(20);
                             @endphp
-                            
+
                             @forelse($nilai as $i => $n)
                             <tr>
                                 <td>{{ $nilai->firstItem() + $i }}</td>
@@ -82,21 +85,19 @@
                                 </td>
                                 <td>
                                     <div class="btn-group btn-group-sm">
-                                        <a href="{{ route('admin.nilai.santri', $n->santri_id) }}" 
-                                           class="btn btn-info"
-                                           title="Detail">
+                                        <a href="{{ route('admin.nilai.santri', $n->santri_id) }}" class="btn btn-info">
                                             <i class="bi bi-eye"></i>
                                         </a>
-                                        <form action="{{ route('admin.nilai.destroy', $n->id) }}" 
-                                              method="POST" 
-                                              class="d-inline"
-                                              onsubmit="return confirm('Yakin hapus nilai ini?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-sm">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
+
+                                        @admin
+                                        <a href="{{ route('admin.nilai.edit', $n->id) }}" class="btn btn-warning">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <form action="{{ route('admin.nilai.destroy', $n->id) }}" method="POST">
+                                            @csrf @method('DELETE')
+                                            <button type="submit" class="btn btn-danger"><i class="bi bi-trash"></i></button>
                                         </form>
+                                        @endadmin
                                     </div>
                                 </td>
                             </tr>
@@ -111,7 +112,7 @@
                         </tbody>
                     </table>
                 </div>
-                
+
                 <div class="d-flex justify-content-between mt-3">
                     <div>
                         Menampilkan {{ $nilai->firstItem() ?? 0 }} - {{ $nilai->lastItem() ?? 0 }} dari {{ $nilai->total() }}

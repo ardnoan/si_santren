@@ -1,4 +1,7 @@
 <?php
+// =============================================
+// FILE 1: app/Http/Controllers/Admin/SantriController.php (Updated show method)
+// =============================================
 
 namespace App\Http\Controllers\Admin;
 
@@ -7,25 +10,15 @@ use App\Services\SantriService;
 use App\Http\Requests\SantriRequest;
 use Illuminate\Http\Request;
 
-/**
- * Class SantriController
- * Implementasi: Dependency Injection & Single Responsibility
- */
 class SantriController extends Controller
 {
     protected $santriService;
 
-    /**
-     * Constructor with Dependency Injection
-     */
     public function __construct(SantriService $santriService)
     {
         $this->santriService = $santriService;
     }
 
-    /**
-     * Display a listing of santri
-     */
     public function index(Request $request)
     {
         if ($request->has('search')) {
@@ -34,21 +27,15 @@ class SantriController extends Controller
             $santri = $this->santriService->getAllSantriAktif();
         }
 
-        return view('admin.santri.index', compact('santri'));
+        return view('pages.santri.index', compact('santri'));
     }
 
-    /**
-     * Show the form for creating a new santri
-     */
     public function create()
     {
         $kelas = \App\Models\Kelas::all();
-        return view('admin.santri.create', compact('kelas'));
+        return view('pages.santri.form', compact('kelas'));
     }
 
-    /**
-     * Store a newly created santri
-     */
     public function store(SantriRequest $request)
     {
         try {
@@ -66,29 +53,20 @@ class SantriController extends Controller
         }
     }
 
-    /**
-     * Display the specified santri
-     */
     public function show(int $id)
     {
         $santri = $this->santriService->getSantriById($id);
-        return view('admin.santri.show', compact('santri'));
+        return view('pages.santri.profile', compact('santri'));
     }
 
-    /**
-     * Show the form for editing the specified santri
-     */
     public function edit(int $id)
     {
         $santri = $this->santriService->getSantriById($id);
         $kelas = \App\Models\Kelas::all();
         
-        return view('admin.santri.edit', compact('santri', 'kelas'));
+        return view('pages.santri.form', compact('santri', 'kelas'));
     }
 
-    /**
-     * Update the specified santri
-     */
     public function update(SantriRequest $request, int $id)
     {
         try {
@@ -106,9 +84,6 @@ class SantriController extends Controller
         }
     }
 
-    /**
-     * Remove the specified santri
-     */
     public function destroy(int $id)
     {
         try {
@@ -125,9 +100,6 @@ class SantriController extends Controller
         }
     }
 
-    /**
-     * Graduate santri
-     */
     public function graduate(int $id)
     {
         try {

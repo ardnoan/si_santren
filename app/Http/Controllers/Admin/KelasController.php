@@ -1,4 +1,7 @@
 <?php
+// =============================================
+// FILE 5: app/Http/Controllers/Admin/KelasController.php (Updated)
+// =============================================
 
 namespace App\Http\Controllers\Admin;
 
@@ -17,13 +20,13 @@ class KelasController extends Controller
             ->orderBy('nama_kelas')
             ->paginate(15);
         
-        return view('admin.kelas.index', compact('kelas'));
+        return view('pages.kelas.index', compact('kelas'));
     }
 
     public function create()
     {
         $ustadz = User::byRole('ustadz')->orderBy('username')->get();
-        return view('admin.kelas.create', compact('ustadz'));
+        return view('pages.kelas.form', compact('ustadz'));
     }
 
     public function store(Request $request)
@@ -51,7 +54,7 @@ class KelasController extends Controller
     public function show(int $id)
     {
         $kelas = Kelas::with(['santris', 'waliKelas'])->findOrFail($id);
-        return view('admin.kelas.show', compact('kelas'));
+        return view('pages.kelas.show', compact('kelas'));
     }
 
     public function edit(int $id)
@@ -59,7 +62,7 @@ class KelasController extends Controller
         $kelas = Kelas::findOrFail($id);
         $ustadz = User::byRole('ustadz')->orderBy('username')->get();
         
-        return view('admin.kelas.edit', compact('kelas', 'ustadz'));
+        return view('pages.kelas.form', compact('kelas', 'ustadz'));
     }
 
     public function update(Request $request, int $id)

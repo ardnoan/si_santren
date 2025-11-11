@@ -1,4 +1,3 @@
-{{-- resources/views/santri/index.blade.php --}}
 @extends('layouts.dashboard')
 
 @section('title', 'Data Santri')
@@ -17,11 +16,12 @@
                         </h5>
                     </div>
 
-                    @if(auth()->user()->isAdmin())
+                    {{-- ACTION BUTTONS - ADMIN ONLY --}}
+                    @admin
                     <a href="{{ route('admin.santri.create') }}" class="btn btn-primary">
                         <i class="bi bi-plus-circle me-2"></i>Tambah Santri
                     </a>
-                    @endif
+                    @endadmin
                 </div>
 
                 <!-- Search & Filter -->
@@ -162,13 +162,15 @@
                                 </td>
                                 <td>
                                     <div class="btn-group btn-group-sm" role="group">
+                                        {{-- VIEW BUTTON - ALL ROLES --}}
                                         <a href="{{ auth()->user()->isAdmin() ? route('admin.santri.show', $s->id) : route('ustadz.santri.show', $s->id) }}"
                                             class="btn btn-info"
                                             title="Detail">
                                             <i class="bi bi-eye"></i>
                                         </a>
 
-                                        @if(auth()->user()->isAdmin())
+                                        {{-- EDIT/DELETE BUTTONS - ADMIN ONLY --}}
+                                        @admin
                                         <a href="{{ route('admin.santri.edit', $s->id) }}"
                                             class="btn btn-warning"
                                             title="Edit">
@@ -201,7 +203,7 @@
                                                 <i class="bi bi-trash"></i>
                                             </button>
                                         </form>
-                                        @endif
+                                        @endadmin
                                     </div>
                                 </td>
                             </tr>
@@ -210,11 +212,11 @@
                                 <td colspan="8" class="text-center py-5">
                                     <i class="bi bi-inbox fs-1 d-block mb-3 text-muted"></i>
                                     <h5 class="text-muted">Belum ada data santri</h5>
-                                    @if(auth()->user()->isAdmin())
+                                    @admin
                                     <a href="{{ route('admin.santri.create') }}" class="btn btn-primary mt-3">
                                         <i class="bi bi-plus-circle me-2"></i>Tambah Santri Pertama
                                     </a>
-                                    @endif
+                                    @endadmin
                                 </td>
                             </tr>
                             @endforelse
@@ -229,7 +231,8 @@
     </div>
 </div>
 
-@if(auth()->user()->isAdmin())
+{{-- QUICK ACTIONS - ADMIN ONLY --}}
+@admin
 <div class="row">
     <div class="col-md-12">
         <div class="card">
@@ -261,7 +264,7 @@
         </div>
     </div>
 </div>
-@endif
+@endadmin
 @endsection
 
 @section('scripts')

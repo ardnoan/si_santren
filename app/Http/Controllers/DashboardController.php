@@ -64,7 +64,7 @@ class DashboardController extends Controller
         $santriLaki = Santri::aktif()->byGender('L')->count();
         $santriPerempuan = Santri::aktif()->byGender('P')->count();
         
-        return view('dashboards.admin', compact(
+        return view('dashboard', compact(
             'totalSantri',
             'totalSantriAktif',
             'totalKelas',
@@ -104,7 +104,7 @@ class DashboardController extends Controller
         // Kelas yang diampu (jika ada relasi)
         $kelasDiampu = Kelas::where('wali_kelas', auth()->id())->count();
         
-        return view('dashboards.ustadz', compact(
+        return view('dashboard', compact(
             'totalSantri',
             'totalKelas',
             'kehadiranToday',
@@ -158,7 +158,7 @@ class DashboardController extends Controller
                 return $item->tanggal->format('Y-m-d');
             });
         
-        return view('dashboards.santri', compact(
+        return view('dashboard', compact(
             'santri',
             'totalKehadiran',
             'kehadiranBulanIni',

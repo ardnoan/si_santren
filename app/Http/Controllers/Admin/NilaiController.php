@@ -1,4 +1,7 @@
 <?php
+// =============================================
+// FILE 4: app/Http/Controllers/Admin/NilaiController.php (Updated)
+// =============================================
 
 namespace App\Http\Controllers\Admin;
 
@@ -24,7 +27,7 @@ class NilaiController extends Controller
 
         $nilai = $query->paginate(20);
 
-        return view('admin.nilai.index', compact('nilai'));
+        return view('pages.nilai.index', compact('nilai'));
     }
 
     public function create()
@@ -32,7 +35,7 @@ class NilaiController extends Controller
         $santri = Santri::aktif()->orderBy('nama_lengkap')->get();
         $mapel = MataPelajaran::orderBy('nama_mapel')->get();
 
-        return view('admin.nilai.create', compact('santri', 'mapel'));
+        return view('pages.nilai.form', compact('santri', 'mapel'));
     }
 
     public function store(Request $request)
@@ -49,13 +52,8 @@ class NilaiController extends Controller
 
         try {
             $nilai = new Nilai($request->all());
-
-            // Hitung nilai akhir
             $nilai->nilai_akhir = $nilai->hitungNilaiAkhir();
-
-            // Tentukan predikat
             $nilai->predikat = $nilai->tentukanPredikat();
-
             $nilai->save();
 
             return redirect()->route('admin.nilai.index')
@@ -67,51 +65,15 @@ class NilaiController extends Controller
         }
     }
 
-    /**
-     * Display nilai by santri
-     */
-    public function bySantri(int $santriId)
-    {
-        $santri = \App\Models\Santri::findOrFail($santriId);
-        $nilai = \App\Models\Nilai::with('mataPelajaran')
-            ->where('santri_id', $santriId)
-            ->orderBy('tahun_ajaran', 'desc')
-            ->orderBy('semester', 'desc')
-            ->get();
-
-        return view('admin.nilai.show', compact('santri', 'nilai'));
-    }
-
-    /**
-     * Remove nilai
-     */
-    public function destroy(int $id)
-    {
-        try {
-            \App\Models\Nilai::findOrFail($id)->delete();
-
-            return redirect()->route('admin.nilai.index')
-                ->with('success', 'Nilai berhasil dihapus!');
-        } catch (\Exception $e) {
-            return redirect()->back()
-                ->with('error', 'Gagal hapus nilai: ' . $e->getMessage());
-        }
-    }
-    /**
-     * Show edit form
-     */
     public function edit(int $id)
     {
-        $nilai = \App\Models\Nilai::with(['santri', 'mataPelajaran'])->findOrFail($id);
-        $santri = \App\Models\Santri::aktif()->orderBy('nama_lengkap')->get();
-        $mapel = \App\Models\MataPelajaran::orderBy('nama_mapel')->get();
+        $nilai = Nilai::with(['santri', 'mataPelajaran'])->findOrFail($id);
+        $santri = Santri::aktif()->orderBy('nama_lengkap')->get();
+        $mapel = MataPelajaran::orderBy('nama_mapel')->get();
 
-        return view('admin.nilai.edit', compact('nilai', 'santri', 'mapel'));
+        return view('pages.nilai.form', compact('nilai', 'santri', 'mapel'));
     }
 
-    /**
-     * Update nilai
-     */
     public function update(Request $request, int $id)
     {
         $request->validate([
@@ -125,7 +87,7 @@ class NilaiController extends Controller
         ]);
 
         try {
-            $nilai = \App\Models\Nilai::findOrFail($id);
+            $nilai = Nilai::findOrFail($id);
             $nilai->fill($request->all());
             $nilai->nilai_akhir = $nilai->hitungNilaiAkhir();
             $nilai->predikat = $nilai->tentukanPredikat();
@@ -139,4 +101,30 @@ class NilaiController extends Controller
                 ->with('error', 'Gagal update nilai: ' . $e->getMessage());
         }
     }
+
+    public function bySantri(int $santriId)
+    {
+        $santri = Santri::findOrFail($santriId);
+        $nilai = Nilai::with('mataPelajaran')
+            ->where('santri_id', $santriId)
+            ->orderBy('tahun_ajaran', 'desc')
+            ->orderBy('semester', 'desc')
+            ->get();
+
+        return view('pages.nilai.show', compact('santri', 'nilai'));
+    }
+
+    public function destroy(int $id)
+    {
+        try {
+            Nilai::findOrFail($id)->delete();
+
+            return redirect()->route('admin.nilai.index')
+                ->with('success', 'Nilai berhasil dihapus!');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Gagal hapus nilai: ' . $e->getMessage());
+        }
+    }
 }
+

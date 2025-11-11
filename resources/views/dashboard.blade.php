@@ -254,39 +254,6 @@
   </div>
 </div>
 
-<!-- Quick Actions -->
-<div class="row">
-  <div class="col-md-12">
-    <div class="card">
-      <div class="card-body">
-        <h6 class="mb-3"><i class="bi bi-lightning-fill me-2"></i>Aksi Cepat</h6>
-        <div class="row g-2">
-          <div class="col-md-3">
-            <a href="{{ route('ustadz.santri.index') }}" class="btn btn-outline-primary w-100">
-              <i class="bi bi-people"></i> Lihat Data Santri
-            </a>
-          </div>
-          <div class="col-md-3">
-            <a href="{{ route('ustadz.kehadiran.create') }}" class="btn btn-outline-info w-100">
-              <i class="bi bi-calendar-check"></i> Input Kehadiran
-            </a>
-          </div>
-          <div class="col-md-3">
-            <a href="{{ route('ustadz.nilai.create') }}" class="btn btn-outline-warning w-100">
-              <i class="bi bi-journal-text"></i> Input Nilai
-            </a>
-          </div>
-          <div class="col-md-3">
-            <a href="{{ route('ustadz.kelas.index') }}" class="btn btn-outline-success w-100">
-              <i class="bi bi-building"></i> Lihat Kelas
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
 {{-- ==================== SANTRI DASHBOARD ==================== --}}
 @else
 @php
@@ -367,42 +334,6 @@ $santri = auth()->user()->santri;
   </div>
 </div>
 
-<!-- Quick Access -->
-<div class="row">
-  <div class="col-md-12">
-    <div class="card">
-      <div class="card-body">
-        <h6 class="mb-3"><i class="bi bi-grid-3x3 me-2"></i>Menu Cepat</h6>
-        <div class="row g-3">
-          <div class="col-md-3">
-            <a href="{{ route('santri.profile') }}" class="btn btn-outline-primary w-100 py-3">
-              <i class="bi bi-person fs-1 d-block mb-2"></i>
-              <strong>Profil Saya</strong>
-            </a>
-          </div>
-          <div class="col-md-3">
-            <a href="{{ route('santri.kehadiran') }}" class="btn btn-outline-info w-100 py-3">
-              <i class="bi bi-calendar-check fs-1 d-block mb-2"></i>
-              <strong>Kehadiran</strong>
-            </a>
-          </div>
-          <div class="col-md-3">
-            <a href="{{ route('santri.nilai') }}" class="btn btn-outline-warning w-100 py-3">
-              <i class="bi bi-journal-text fs-1 d-block mb-2"></i>
-              <strong>Nilai</strong>
-            </a>
-          </div>
-          <div class="col-md-3">
-            <a href="{{ route('santri.pembayaran') }}" class="btn btn-outline-success w-100 py-3">
-              <i class="bi bi-cash-coin fs-1 d-block mb-2"></i>
-              <strong>Pembayaran</strong>
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 @endif
 
 @endsection

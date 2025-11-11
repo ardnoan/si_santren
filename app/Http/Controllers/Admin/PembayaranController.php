@@ -1,5 +1,8 @@
 <?php
-// FILE: app/Http/Controllers/Admin/PembayaranController.php
+
+// =============================================
+// FILE 2: app/Http/Controllers/Admin/PembayaranController.php (Updated)
+// =============================================
 
 namespace App\Http\Controllers\Admin;
 
@@ -22,12 +25,12 @@ class PembayaranController extends Controller
 
     public function index()
     {
-        return view('admin.pembayaran.index');
+        return view('pages.pembayaran.index');
     }
 
     public function create()
     {
-        return view('admin.pembayaran.create');
+        return view('pages.pembayaran.form');
     }
 
     public function store(PembayaranRequest $request)
@@ -46,7 +49,7 @@ class PembayaranController extends Controller
     public function edit($id)
     {
         $pembayaran = Pembayaran::findOrFail($id);
-        return view('admin.pembayaran.edit', compact('pembayaran'));
+        return view('pages.pembayaran.form', compact('pembayaran'));
     }
 
     public function update(PembayaranRequest $request, $id)
@@ -76,7 +79,7 @@ class PembayaranController extends Controller
 
     public function laporan()
     {
-        return view('admin.pembayaran.laporan');
+        return view('pages.pembayaran.laporan');
     }
 
     public function export(Request $request)

@@ -15,9 +15,11 @@
                     <h5 class="card-title mb-0">
                         <i class="bi bi-calendar-check me-2"></i>Kehadiran Santri
                     </h5>
-                    <a href="{{ route('admin.kehadiran.create') }}" class="btn btn-primary">
+                    @canInputKehadiran
+                    <a href="{{ auth()->user()->isAdmin() ? route('admin.kehadiran.create') : route('ustadz.kehadiran.create') }}" class="btn btn-primary">
                         <i class="bi bi-plus-circle me-2"></i>Input Kehadiran
                     </a>
+                    @endcanInputKehadiran
                 </div>
 
                 <!-- Date Filter -->
@@ -149,21 +151,18 @@
                                 </td>
                                 <td>
                                     <div class="btn-group btn-group-sm">
-                                        <a href="{{ route('admin.kehadiran.edit', $k->id) }}"
-                                            class="btn btn-warning"
-                                            title="Edit">
+                                        @canEdit('kehadiran')
+                                        <a href="{{ route('admin.kehadiran.edit', $k->id) }}" class="btn btn-warning">
                                             <i class="bi bi-pencil"></i>
                                         </a>
-                                        <form action="{{ route('admin.kehadiran.destroy', $k->id) }}"
-                                            method="POST"
-                                            class="d-inline"
-                                            onsubmit="return confirm('Yakin hapus data ini?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-sm">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
+                                        @endcanEdit
+
+                                        @canDelete('kehadiran')
+                                        <form action="{{ route('admin.kehadiran.destroy', $k->id) }}" method="POST">
+                                            @csrf @method('DELETE')
+                                            <button type="submit" class="btn btn-danger"><i class="bi bi-trash"></i></button>
                                         </form>
+                                        @endcanDelete
                                     </div>
                                 </td>
                             </tr>
