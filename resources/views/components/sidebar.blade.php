@@ -1,5 +1,5 @@
 {{-- resources/views/components/sidebar.blade.php --}}
-<div class="sidebar position-fixed top-0 start-0 vh-100 bg-gradient-primary text-white overflow-auto shadow-lg d-flex flex-column" 
+<div class="sidebar position-fixed top-0 start-0 vh-100 bg-gradient-primary text-black overflow-auto shadow-lg d-flex flex-column" 
      style="z-index: 1000;">
     
     <!-- Brand -->
@@ -25,7 +25,7 @@
         @admin
         <!-- Dashboard -->
         <a href="{{ route('admin.dashboard') }}"
-           class="d-flex align-items-center gap-3 text-white text-decoration-none p-3 rounded-3 mb-2 transition-all
+           class="d-flex align-items-center gap-3 text-black text-decoration-none p-3 rounded-3 mb-2 transition-all
                   {{ request()->routeIs('admin.dashboard') ? 'bg-white bg-opacity-20 fw-semibold shadow-sm' : 'bg-white bg-opacity-0' }}">
             <i class="bi bi-speedometer2 fs-5"></i>
             <span>Dashboard</span>
@@ -39,7 +39,7 @@
 
         <!-- Data Santri -->
         <a href="{{ route('admin.santri.index') }}"
-           class="d-flex align-items-center gap-3 text-white text-decoration-none p-3 rounded-3 mb-2 transition-all
+           class="d-flex align-items-center gap-3 text-black text-decoration-none p-3 rounded-3 mb-2 transition-all
                   {{ request()->routeIs('admin.santri.*') ? 'bg-white bg-opacity-20 fw-semibold shadow-sm' : 'bg-white bg-opacity-0' }}">
             <i class="bi bi-people fs-5"></i>
             <span>Data Santri</span>
@@ -47,7 +47,7 @@
 
         <!-- Kelas -->
         <a href="{{ route('admin.kelas.index') }}"
-           class="d-flex align-items-center gap-3 text-white text-decoration-none p-3 rounded-3 mb-2 transition-all
+           class="d-flex align-items-center gap-3 text-black text-decoration-none p-3 rounded-3 mb-2 transition-all
                   {{ request()->routeIs('admin.kelas.*') ? 'bg-white bg-opacity-20 fw-semibold shadow-sm' : 'bg-white bg-opacity-0' }}">
             <i class="bi bi-building fs-5"></i>
             <span>Data Kelas</span>
@@ -61,7 +61,7 @@
 
         <!-- Kehadiran -->
         <a href="{{ route('admin.kehadiran.index') }}"
-           class="d-flex align-items-center gap-3 text-white text-decoration-none p-3 rounded-3 mb-2 transition-all
+           class="d-flex align-items-center gap-3 text-black text-decoration-none p-3 rounded-3 mb-2 transition-all
                   {{ request()->routeIs('admin.kehadiran.*') ? 'bg-white bg-opacity-20 fw-semibold shadow-sm' : 'bg-white bg-opacity-0' }}">
             <i class="bi bi-calendar-check fs-5"></i>
             <span>Kehadiran</span>
@@ -69,7 +69,7 @@
 
         <!-- Nilai -->
         <a href="{{ route('admin.nilai.index') }}"
-           class="d-flex align-items-center gap-3 text-white text-decoration-none p-3 rounded-3 mb-2 transition-all
+           class="d-flex align-items-center gap-3 text-black text-decoration-none p-3 rounded-3 mb-2 transition-all
                   {{ request()->routeIs('admin.nilai.*') ? 'bg-white bg-opacity-20 fw-semibold shadow-sm' : 'bg-white bg-opacity-0' }}">
             <i class="bi bi-journal-text fs-5"></i>
             <span>Nilai Santri</span>
@@ -83,7 +83,7 @@
 
         <!-- Pembayaran -->
         <a href="{{ route('admin.pembayaran.index') }}"
-           class="d-flex align-items-center gap-3 text-white text-decoration-none p-3 rounded-3 mb-2 transition-all
+           class="d-flex align-items-center gap-3 text-black text-decoration-none p-3 rounded-3 mb-2 transition-all
                   {{ request()->routeIs('admin.pembayaran.index') || request()->routeIs('admin.pembayaran.create') || request()->routeIs('admin.pembayaran.edit') ? 'bg-white bg-opacity-20 fw-semibold shadow-sm' : 'bg-white bg-opacity-0' }}">
             <i class="bi bi-cash-coin fs-5"></i>
             <span>Pembayaran</span>
@@ -91,7 +91,7 @@
 
         <!-- Laporan -->
         <a href="{{ route('admin.pembayaran.laporan') }}"
-           class="d-flex align-items-center gap-3 text-white text-decoration-none p-3 rounded-3 mb-2 transition-all
+           class="d-flex align-items-center gap-3 text-black text-decoration-none p-3 rounded-3 mb-2 transition-all
                   {{ request()->routeIs('admin.pembayaran.laporan') || request()->routeIs('admin.pembayaran.export') ? 'bg-white bg-opacity-20 fw-semibold shadow-sm' : 'bg-white bg-opacity-0' }}">
             <i class="bi bi-file-earmark-text fs-5"></i>
             <span>Laporan Keuangan</span>
@@ -102,7 +102,7 @@
         @ustadz
         <!-- Dashboard -->
         <a href="{{ route('ustadz.dashboard') }}"
-           class="d-flex align-items-center gap-3 text-white text-decoration-none p-3 rounded-3 mb-2 transition-all
+           class="d-flex align-items-center gap-3 text-black text-decoration-none p-3 rounded-3 mb-2 transition-all
                   {{ request()->routeIs('ustadz.dashboard') ? 'bg-white bg-opacity-20 fw-semibold shadow-sm' : 'bg-white bg-opacity-0' }}">
             <i class="bi bi-speedometer2 fs-5"></i>
             <span>Dashboard</span>
@@ -115,14 +115,14 @@
         </div>
 
         <a href="{{ route('ustadz.santri.index') }}"
-           class="d-flex align-items-center gap-3 text-white text-decoration-none p-3 rounded-3 mb-2 transition-all
+           class="d-flex align-items-center gap-3 text-black text-decoration-none p-3 rounded-3 mb-2 transition-all
                   {{ request()->routeIs('ustadz.santri.*') ? 'bg-white bg-opacity-20 fw-semibold shadow-sm' : 'bg-white bg-opacity-0' }}">
             <i class="bi bi-people fs-5"></i>
             <span>Data Santri</span>
         </a>
 
         <a href="{{ route('ustadz.kelas.index') }}"
-           class="d-flex align-items-center gap-3 text-white text-decoration-none p-3 rounded-3 mb-2 transition-all
+           class="d-flex align-items-center gap-3 text-black text-decoration-none p-3 rounded-3 mb-2 transition-all
                   {{ request()->routeIs('ustadz.kelas.*') ? 'bg-white bg-opacity-20 fw-semibold shadow-sm' : 'bg-white bg-opacity-0' }}">
             <i class="bi bi-building fs-5"></i>
             <span>Data Kelas</span>
@@ -135,14 +135,14 @@
         </div>
 
         <a href="{{ route('ustadz.kehadiran.index') }}"
-           class="d-flex align-items-center gap-3 text-white text-decoration-none p-3 rounded-3 mb-2 transition-all
+           class="d-flex align-items-center gap-3 text-black text-decoration-none p-3 rounded-3 mb-2 transition-all
                   {{ request()->routeIs('ustadz.kehadiran.*') ? 'bg-white bg-opacity-20 fw-semibold shadow-sm' : 'bg-white bg-opacity-0' }}">
             <i class="bi bi-calendar-check fs-5"></i>
             <span>Input Kehadiran</span>
         </a>
 
         <a href="{{ route('ustadz.nilai.index') }}"
-           class="d-flex align-items-center gap-3 text-white text-decoration-none p-3 rounded-3 mb-2 transition-all
+           class="d-flex align-items-center gap-3 text-black text-decoration-none p-3 rounded-3 mb-2 transition-all
                   {{ request()->routeIs('ustadz.nilai.*') ? 'bg-white bg-opacity-20 fw-semibold shadow-sm' : 'bg-white bg-opacity-0' }}">
             <i class="bi bi-journal-text fs-5"></i>
             <span>Input Nilai</span>
@@ -152,7 +152,7 @@
         {{-- SANTRI MENU --}}
         @santri
         <a href="{{ route('santri.dashboard') }}"
-           class="d-flex align-items-center gap-3 text-white text-decoration-none p-3 rounded-3 mb-2 transition-all
+           class="d-flex align-items-center gap-3 text-black text-decoration-none p-3 rounded-3 mb-2 transition-all
                   {{ request()->routeIs('santri.dashboard') ? 'bg-white bg-opacity-20 fw-semibold shadow-sm' : 'bg-white bg-opacity-0' }}">
             <i class="bi bi-speedometer2 fs-5"></i>
             <span>Dashboard</span>
@@ -165,7 +165,7 @@
         </div>
 
         <a href="{{ route('santri.profile') }}"
-           class="d-flex align-items-center gap-3 text-white text-decoration-none p-3 rounded-3 mb-2 transition-all
+           class="d-flex align-items-center gap-3 text-black text-decoration-none p-3 rounded-3 mb-2 transition-all
                   {{ request()->routeIs('santri.profile') ? 'bg-white bg-opacity-20 fw-semibold shadow-sm' : 'bg-white bg-opacity-0' }}">
             <i class="bi bi-person-circle fs-5"></i>
             <span>Profil Saya</span>
@@ -178,14 +178,14 @@
         </div>
 
         <a href="{{ route('santri.kehadiran') }}"
-           class="d-flex align-items-center gap-3 text-white text-decoration-none p-3 rounded-3 mb-2 transition-all
+           class="d-flex align-items-center gap-3 text-black text-decoration-none p-3 rounded-3 mb-2 transition-all
                   {{ request()->routeIs('santri.kehadiran') ? 'bg-white bg-opacity-20 fw-semibold shadow-sm' : 'bg-white bg-opacity-0' }}">
             <i class="bi bi-calendar-check fs-5"></i>
             <span>Kehadiran Saya</span>
         </a>
 
         <a href="{{ route('santri.nilai') }}"
-           class="d-flex align-items-center gap-3 text-white text-decoration-none p-3 rounded-3 mb-2 transition-all {{ request()->routeIs('santri.nilai') ? 'bg-white bg-opacity-20 fw-semibold shadow-sm' : 'bg-white bg-opacity-0' }}">
+           class="d-flex align-items-center gap-3 text-black text-decoration-none p-3 rounded-3 mb-2 transition-all {{ request()->routeIs('santri.nilai') ? 'bg-white bg-opacity-20 fw-semibold shadow-sm' : 'bg-white bg-opacity-0' }}">
             <i class="bi bi-journal-text fs-5"></i>
             <span>Nilai Saya</span>
         </a>
@@ -197,7 +197,7 @@
         </div>
 
         <a href="{{ route('santri.pembayaran') }}"
-           class="d-flex align-items-center gap-3 text-white text-decoration-none p-3 rounded-3 mb-2 transition-all
+           class="d-flex align-items-center gap-3 text-black text-decoration-none p-3 rounded-3 mb-2 transition-all
                   {{ request()->routeIs('santri.pembayaran') ? 'bg-white bg-opacity-20 fw-semibold shadow-sm' : 'bg-white bg-opacity-0' }}">
             <i class="bi bi-cash-coin fs-5"></i>
             <span>Riwayat Pembayaran</span>

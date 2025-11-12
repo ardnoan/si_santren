@@ -1,3 +1,4 @@
+{{-- resources/views/pages/kelas/form.blade.php --}}
 @extends('layouts.dashboard')
 
 @php
@@ -10,133 +11,11 @@ $route = $isEdit ? route('admin.santri.update', $santri->id) : route('admin.sant
 @section('page-title', $title)
 @section('page-subtitle', $isEdit ? $santri->nama_lengkap : 'Form pendaftaran santri baru')
 
-@section('styles')
-<style>
-  .form-section {
-    background: var(--surface-color);
-    border-radius: var(--border-radius);
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
-    border: 1px solid var(--border-color);
-  }
-
-  .form-section-title {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin-bottom: 1.5rem;
-    padding-bottom: 0.75rem;
-    border-bottom: 2px solid var(--border-color);
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-  }
-
-  .form-section-title i {
-    color: var(--secondary-color);
-    font-size: 1.3rem;
-  }
-
-  .form-label {
-    font-weight: 600;
-    color: var(--text-primary);
-    margin-bottom: 0.5rem;
-    font-size: 0.9rem;
-  }
-
-  .form-label .text-danger {
-    color: #e74c3c;
-  }
-
-  .form-control,
-  .form-select {
-    padding: 0.75rem;
-    border: 2px solid var(--border-color);
-    border-radius: 8px;
-    font-size: 0.95rem;
-    transition: var(--transition);
-    background: var(--surface-color);
-    color: var(--text-primary);
-  }
-
-  .form-control:focus,
-  .form-select:focus {
-    border-color: var(--secondary-color);
-    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
-    background: var(--surface-color);
-  }
-
-  .form-control::placeholder {
-    color: var(--text-muted);
-    opacity: 0.7;
-  }
-
-  .form-text {
-    color: var(--text-muted);
-    font-size: 0.85rem;
-    margin-top: 0.25rem;
-  }
-
-  .input-group-text {
-    background: var(--bg-color);
-    border: 2px solid var(--border-color);
-    border-right: none;
-    color: var(--text-secondary);
-  }
-
-  .input-group .form-control {
-    border-left: none;
-  }
-
-  .input-group:focus-within .input-group-text {
-    border-color: var(--secondary-color);
-  }
-
-  .invalid-feedback {
-    display: block;
-    color: #e74c3c;
-    font-size: 0.85rem;
-    margin-top: 0.25rem;
-  }
-
-  .is-invalid {
-    border-color: #e74c3c !important;
-  }
-
-  .photo-preview {
-    position: relative;
-    display: inline-block;
-    margin-bottom: 1rem;
-  }
-
-  .photo-preview img {
-    border-radius: 12px;
-    border: 3px solid var(--border-color);
-    box-shadow: var(--shadow-md);
-  }
-
-  .photo-preview-badge {
-    position: absolute;
-    top: -10px;
-    right: -10px;
-    background: var(--secondary-color);
-    color: white;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: var(--shadow-md);
-  }
-</style>
-@endsection
-
 @section('content')
 <div class="row">
   <div class="col-12">
-    <div class="card">
-      <div class="card-body">
+    <div class="card border-0 shadow-sm rounded-3">
+      <div class="card-body p-4">
         <form action="{{ $route }}" method="POST" enctype="multipart/form-data">
           @csrf
           @if($isEdit)
@@ -147,22 +26,26 @@ $route = $isEdit ? route('admin.santri.update', $santri->id) : route('admin.sant
             <!-- Left Column -->
             <div class="col-lg-6">
               <!-- Data Pribadi Section -->
-              <div class="form-section">
-                <div class="form-section-title">
-                  <i class="bi bi-person-badge"></i>
+              <div class="bg-light rounded-3 p-4 mb-4 border">
+                <h6 class="fw-bold mb-3 pb-2 border-bottom d-flex align-items-center gap-2">
+                  <i class="bi bi-person-badge text-primary fs-5"></i>
                   <span>Data Pribadi</span>
-                </div>
+                </h6>
 
                 @if($isEdit)
                 <div class="mb-3">
-                  <label class="form-label">Nomor Induk</label>
-                  <input type="text" class="form-control" value="{{ $santri->nomor_induk }}" disabled>
-                  <small class="form-text">NIS tidak dapat diubah</small>
+                  <label class="form-label fw-semibold">Nomor Induk</label>
+                  <input type="text" class="form-control bg-white" value="{{ $santri->nomor_induk }}" disabled>
+                  <small class="text-muted d-block mt-1">
+                    <i class="bi bi-info-circle me-1"></i>NIS tidak dapat diubah
+                  </small>
                 </div>
                 @endif
 
                 <div class="mb-3">
-                  <label class="form-label">Nama Lengkap <span class="text-danger">*</span></label>
+                  <label class="form-label fw-semibold">
+                    Nama Lengkap <span class="text-danger">*</span>
+                  </label>
                   <input type="text"
                     class="form-control @error('nama_lengkap') is-invalid @enderror"
                     name="nama_lengkap"
@@ -175,7 +58,7 @@ $route = $isEdit ? route('admin.santri.update', $santri->id) : route('admin.sant
                 </div>
 
                 <div class="mb-3">
-                  <label class="form-label">Nama Panggilan</label>
+                  <label class="form-label fw-semibold">Nama Panggilan</label>
                   <input type="text"
                     class="form-control @error('nama_panggilan') is-invalid @enderror"
                     name="nama_panggilan"
@@ -187,13 +70,19 @@ $route = $isEdit ? route('admin.santri.update', $santri->id) : route('admin.sant
                 </div>
 
                 <div class="mb-3">
-                  <label class="form-label">Jenis Kelamin <span class="text-danger">*</span></label>
+                  <label class="form-label fw-semibold">
+                    Jenis Kelamin <span class="text-danger">*</span>
+                  </label>
                   <select class="form-select @error('jenis_kelamin') is-invalid @enderror"
                     name="jenis_kelamin"
                     required>
                     <option value="">Pilih Jenis Kelamin</option>
-                    <option value="L" {{ old('jenis_kelamin', $santri->jenis_kelamin ?? '') == 'L' ? 'selected' : '' }}>Laki-laki</option>
-                    <option value="P" {{ old('jenis_kelamin', $santri->jenis_kelamin ?? '') == 'P' ? 'selected' : '' }}>Perempuan</option>
+                    <option value="L" {{ old('jenis_kelamin', $santri->jenis_kelamin ?? '') == 'L' ? 'selected' : '' }}>
+                      Laki-laki
+                    </option>
+                    <option value="P" {{ old('jenis_kelamin', $santri->jenis_kelamin ?? '') == 'P' ? 'selected' : '' }}>
+                      Perempuan
+                    </option>
                   </select>
                   @error('jenis_kelamin')
                   <div class="invalid-feedback">{{ $message }}</div>
@@ -202,7 +91,9 @@ $route = $isEdit ? route('admin.santri.update', $santri->id) : route('admin.sant
 
                 <div class="row">
                   <div class="col-md-6 mb-3">
-                    <label class="form-label">Tempat Lahir <span class="text-danger">*</span></label>
+                    <label class="form-label fw-semibold">
+                      Tempat Lahir <span class="text-danger">*</span>
+                    </label>
                     <input type="text"
                       class="form-control @error('tempat_lahir') is-invalid @enderror"
                       name="tempat_lahir"
@@ -215,7 +106,9 @@ $route = $isEdit ? route('admin.santri.update', $santri->id) : route('admin.sant
                   </div>
 
                   <div class="col-md-6 mb-3">
-                    <label class="form-label">Tanggal Lahir <span class="text-danger">*</span></label>
+                    <label class="form-label fw-semibold">
+                      Tanggal Lahir <span class="text-danger">*</span>
+                    </label>
                     <input type="date"
                       class="form-control @error('tanggal_lahir') is-invalid @enderror"
                       name="tanggal_lahir"
@@ -228,7 +121,9 @@ $route = $isEdit ? route('admin.santri.update', $santri->id) : route('admin.sant
                 </div>
 
                 <div class="mb-3">
-                  <label class="form-label">Alamat Lengkap <span class="text-danger">*</span></label>
+                  <label class="form-label fw-semibold">
+                    Alamat Lengkap <span class="text-danger">*</span>
+                  </label>
                   <textarea class="form-control @error('alamat') is-invalid @enderror"
                     name="alamat"
                     rows="3"
@@ -240,7 +135,7 @@ $route = $isEdit ? route('admin.santri.update', $santri->id) : route('admin.sant
                 </div>
 
                 <div class="mb-3">
-                  <label class="form-label">Kelas</label>
+                  <label class="form-label fw-semibold">Kelas</label>
                   <select class="form-select @error('kelas_id') is-invalid @enderror"
                     name="kelas_id">
                     <option value="">Belum Ada Kelas</option>
@@ -257,8 +152,8 @@ $route = $isEdit ? route('admin.santri.update', $santri->id) : route('admin.sant
                 </div>
 
                 @if($isEdit)
-                <div class="mb-3">
-                  <label class="form-label">Status</label>
+                <div class="mb-0">
+                  <label class="form-label fw-semibold">Status</label>
                   <select class="form-select" name="status">
                     <option value="aktif" {{ $santri->status == 'aktif' ? 'selected' : '' }}>Aktif</option>
                     <option value="cuti" {{ $santri->status == 'cuti' ? 'selected' : '' }}>Cuti</option>
@@ -273,14 +168,16 @@ $route = $isEdit ? route('admin.santri.update', $santri->id) : route('admin.sant
             <!-- Right Column -->
             <div class="col-lg-6">
               <!-- Data Wali Section -->
-              <div class="form-section">
-                <div class="form-section-title">
-                  <i class="bi bi-people"></i>
+              <div class="bg-light rounded-3 p-4 mb-4 border">
+                <h6 class="fw-bold mb-3 pb-2 border-bottom d-flex align-items-center gap-2">
+                  <i class="bi bi-people text-success fs-5"></i>
                   <span>Data Wali</span>
-                </div>
+                </h6>
 
                 <div class="mb-3">
-                  <label class="form-label">Nama Wali <span class="text-danger">*</span></label>
+                  <label class="form-label fw-semibold">
+                    Nama Wali <span class="text-danger">*</span>
+                  </label>
                   <input type="text"
                     class="form-control @error('nama_wali') is-invalid @enderror"
                     name="nama_wali"
@@ -292,8 +189,10 @@ $route = $isEdit ? route('admin.santri.update', $santri->id) : route('admin.sant
                   @enderror
                 </div>
 
-                <div class="mb-3">
-                  <label class="form-label">No. Telepon Wali <span class="text-danger">*</span></label>
+                <div class="mb-0">
+                  <label class="form-label fw-semibold">
+                    No. Telepon Wali <span class="text-danger">*</span>
+                  </label>
                   <input type="text"
                     class="form-control @error('no_telp_wali') is-invalid @enderror"
                     name="no_telp_wali"
@@ -307,14 +206,16 @@ $route = $isEdit ? route('admin.santri.update', $santri->id) : route('admin.sant
               </div>
 
               <!-- Akun Login Section -->
-              <div class="form-section">
-                <div class="form-section-title">
-                  <i class="bi bi-shield-lock"></i>
+              <div class="bg-light rounded-3 p-4 mb-4 border">
+                <h6 class="fw-bold mb-3 pb-2 border-bottom d-flex align-items-center gap-2">
+                  <i class="bi bi-shield-lock text-warning fs-5"></i>
                   <span>Akun Login</span>
-                </div>
+                </h6>
 
                 <div class="mb-3">
-                  <label class="form-label">Username <span class="text-danger">*</span></label>
+                  <label class="form-label fw-semibold">
+                    Username <span class="text-danger">*</span>
+                  </label>
                   <input type="text"
                     class="form-control @error('username') is-invalid @enderror"
                     name="username"
@@ -324,11 +225,13 @@ $route = $isEdit ? route('admin.santri.update', $santri->id) : route('admin.sant
                   @error('username')
                   <div class="invalid-feedback">{{ $message }}</div>
                   @enderror
-                  <small class="form-text">Username tidak boleh mengandung spasi</small>
+                  <small class="text-muted d-block mt-1">
+                    <i class="bi bi-info-circle me-1"></i>Username tidak boleh mengandung spasi
+                  </small>
                 </div>
 
                 <div class="mb-3">
-                  <label class="form-label">Email</label>
+                  <label class="form-label fw-semibold">Email</label>
                   <input type="email"
                     class="form-control @error('email') is-invalid @enderror"
                     name="email"
@@ -339,11 +242,11 @@ $route = $isEdit ? route('admin.santri.update', $santri->id) : route('admin.sant
                   @enderror
                 </div>
 
-                <div class="mb-3">
-                  <label class="form-label">
+                <div class="mb-0">
+                  <label class="form-label fw-semibold">
                     Password
                     @if($isEdit)
-                    <small class="text-muted">(Kosongkan jika tidak ingin mengubah)</small>
+                    <small class="text-muted fw-normal">(Kosongkan jika tidak ingin mengubah)</small>
                     @else
                     <span class="text-danger">*</span>
                     @endif
@@ -360,20 +263,23 @@ $route = $isEdit ? route('admin.santri.update', $santri->id) : route('admin.sant
               </div>
 
               <!-- Foto Section -->
-              <div class="form-section">
-                <div class="form-section-title">
-                  <i class="bi bi-camera"></i>
+              <div class="bg-light rounded-3 p-4 mb-4 border">
+                <h6 class="fw-bold mb-3 pb-2 border-bottom d-flex align-items-center gap-2">
+                  <i class="bi bi-camera text-info fs-5"></i>
                   <span>Foto Santri</span>
-                </div>
+                </h6>
 
                 @if($isEdit && $santri->foto)
-                <div class="photo-preview">
-                  <img src="{{ asset('storage/' . $santri->foto) }}"
-                    alt="{{ $santri->nama_lengkap }}"
-                    style="max-width: 200px; max-height: 200px; object-fit: cover;">
-                  <span class="photo-preview-badge">
-                    <i class="bi bi-check"></i>
-                  </span>
+                <div class="text-center mb-3">
+                  <div class="position-relative d-inline-block">
+                    <img src="{{ asset('storage/' . $santri->foto) }}"
+                      alt="{{ $santri->nama_lengkap }}"
+                      class="rounded-3 shadow-sm border border-3"
+                      style="max-width: 200px; max-height: 200px; object-fit: cover;">
+                    <span class="position-absolute top-0 end-0 translate-middle badge rounded-pill bg-success">
+                      <i class="bi bi-check"></i>
+                    </span>
+                  </div>
                 </div>
                 @endif
 
@@ -385,7 +291,7 @@ $route = $isEdit ? route('admin.santri.update', $santri->id) : route('admin.sant
                   @error('foto')
                   <div class="invalid-feedback">{{ $message }}</div>
                   @enderror
-                  <small class="form-text">
+                  <small class="text-muted d-block mt-1">
                     <i class="bi bi-info-circle me-1"></i>
                     Format: JPG, PNG (Max: 2MB)
                     @if($isEdit). Kosongkan jika tidak ingin mengubah foto.@endif
@@ -396,12 +302,12 @@ $route = $isEdit ? route('admin.santri.update', $santri->id) : route('admin.sant
           </div>
 
           <!-- Action Buttons -->
-          <div class="form-section">
-            <div class="d-flex justify-content-between align-items-center">
-              <a href="{{ route('admin.santri.index') }}" class="btn btn-secondary">
+          <div class="bg-light rounded-3 p-4 border">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+              <a href="{{ route('admin.santri.index') }}" class="btn btn-secondary w-100 w-md-auto">
                 <i class="bi bi-arrow-left me-2"></i>Kembali
               </a>
-              <button type="submit" class="btn btn-primary">
+              <button type="submit" class="btn btn-primary btn-lg w-100 w-md-auto shadow-sm">
                 <i class="bi bi-check-circle me-2"></i>
                 {{ $isEdit ? 'Update Data Santri' : 'Simpan Data Santri' }}
               </button>
