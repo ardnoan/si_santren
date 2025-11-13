@@ -217,7 +217,6 @@ $nilaiTerendah = $nilai->min('nilai_akhir');
     </div>
   </div>
 </div>
-
 <!-- Info Card -->
 <div class="row g-3 mt-3">
   <div class="col-md-6">
@@ -227,11 +226,28 @@ $nilaiTerendah = $nilai->min('nilai_akhir');
           <i class="bi bi-calculator text-primary"></i>
           Formula Perhitungan
         </h6>
-        <div class="alert alert-light border mb-0">
+
+        @php
+          // Hitung rata-rata nilai akhir (fallback kalau kolom kosong)
+          $rataAkhir = $nilai->avg(function($n) {
+              return $n->nilai_akhir ?? (
+                  ($n->nilai_tugas * 0.3) +
+                  ($n->nilai_uts * 0.3) +
+                  ($n->nilai_uas * 0.4)
+              );
+          });
+        @endphp
+
+        <div class="alert-light border mb-0 rounded-3 p-3 bg-light">
           <small class="d-block mb-2">
-            <strong>Nilai Akhir =</strong>
+            <strong>
+              Nilai Akhir = 
+              <span class="text-primary">
+                {{ $rataAkhir ? number_format($rataAkhir, 2) : '-' }}
+              </span>
+            </strong>
           </small>
-          <div class="d-flex gap-2 flex-wrap">
+          <div class="d-flex gap-2 flex-wrap mb-3">
             <span class="badge bg-primary px-3 py-2">(Tugas × 30%)</span>
             <span class="badge bg-secondary px-2 py-2">+</span>
             <span class="badge bg-warning px-3 py-2">(UTS × 30%)</span>
@@ -242,6 +258,7 @@ $nilaiTerendah = $nilai->min('nilai_akhir');
       </div>
     </div>
   </div>
+
   <div class="col-md-6">
     <div class="card border-0 shadow-sm rounded-3">
       <div class="card-body p-4">
@@ -254,10 +271,11 @@ $nilaiTerendah = $nilai->min('nilai_akhir');
           <span class="badge bg-info px-3 py-2">B: 80-89</span>
           <span class="badge bg-warning px-3 py-2">C: 70-79</span>
           <span class="badge bg-danger px-3 py-2">D: 60-69</span>
-          <span class="badge bg-dark px-3 py-2">E: <60</span>
+          <span class="badge bg-dark px-3 py-2">E: &lt;60</span>
         </div>
       </div>
     </div>
   </div>
 </div>
+
 @endsection
