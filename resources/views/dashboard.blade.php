@@ -90,7 +90,9 @@
           <i class="bi bi-bar-chart text-primary"></i>
           Santri Per Kelas
         </h6>
-        <canvas id="santriPerKelasChart" height="280"></canvas>
+        <div class="chart-container">
+          <canvas id="santriPerKelasChart"></canvas>
+        </div>
       </div>
     </div>
   </div>
@@ -102,7 +104,9 @@
           <i class="bi bi-pie-chart text-success"></i>
           Kehadiran Hari Ini
         </h6>
-        <canvas id="kehadiranChart" height="280"></canvas>
+        <div class="chart-container">
+          <canvas id="kehadiranChart"></canvas>
+        </div>
       </div>
     </div>
   </div>
@@ -271,7 +275,9 @@
           <i class="bi bi-bar-chart text-primary"></i>
           Santri Per Kelas
         </h6>
-        <canvas id="santriPerKelasChart" height="280"></canvas>
+        <div class="chart-container">
+          <canvas id="santriPerKelasChart"></canvas>
+        </div>
       </div>
     </div>
   </div>
@@ -283,7 +289,9 @@
           <i class="bi bi-pie-chart text-success"></i>
           Kehadiran Hari Ini
         </h6>
-        <canvas id="kehadiranChart" height="280"></canvas>
+        <div class="chart-container">
+          <canvas id="kehadiranChart"></canvas>
+        </div>
       </div>
     </div>
   </div>
@@ -419,7 +427,8 @@ $santri = auth()->user()->santri;
       },
       options: {
         responsive: true,
-        maintainAspectRatio: false,
+        maintainAspectRatio: true,
+        aspectRatio: 2,
         plugins: {
           legend: {
             display: false
@@ -470,7 +479,8 @@ $santri = auth()->user()->santri;
       },
       options: {
         responsive: true,
-        maintainAspectRatio: false,
+        maintainAspectRatio: true,
+        aspectRatio: 2,
         plugins: {
           legend: {
             position: 'bottom',

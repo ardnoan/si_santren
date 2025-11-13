@@ -194,7 +194,7 @@
     </div>
 
     <!-- Pagination -->
-    @include('components.pagination', ['paginator' => $kelas])
+    {{ $kelas->links('components.pagination') }}
   </div>
 </div>
 

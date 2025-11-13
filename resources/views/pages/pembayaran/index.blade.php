@@ -311,6 +311,7 @@
     </div>
 
     <!-- Pagination -->
+    {{ $pembayaran->links('components.pagination') }}
   </div>
 </div>
 @endsection

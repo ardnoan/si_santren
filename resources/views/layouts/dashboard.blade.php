@@ -18,7 +18,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
 </head>
-<body class="bg-light">
+<body>
     <!-- Loading Overlay -->
     <div class="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-50 d-none align-items-center justify-content-center" 
          id="loadingOverlay" style="z-index: 9999; backdrop-filter: blur(4px);">

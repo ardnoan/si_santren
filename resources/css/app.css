@@ -13,9 +13,13 @@
     --accent: #4ade80;
     --accent-rgb: 74, 222, 128;
     
-    /* Gradients */
+    /* Gradients - Light Mode */
     --gradient-primary: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
     --gradient-dark: linear-gradient(135deg, #1a252f 0%, #2c3e50 100%);
+    
+    /* Sidebar Colors - Light Mode */
+    --sidebar-text: #ffffff;
+    --sidebar-text-hover: #f0f0f0;
 }
 
 /* Dark Theme */
@@ -23,6 +27,14 @@
     --bs-body-bg: #0f172a;
     --bs-body-color: #f1f5f9;
     --bs-border-color: #334155;
+    
+    /* Gradients - Dark Mode (lebih gelap) */
+    --gradient-primary: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    --gradient-dark: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    
+    /* Sidebar Colors - Dark Mode */
+    --sidebar-text: #e2e8f0;
+    --sidebar-text-hover: #f1f5f9;
 }
 
 /* ==================== BACKGROUND UTILITIES ==================== */
@@ -46,20 +58,51 @@
     pointer-events: none;
 }
 
+[data-bs-theme="dark"] .animated-bg::before {
+    background-image: radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px);
+}
+
 @keyframes moveBackground {
     from { transform: translate(0, 0); }
     to { transform: translate(30px, 30px); }
 }
 
-/* ==================== SIDEBAR WIDTH ==================== */
+/* ==================== SIDEBAR STYLING ==================== */
 .sidebar {
     width: 280px;
+}
+
+.sidebar-link {
+    color: var(--sidebar-text) !important;
+}
+
+.sidebar-link:hover {
+    color: var(--sidebar-text-hover) !important;
+}
+
+.sidebar-link.active {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+[data-bs-theme="dark"] .sidebar-link.active {
+    background-color: rgba(255, 255, 255, 0.1) !important;
 }
 
 @media (max-width: 992px) {
     .sidebar {
         width: 100%;
     }
+}
+
+/* ==================== NAVBAR THEMING ==================== */
+.navbar-custom {
+    background-color: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+[data-bs-theme="dark"] .navbar-custom {
+    background-color: #1e293b;
+    border-bottom: 1px solid #334155;
 }
 
 /* ==================== MAIN CONTENT MARGIN ==================== */

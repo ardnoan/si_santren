@@ -1,5 +1,5 @@
 {{-- resources/views/components/navbar.blade.php --}}
-<div class="bg-white border-bottom shadow-sm sticky-top" style="z-index: 100;">
+<div class="navbar-custom border-bottom shadow-sm sticky-top" style="z-index: 100;">
     <div class="d-flex justify-content-between align-items-center p-3 p-lg-4">
         <!-- Page Title -->
         <div>

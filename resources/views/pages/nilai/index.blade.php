@@ -290,6 +290,7 @@
     </div>
 
     <!-- Pagination -->
+    {{ $nilai->links('components.pagination') }}
   </div>
 </div>
 
