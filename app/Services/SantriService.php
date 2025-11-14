@@ -42,7 +42,7 @@ class SantriService
     public function createSantri(array $data)
     {
         DB::beginTransaction();
-        
+
         try {
             // Prepare user data
             $userData = [
@@ -72,7 +72,6 @@ class SantriService
 
             DB::commit();
             return $santri;
-            
         } catch (\Exception $e) {
             DB::rollBack();
             throw $e;
@@ -85,10 +84,10 @@ class SantriService
     public function updateSantri(int $id, array $data)
     {
         DB::beginTransaction();
-        
+
         try {
             $santri = $this->santriRepository->findById($id);
-            
+
             // Update santri data
             $santriData = [
                 'nama_lengkap' => $data['nama_lengkap'],
@@ -115,7 +114,6 @@ class SantriService
 
             DB::commit();
             return $santri;
-            
         } catch (\Exception $e) {
             DB::rollBack();
             throw $e;
@@ -128,16 +126,15 @@ class SantriService
     public function deleteSantri(int $id): bool
     {
         DB::beginTransaction();
-        
+
         try {
             $santri = $this->santriRepository->findById($id);
-            
+
             // Delete user (cascade will delete santri)
             $santri->user->delete();
-            
+
             DB::commit();
             return true;
-            
         } catch (\Exception $e) {
             DB::rollBack();
             throw $e;
@@ -168,10 +165,15 @@ class SantriService
     /**
      * Search santri
      */
-    public function searchSantri(string $keyword)
+    public function searchSantri(?string $keyword)
     {
+        if (!$keyword) {
+            return $this->santriRepository->getAllAktifWithKelas();
+        }
+
         return $this->santriRepository->search($keyword);
     }
+
 
     /**
      * Get santri by kelas

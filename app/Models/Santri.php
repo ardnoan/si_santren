@@ -42,7 +42,7 @@ class Santri extends Model
     ];
 
     // === RELATIONSHIPS ===
-    
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -69,7 +69,7 @@ class Santri extends Model
     }
 
     // === BUSINESS METHODS ===
-    
+
     /**
      * Get full name with nickname
      */
@@ -117,7 +117,7 @@ class Santri extends Model
      */
     public function getStatusBadgeAttribute(): string
     {
-        return match($this->status) {
+        return match ($this->status) {
             'aktif' => 'success',
             'cuti' => 'warning',
             'lulus' => 'info',
@@ -127,7 +127,7 @@ class Santri extends Model
     }
 
     // === SCOPES ===
-    
+
     public function scopeAktif($query)
     {
         return $query->where('status', 'aktif');
@@ -143,12 +143,30 @@ class Santri extends Model
         return $query->where('jenis_kelamin', $gender);
     }
 
-    public function scopeSearch($query, string $keyword)
+    public function scopeSearch($query, $keyword)
     {
-        return $query->where(function($q) use ($keyword) {
-            $q->where('nama_lengkap', 'LIKE', "%{$keyword}%")
-              ->orWhere('nomor_induk', 'LIKE', "%{$keyword}%")
-              ->orWhere('nama_panggilan', 'LIKE', "%{$keyword}%");
+        if (!$keyword) return $query;
+
+        return $query->where(function ($q) use ($keyword) {
+            $q->where('nama_lengkap', 'like', "%{$keyword}%")
+                ->orWhere('nomor_induk', 'like', "%{$keyword}%")
+                ->orWhere('nama_panggilan', 'like', "%{$keyword}%")
+                ->orWhere('status', 'like', "%{$keyword}%")
+                ->orWhereHas('kelas', function ($k) use ($keyword) {
+                    $k->where('nama_kelas', 'like', "%{$keyword}%");
+                })
+                ->orWhereHas('user', function ($u) use ($keyword) {
+                    $u->where('username', 'like', "%{$keyword}%");
+                });
+
+            // Tambahkan match untuk gender tulisannya
+            if (str_contains(strtolower($keyword), 'perempuan') || strtolower($keyword) === 'p') {
+                $q->orWhere('jenis_kelamin', 'P');
+            }
+
+            if (str_contains(strtolower($keyword), 'laki') || strtolower($keyword) === 'l') {
+                $q->orWhere('jenis_kelamin', 'L');
+            }
         });
     }
 }

@@ -22,13 +22,18 @@ class SantriController extends Controller
     public function index(Request $request)
     {
         if ($request->has('search')) {
-            $santri = $this->santriService->searchSantri($request->search);
+            $santri = $this->santriService
+                ->searchSantri($request->search)
+                ->appends($request->query());
         } else {
-            $santri = $this->santriService->getAllSantriAktif();
+            $santri = $this->santriService
+                ->getAllSantriAktif()
+                ->appends($request->query());
         }
 
         return view('pages.santri.index', compact('santri'));
     }
+
 
     public function create()
     {
@@ -40,11 +45,10 @@ class SantriController extends Controller
     {
         try {
             $this->santriService->createSantri($request->validated());
-            
+
             return redirect()
                 ->route('admin.santri.index')
                 ->with('success', 'Data santri berhasil ditambahkan!');
-                
         } catch (\Exception $e) {
             return redirect()
                 ->back()
@@ -63,7 +67,7 @@ class SantriController extends Controller
     {
         $santri = $this->santriService->getSantriById($id);
         $kelas = \App\Models\Kelas::all();
-        
+
         return view('pages.santri.form', compact('santri', 'kelas'));
     }
 
@@ -71,11 +75,10 @@ class SantriController extends Controller
     {
         try {
             $this->santriService->updateSantri($id, $request->validated());
-            
+
             return redirect()
                 ->route('admin.santri.index')
                 ->with('success', 'Data santri berhasil diperbarui!');
-                
         } catch (\Exception $e) {
             return redirect()
                 ->back()
@@ -88,11 +91,10 @@ class SantriController extends Controller
     {
         try {
             $this->santriService->deleteSantri($id);
-            
+
             return redirect()
                 ->route('admin.santri.index')
                 ->with('success', 'Data santri berhasil dihapus!');
-                
         } catch (\Exception $e) {
             return redirect()
                 ->back()
@@ -104,11 +106,10 @@ class SantriController extends Controller
     {
         try {
             $this->santriService->luluskanSantri($id);
-            
+
             return redirect()
                 ->route('admin.santri.index')
                 ->with('success', 'Santri berhasil diluluskan!');
-                
         } catch (\Exception $e) {
             return redirect()
                 ->back()

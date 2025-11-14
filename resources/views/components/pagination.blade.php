@@ -1,5 +1,5 @@
 {{-- resources/views/components/pagination.blade.php --}}
-@if ($paginator->hasPages())
+@if (true)
 <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3 mt-4">
     <!-- Info Text -->
     <div>
