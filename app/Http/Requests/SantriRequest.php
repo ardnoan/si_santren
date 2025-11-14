@@ -23,6 +23,7 @@ class SantriRequest extends FormRequest
             'kelas_id' => 'nullable|exists:kelas,id',
             'nama_wali' => 'required|string|max:124',
             'no_telp_wali' => 'required|string|max:20',
+            'r_foto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ];
 
         // Only validate user fields on create
@@ -34,10 +35,18 @@ class SantriRequest extends FormRequest
 
         // On update, username and email are optional
         if ($this->isMethod('put') || $this->isMethod('patch')) {
-            $userId = $this->route('santri') 
-                ? \App\Models\Santri::findOrFail($this->route('santri'))->user_id 
-                : null;
-                
+
+            // Ambil ID santri dari route parameter
+            $santriId = $this->route('id');
+            $userId = null;
+
+            if ($santriId) {
+                $santri = \App\Models\Santri::find($santriId);
+                if ($santri) {
+                    $userId = $santri->user_id;
+                }
+            }
+
             $rules['username'] = 'sometimes|string|max:64|unique:users,username,' . $userId;
             $rules['email'] = 'nullable|email|unique:users,email,' . $userId;
             $rules['password'] = 'nullable|string|min:6';

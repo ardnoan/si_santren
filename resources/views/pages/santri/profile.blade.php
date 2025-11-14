@@ -14,8 +14,8 @@
         <!-- Photo -->
         <div class="mb-4">
           @if($santri->foto)
-          <img src="{{ asset('storage/' . $santri->foto) }}"
-               class="rounded-circle shadow-sm border border-4 border-primary"
+          <img src="{{ asset('storage/santri/' . $santri->foto) }}"
+               class="rounded-circle shadow-sm border border-4"
                style="width: 150px; height: 150px; object-fit: cover;">
           @else
           <div class="rounded-circle bg-secondary bg-opacity-25 d-inline-flex align-items-center justify-content-center border border-4 border-secondary"
@@ -230,7 +230,7 @@
           @endif
         </div>
         @else
-        <div class="alert alert-warning border-0 mb-0">
+        <div class="alert-warning border-0 mb-0">
           <i class="bi bi-exclamation-triangle me-2"></i>
           Anda belum terdaftar di kelas manapun
         </div>

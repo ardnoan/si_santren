@@ -44,7 +44,16 @@ class SantriService
         DB::beginTransaction();
 
         try {
-            // Prepare user data
+
+            // ===== Upload Foto (jika ada) =====
+            $fotoName = null;
+            if (isset($data['r_foto'])) {
+                $foto = $data['r_foto'];
+                $fotoName = time() . '_' . $foto->getClientOriginalName();
+                $foto->storeAs('santri', $fotoName, 'public');
+            }
+
+            // ===== User Data =====
             $userData = [
                 'username' => $data['username'],
                 'email' => $data['email'] ?? null,
@@ -53,7 +62,7 @@ class SantriService
                 'is_active' => true,
             ];
 
-            // Prepare santri data
+            // ===== Santri Data =====
             $santriData = [
                 'nama_lengkap' => $data['nama_lengkap'],
                 'nama_panggilan' => $data['nama_panggilan'] ?? null,
@@ -65,9 +74,9 @@ class SantriService
                 'nama_wali' => $data['nama_wali'],
                 'no_telp_wali' => $data['no_telp_wali'],
                 'status' => 'aktif',
+                'foto' => $fotoName,
             ];
 
-            // Create santri with user
             $santri = $this->santriRepository->createWithUser($santriData, $userData);
 
             DB::commit();
@@ -86,9 +95,18 @@ class SantriService
         DB::beginTransaction();
 
         try {
+
             $santri = $this->santriRepository->findById($id);
 
-            // Update santri data
+            // ===== Upload Foto Baru (jika ada) =====
+            $fotoName = $santri->foto;
+            if (isset($data['r_foto'])) {
+                $foto = $data['r_foto'];
+                $fotoName = time() . '_' . $foto->getClientOriginalName();
+                $foto->storeAs('santri', $fotoName, 'public');
+            }
+
+            // ===== Santri Data =====
             $santriData = [
                 'nama_lengkap' => $data['nama_lengkap'],
                 'nama_panggilan' => $data['nama_panggilan'] ?? null,
@@ -99,11 +117,12 @@ class SantriService
                 'kelas_id' => $data['kelas_id'] ?? null,
                 'nama_wali' => $data['nama_wali'],
                 'no_telp_wali' => $data['no_telp_wali'],
+                'foto' => $fotoName,
             ];
 
             $santri = $this->santriRepository->update($id, $santriData);
 
-            // Update user if needed
+            // ===== Update User =====
             if (isset($data['username']) || isset($data['email'])) {
                 $user = $santri->user;
                 if (isset($data['username'])) $user->username = $data['username'];

@@ -44,7 +44,17 @@ class SantriController extends Controller
     public function store(SantriRequest $request)
     {
         try {
-            $this->santriService->createSantri($request->validated());
+            $data = $request->validated();
+
+            // HANDLE FOTO
+            if ($request->hasFile('r_foto')) {
+                $foto = $request->file('r_foto');
+                $namaFile = time() . '_' . $foto->getClientOriginalName();
+                $foto->storeAs('foto_santri', $namaFile, 'public');
+                $data['foto'] = $namaFile; // kirim ke service
+            }
+
+            $this->santriService->createSantri($data);
 
             return redirect()
                 ->route('admin.santri.index')
@@ -56,6 +66,7 @@ class SantriController extends Controller
                 ->with('error', 'Gagal menambahkan santri: ' . $e->getMessage());
         }
     }
+
 
     public function show(int $id)
     {
@@ -74,7 +85,18 @@ class SantriController extends Controller
     public function update(SantriRequest $request, int $id)
     {
         try {
-            $this->santriService->updateSantri($id, $request->validated());
+            $data = $request->validated();
+
+            // HANDLE FOTO (jika ada upload baru)
+            if ($request->hasFile('r_foto')) {
+                $foto = $request->file('r_foto');
+                $namaFile = time() . '_' . $foto->getClientOriginalName();
+                $foto->storeAs('santri', $namaFile, 'public');
+
+                $data['foto'] = $namaFile;
+            }
+
+            $this->santriService->updateSantri($id, $data);
 
             return redirect()
                 ->route('admin.santri.index')
@@ -86,6 +108,7 @@ class SantriController extends Controller
                 ->with('error', 'Gagal memperbarui santri: ' . $e->getMessage());
         }
     }
+
 
     public function destroy(int $id)
     {

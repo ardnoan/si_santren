@@ -69,7 +69,7 @@
                 <td>{{ $s->nomor_induk }}</td>
                 <td>
                     @if($s->foto)
-                    <img src="{{ asset('storage/' . $s->foto) }}"
+                    <img src="{{ asset('storage/santri/' . $s->foto) }}"
                         alt="{{ $s->nama_lengkap }}"
                         class="rounded-circle shadow-sm"
                         width="45" height="45"
