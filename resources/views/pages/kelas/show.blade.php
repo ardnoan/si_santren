@@ -12,8 +12,8 @@
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3">
       <div>
         <div class="d-flex align-items-center gap-3 mb-2">
-          <div class="bg-primary bg-opacity-10 rounded-3 d-flex align-items-center justify-content-center" 
-               style="width: 60px; height: 60px;">
+          <div class="bg-primary bg-opacity-10 rounded-3 d-flex align-items-center justify-content-center"
+            style="width: 60px; height: 60px;">
             <i class="bi bi-building fs-1 text-primary"></i>
           </div>
           <div>
@@ -26,13 +26,13 @@
         </div>
       </div>
       <div class="d-flex gap-2">
-        <a href="{{ auth()->user()->isAdmin() ? route('admin.kelas.index') : route('ustadz.kelas.index') }}" 
-           class="btn btn-secondary">
+        <a href="{{ auth()->user()->isAdmin() ? route('admin.kelas.index') : route('ustadz.kelas.index') }}"
+          class="btn btn-secondary">
           <i class="bi bi-arrow-left me-2"></i>Kembali
         </a>
         @admin
-        <a href="{{ route('admin.kelas.edit', $kelas->id) }}" 
-           class="btn btn-warning">
+        <a href="{{ route('admin.kelas.edit', $kelas->id) }}"
+          class="btn btn-warning">
           <i class="bi bi-pencil me-2"></i>Edit
         </a>
         @endadmin
@@ -87,8 +87,8 @@
             $colorClass = $persentase >= 100 ? 'bg-danger' : ($persentase >= 80 ? 'bg-warning' : 'bg-success');
             @endphp
             <div class="progress" style="height: 24px;">
-              <div class="progress-bar {{ $colorClass }} fw-semibold" 
-                   style="width: {{ min($persentase, 100) }}%">
+              <div class="progress-bar {{ $colorClass }} fw-semibold"
+                style="width: {{ min($persentase, 100) }}%">
                 {{ number_format($persentase, 0) }}%
               </div>
             </div>
@@ -147,19 +147,19 @@
         Daftar Santri ({{ $kelas->santris->count() }})
       </h6>
       <div class="input-group" style="max-width: 300px;">
-        <span class="input-group-text bg-light border-end-0">
+        <span class="input-group-text border-end-0">
           <i class="bi bi-search text-muted"></i>
         </span>
-        <input type="text" 
-               class="form-control border-start-0 ps-0" 
-               id="searchSantri"
-               placeholder="Cari santri...">
+        <input type="text"
+          class="form-control border-start-0 ps-0"
+          id="searchSantri"
+          placeholder=" Searching...">
       </div>
     </div>
 
     <div class="table-responsive">
       <table class="table table-hover align-middle" id="santriTable">
-        <thead class="table-light">
+        <thead>
           <tr>
             <th class="text-center" style="width: 5%;">No</th>
             <th style="width: 12%;">NIS</th>
@@ -175,33 +175,29 @@
           @forelse($kelas->santris as $index => $s)
           <tr>
             <td class="text-center fw-semibold">{{ $index + 1 }}</td>
-            <td>
-              <code class="text-primary">{{ $s->nomor_induk }}</code>
-            </td>
+            <td>{{ $s->nomor_induk }}</td>
             <td class="text-center">
               @if($s->foto)
               <img src="{{ asset('storage/' . $s->foto) }}"
-                   alt="{{ $s->nama_lengkap }}"
-                   class="rounded-circle shadow-sm"
-                   width="45" height="45"
-                   style="object-fit: cover;">
+                alt="{{ $s->nama_lengkap }}"
+                class="rounded-circle shadow-sm"
+                width="45" height="45"
+                style="object-fit: cover;">
               @else
               <div class="rounded-circle bg-secondary bg-opacity-25 d-inline-flex align-items-center justify-content-center"
-                   style="width: 45px; height: 45px;">
+                style="width: 45px; height: 45px;">
                 <i class="bi bi-person text-secondary"></i>
               </div>
               @endif
             </td>
             <td>
-              <div class="fw-semibold text-dark">{{ $s->nama_lengkap }}</div>
+              {{ $s->nama_lengkap }}
               @if($s->nama_panggilan)
               <small class="text-muted">({{ $s->nama_panggilan }})</small>
               @endif
             </td>
             <td class="text-center">
-              <span class="badge {{ $s->jenis_kelamin == 'L' ? 'bg-primary' : 'bg-danger' }} px-3 py-2">
                 {{ $s->jenis_kelamin == 'L' ? 'L' : 'P' }}
-              </span>
             </td>
             <td>
               <small class="d-block">{{ $s->tempat_lahir }}</small>
@@ -211,22 +207,20 @@
             <td class="text-center">
               @php
               $statusColors = [
-                'aktif' => 'success',
-                'cuti' => 'warning',
-                'lulus' => 'info',
-                'keluar' => 'secondary'
+              'aktif' => 'success',
+              'cuti' => 'warning',
+              'lulus' => 'info',
+              'keluar' => 'secondary'
               ];
               $badgeColor = $statusColors[$s->status] ?? 'secondary';
               @endphp
-              <span class="badge bg-{{ $badgeColor }} px-3 py-2">
-                {{ ucfirst($s->status) }}
-              </span>
+              {{ ucfirst($s->status) }}
             </td>
             <td class="text-center">
               <a href="{{ auth()->user()->isAdmin() ? route('admin.santri.show', $s->id) : route('ustadz.santri.show', $s->id) }}"
-                 class="btn btn-sm btn-info shadow-sm"
-                 data-bs-toggle="tooltip"
-                 title="Lihat Detail">
+                class="btn btn-sm btn-info shadow-sm"
+                data-bs-toggle="tooltip"
+                title="Lihat Detail">
                 <i class="bi bi-eye"></i>
               </a>
             </td>
@@ -255,7 +249,7 @@
   document.getElementById('searchSantri').addEventListener('input', function() {
     const searchValue = this.value.toLowerCase();
     const rows = document.querySelectorAll('#santriTable tbody tr');
-    
+
     rows.forEach(row => {
       const text = row.textContent.toLowerCase();
       row.style.display = text.includes(searchValue) ? '' : 'none';
