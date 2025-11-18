@@ -1,4 +1,4 @@
-{{-- resources/views/components/sidebar.blade.php --}}
+{{-- resources/views/components/sidebar.blade.php - FIXED VERSION --}}
 <div class="sidebar position-fixed top-0 start-0 vh-100 bg-gradient-primary overflow-auto shadow-lg d-flex flex-column" 
      style="z-index: 1000;">
     
@@ -12,6 +12,8 @@
         <span class="badge 
             @if(auth()->user()->isAdmin()) bg-danger
             @elseif(auth()->user()->isUstadz()) bg-success
+            @elseif(auth()->user()->isBendahara()) bg-warning
+            @elseif(auth()->user()->isPemimpin()) bg-dark
             @else bg-info
             @endif px-3 py-2">
             {{ auth()->user()->role_name }}
@@ -21,9 +23,9 @@
 
     <!-- Navigation -->
     <nav class="flex-grow-1 p-3">
-        {{-- ADMIN MENU --}}
+        
+        {{-- ==================== ADMIN MENU ==================== --}}
         @admin
-        <!-- Dashboard -->
         <a href="{{ route('admin.dashboard') }}"
            class="sidebar-link d-flex align-items-center gap-3 text-decoration-none p-3 rounded-3 mb-2 transition-all
                   {{ request()->routeIs('admin.dashboard') ? 'active fw-semibold shadow-sm' : '' }}">
@@ -32,12 +34,11 @@
         </a>
 
         <div class="px-3 pt-3 pb-2">
-            <small class="text-uppercase opacity-75 fw-semibold ls-1 sidebar-link" style="font-size: 0.7rem; letter-spacing: 0.5px;">
+            <small class="text-uppercase opacity-75 fw-semibold ls-1 sidebar-link" style="font-size: 0.7rem;">
                 Manajemen Data
             </small>
         </div>
 
-        <!-- Data Santri -->
         <a href="{{ route('admin.santri.index') }}"
            class="sidebar-link d-flex align-items-center gap-3 text-decoration-none p-3 rounded-3 mb-2 transition-all
                   {{ request()->routeIs('admin.santri.*') ? 'active fw-semibold shadow-sm' : '' }}">
@@ -45,7 +46,6 @@
             <span>Data Santri</span>
         </a>
 
-        <!-- Kelas -->
         <a href="{{ route('admin.kelas.index') }}"
            class="sidebar-link d-flex align-items-center gap-3 text-decoration-none p-3 rounded-3 mb-2 transition-all
                   {{ request()->routeIs('admin.kelas.*') ? 'active fw-semibold shadow-sm' : '' }}">
@@ -54,12 +54,11 @@
         </a>
 
         <div class="px-3 pt-3 pb-2">
-            <small class="text-uppercase opacity-75 fw-semibold sidebar-link" style="font-size: 0.7rem; letter-spacing: 0.5px;">
+            <small class="text-uppercase opacity-75 fw-semibold sidebar-link" style="font-size: 0.7rem;">
                 Akademik
             </small>
         </div>
 
-        <!-- Kehadiran -->
         <a href="{{ route('admin.kehadiran.index') }}"
            class="sidebar-link d-flex align-items-center gap-3 text-decoration-none p-3 rounded-3 mb-2 transition-all
                   {{ request()->routeIs('admin.kehadiran.*') ? 'active fw-semibold shadow-sm' : '' }}">
@@ -67,7 +66,6 @@
             <span>Kehadiran</span>
         </a>
 
-        <!-- Nilai -->
         <a href="{{ route('admin.nilai.index') }}"
            class="sidebar-link d-flex align-items-center gap-3 text-decoration-none p-3 rounded-3 mb-2 transition-all
                   {{ request()->routeIs('admin.nilai.*') ? 'active fw-semibold shadow-sm' : '' }}">
@@ -76,12 +74,11 @@
         </a>
 
         <div class="px-3 pt-3 pb-2">
-            <small class="text-uppercase opacity-75 fw-semibold sidebar-link" style="font-size: 0.7rem; letter-spacing: 0.5px;">
+            <small class="text-uppercase opacity-75 fw-semibold sidebar-link" style="font-size: 0.7rem;">
                 Keuangan
             </small>
         </div>
 
-        <!-- Pembayaran -->
         <a href="{{ route('admin.pembayaran.index') }}"
            class="sidebar-link d-flex align-items-center gap-3 text-decoration-none p-3 rounded-3 mb-2 transition-all
                   {{ request()->routeIs('admin.pembayaran.index') || request()->routeIs('admin.pembayaran.create') || request()->routeIs('admin.pembayaran.edit') ? 'active fw-semibold shadow-sm' : '' }}">
@@ -89,18 +86,16 @@
             <span>Pembayaran</span>
         </a>
 
-        <!-- Laporan -->
         <a href="{{ route('admin.pembayaran.laporan') }}"
            class="sidebar-link d-flex align-items-center gap-3 text-decoration-none p-3 rounded-3 mb-2 transition-all
-                  {{ request()->routeIs('admin.pembayaran.laporan') || request()->routeIs('admin.pembayaran.export') ? 'active fw-semibold shadow-sm' : '' }}">
+                  {{ request()->routeIs('admin.pembayaran.laporan') ? 'active fw-semibold shadow-sm' : '' }}">
             <i class="bi bi-file-earmark-text fs-5"></i>
             <span>Laporan Keuangan</span>
         </a>
         @endadmin
 
-        {{-- USTADZ MENU --}}
+        {{-- ==================== USTADZ MENU ==================== --}}
         @ustadz
-        <!-- Dashboard -->
         <a href="{{ route('ustadz.dashboard') }}"
            class="sidebar-link d-flex align-items-center gap-3 text-decoration-none p-3 rounded-3 mb-2 transition-all
                   {{ request()->routeIs('ustadz.dashboard') ? 'active fw-semibold shadow-sm' : '' }}">
@@ -109,7 +104,7 @@
         </a>
 
         <div class="px-3 pt-3 pb-2">
-            <small class="text-uppercase opacity-75 fw-semibold sidebar-link" style="font-size: 0.7rem; letter-spacing: 0.5px;">
+            <small class="text-uppercase opacity-75 fw-semibold sidebar-link" style="font-size: 0.7rem;">
                 Data
             </small>
         </div>
@@ -129,7 +124,7 @@
         </a>
 
         <div class="px-3 pt-3 pb-2">
-            <small class="text-uppercase opacity-75 fw-semibold sidebar-link" style="font-size: 0.7rem; letter-spacing: 0.5px;">
+            <small class="text-uppercase opacity-75 fw-semibold sidebar-link" style="font-size: 0.7rem;">
                 Input Data
             </small>
         </div>
@@ -149,7 +144,7 @@
         </a>
         @endustadz
 
-        {{-- SANTRI MENU --}}
+        {{-- ==================== SANTRI MENU ==================== --}}
         @santri
         <a href="{{ route('santri.dashboard') }}"
            class="sidebar-link d-flex align-items-center gap-3 text-decoration-none p-3 rounded-3 mb-2 transition-all
@@ -159,7 +154,7 @@
         </a>
 
         <div class="px-3 pt-3 pb-2">
-            <small class="text-uppercase opacity-75 fw-semibold sidebar-link" style="font-size: 0.7rem; letter-spacing: 0.5px;">
+            <small class="text-uppercase opacity-75 fw-semibold sidebar-link" style="font-size: 0.7rem;">
                 Profil Saya
             </small>
         </div>
@@ -172,7 +167,7 @@
         </a>
 
         <div class="px-3 pt-3 pb-2">
-            <small class="text-uppercase opacity-75 fw-semibold sidebar-link" style="font-size: 0.7rem; letter-spacing: 0.5px;">
+            <small class="text-uppercase opacity-75 fw-semibold sidebar-link" style="font-size: 0.7rem;">
                 Akademik
             </small>
         </div>
@@ -185,13 +180,14 @@
         </a>
 
         <a href="{{ route('santri.nilai') }}"
-           class="sidebar-link d-flex align-items-center gap-3 text-decoration-none p-3 rounded-3 mb-2 transition-all {{ request()->routeIs('santri.nilai') ? 'active fw-semibold shadow-sm' : '' }}">
+           class="sidebar-link d-flex align-items-center gap-3 text-decoration-none p-3 rounded-3 mb-2 transition-all
+                  {{ request()->routeIs('santri.nilai') ? 'active fw-semibold shadow-sm' : '' }}">
             <i class="bi bi-journal-text fs-5"></i>
             <span>Nilai Saya</span>
         </a>
 
         <div class="px-3 pt-3 pb-2">
-            <small class="text-uppercase opacity-75 fw-semibold sidebar-link" style="font-size: 0.7rem; letter-spacing: 0.5px;">
+            <small class="text-uppercase opacity-75 fw-semibold sidebar-link" style="font-size: 0.7rem;">
                 Keuangan
             </small>
         </div>
@@ -203,6 +199,106 @@
             <span>Riwayat Pembayaran</span>
         </a>
         @endsantri
+
+        {{-- ==================== BENDAHARA MENU ==================== --}}
+        @bendahara
+        <a href="{{ route('bendahara.dashboard') }}"
+           class="sidebar-link d-flex align-items-center gap-3 text-decoration-none p-3 rounded-3 mb-2 transition-all
+                  {{ request()->routeIs('bendahara.dashboard') ? 'active fw-semibold shadow-sm' : '' }}">
+            <i class="bi bi-speedometer2 fs-5"></i>
+            <span>Dashboard</span>
+        </a>
+
+        <div class="px-3 pt-3 pb-2">
+            <small class="text-uppercase opacity-75 fw-semibold sidebar-link" style="font-size: 0.7rem;">
+                Keuangan
+            </small>
+        </div>
+
+        <a href="{{ route('bendahara.pembayaran.index') }}"
+           class="sidebar-link d-flex align-items-center gap-3 text-decoration-none p-3 rounded-3 mb-2 transition-all
+                  {{ request()->routeIs('bendahara.pembayaran.*') ? 'active fw-semibold shadow-sm' : '' }}">
+            <i class="bi bi-cash-coin fs-5"></i>
+            <span>Pembayaran</span>
+        </a>
+
+        <a href="{{ route('bendahara.pengeluaran.index') }}"
+           class="sidebar-link d-flex align-items-center gap-3 text-decoration-none p-3 rounded-3 mb-2 transition-all
+                  {{ request()->routeIs('bendahara.pengeluaran.*') ? 'active fw-semibold shadow-sm' : '' }}">
+            <i class="bi bi-wallet2 fs-5"></i>
+            <span>Pengeluaran</span>
+        </a>
+
+        <a href="{{ route('bendahara.kas.index') }}"
+           class="sidebar-link d-flex align-items-center gap-3 text-decoration-none p-3 rounded-3 mb-2 transition-all
+                  {{ request()->routeIs('bendahara.kas.*') ? 'active fw-semibold shadow-sm' : '' }}">
+            <i class="bi bi-piggy-bank fs-5"></i>
+            <span>Kas Pesantren</span>
+        </a>
+
+        <div class="px-3 pt-3 pb-2">
+            <small class="text-uppercase opacity-75 fw-semibold sidebar-link" style="font-size: 0.7rem;">
+                Data Santri
+            </small>
+        </div>
+
+        <a href="{{ route('bendahara.santri.index') }}"
+           class="sidebar-link d-flex align-items-center gap-3 text-decoration-none p-3 rounded-3 mb-2 transition-all
+                  {{ request()->routeIs('bendahara.santri.*') ? 'active fw-semibold shadow-sm' : '' }}">
+            <i class="bi bi-people fs-5"></i>
+            <span>Data Santri</span>
+        </a>
+        @endbendahara
+
+        {{-- ==================== PEMIMPIN MENU ==================== --}}
+        @pemimpin
+        <a href="{{ route('pemimpin.dashboard') }}"
+           class="sidebar-link d-flex align-items-center gap-3 text-decoration-none p-3 rounded-3 mb-2 transition-all
+                  {{ request()->routeIs('pemimpin.dashboard') ? 'active fw-semibold shadow-sm' : '' }}">
+            <i class="bi bi-speedometer2 fs-5"></i>
+            <span>Dashboard</span>
+        </a>
+
+        <div class="px-3 pt-3 pb-2">
+            <small class="text-uppercase opacity-75 fw-semibold sidebar-link" style="font-size: 0.7rem;">
+                Laporan & Statistik
+            </small>
+        </div>
+
+        <a href="{{ route('pemimpin.laporan.index') }}"
+           class="sidebar-link d-flex align-items-center gap-3 text-decoration-none p-3 rounded-3 mb-2 transition-all
+                  {{ request()->routeIs('pemimpin.laporan.*') ? 'active fw-semibold shadow-sm' : '' }}">
+            <i class="bi bi-file-earmark-text fs-5"></i>
+            <span>Laporan</span>
+        </a>
+
+        <a href="{{ route('pemimpin.statistik.index') }}"
+           class="sidebar-link d-flex align-items-center gap-3 text-decoration-none p-3 rounded-3 mb-2 transition-all
+                  {{ request()->routeIs('pemimpin.statistik.*') ? 'active fw-semibold shadow-sm' : '' }}">
+            <i class="bi bi-graph-up fs-5"></i>
+            <span>Statistik</span>
+        </a>
+
+        <div class="px-3 pt-3 pb-2">
+            <small class="text-uppercase opacity-75 fw-semibold sidebar-link" style="font-size: 0.7rem;">
+                Lihat Data
+            </small>
+        </div>
+
+        <a href="{{ route('pemimpin.santri.index') }}"
+           class="sidebar-link d-flex align-items-center gap-3 text-decoration-none p-3 rounded-3 mb-2 transition-all
+                  {{ request()->routeIs('pemimpin.santri.*') ? 'active fw-semibold shadow-sm' : '' }}">
+            <i class="bi bi-people fs-5"></i>
+            <span>Data Santri</span>
+        </a>
+
+        <a href="{{ route('pemimpin.pembayaran.index') }}"
+           class="sidebar-link d-flex align-items-center gap-3 text-decoration-none p-3 rounded-3 mb-2 transition-all
+                  {{ request()->routeIs('pemimpin.pembayaran.*') ? 'active fw-semibold shadow-sm' : '' }}">
+            <i class="bi bi-cash-coin fs-5"></i>
+            <span>Data Pembayaran</span>
+        </a>
+        @endpemimpin
 
         <!-- Divider -->
         <hr class="border-white border-opacity-20 my-3">

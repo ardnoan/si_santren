@@ -19,13 +19,13 @@
         <p class="text-muted mb-0 small">Monitor dan kelola kehadiran harian</p>
       </div>
 
-      @canInputKehadiran
-      <a href="{{ auth()->user()->isAdmin() ? route('admin.kehadiran.create') : route('ustadz.kehadiran.create') }}" 
-         class="btn btn-primary shadow-sm">
+      @adminOrUstadz
+      <a href="{{ auth()->user()->isAdmin() ? route('admin.kehadiran.create') : route('ustadz.kehadiran.create') }}"
+        class="btn btn-primary shadow-sm">
         <i class="bi bi-plus-circle me-2"></i>
         <span>Input Kehadiran</span>
       </a>
-      @endcanInputKehadiran
+      @endadminOrUstadz
     </div>
 
     <!-- Date Filter -->
@@ -34,13 +34,13 @@
         <div class="col-md-3">
           <label class="form-label fw-semibold small">Pilih Tanggal</label>
           <div class="input-group shadow-sm">
-            <span class="input-group-text bg-light border-end-0">
+            <span class="input-group-text border-end-0">
               <i class="bi bi-calendar3 text-muted"></i>
             </span>
             <input type="date"
-                   name="tanggal"
-                   class="form-control border-start-0 ps-0"
-                   value="{{ request('tanggal', date('Y-m-d')) }}">
+              name="tanggal"
+              class="form-control border-start-0 ps-0"
+              value="{{ request('tanggal', date('Y-m-d')) }}">
           </div>
         </div>
         <div class="col-md-2 d-flex align-items-end">
@@ -51,15 +51,15 @@
         <div class="col-md-7 d-flex align-items-end justify-content-end">
           <div class="btn-group shadow-sm" role="group">
             <a href="?tanggal={{ date('Y-m-d', strtotime('-1 day', strtotime(request('tanggal', date('Y-m-d'))))) }}"
-               class="btn btn-outline-secondary">
+              class="btn btn-outline-secondary">
               <i class="bi bi-chevron-left"></i> Kemarin
             </a>
-            <a href="?tanggal={{ date('Y-m-d') }}" 
-               class="btn btn-outline-primary">
+            <a href="?tanggal={{ date('Y-m-d') }}"
+              class="btn btn-outline-primary">
               Hari Ini
             </a>
             <a href="?tanggal={{ date('Y-m-d', strtotime('+1 day', strtotime(request('tanggal', date('Y-m-d'))))) }}"
-               class="btn btn-outline-secondary">
+              class="btn btn-outline-secondary">
               Besok <i class="bi bi-chevron-right"></i>
             </a>
           </div>
@@ -71,17 +71,17 @@
     @php
     $tanggal = request('tanggal', date('Y-m-d'));
     $stats = [
-      'hadir' => \App\Models\Kehadiran::whereDate('tanggal', $tanggal)->where('status', 'hadir')->count(),
-      'izin' => \App\Models\Kehadiran::whereDate('tanggal', $tanggal)->where('status', 'izin')->count(),
-      'sakit' => \App\Models\Kehadiran::whereDate('tanggal', $tanggal)->where('status', 'sakit')->count(),
-      'alpa' => \App\Models\Kehadiran::whereDate('tanggal', $tanggal)->where('status', 'alpa')->count(),
+    'hadir' => \App\Models\Kehadiran::whereDate('tanggal', $tanggal)->where('status', 'hadir')->count(),
+    'izin' => \App\Models\Kehadiran::whereDate('tanggal', $tanggal)->where('status', 'izin')->count(),
+    'sakit' => \App\Models\Kehadiran::whereDate('tanggal', $tanggal)->where('status', 'sakit')->count(),
+    'alpa' => \App\Models\Kehadiran::whereDate('tanggal', $tanggal)->where('status', 'alpa')->count(),
     ];
     $total = array_sum($stats);
     @endphp
 
     <div class="row g-3 mb-4">
       <div class="col-md-3">
-        <div class="alert alert-success border-0 shadow-sm mb-0">
+        <div class="alert-success border-0 shadow-sm mb-0">
           <div class="d-flex justify-content-between align-items-center">
             <div>
               <small class="d-block opacity-75 mb-1">
@@ -100,7 +100,7 @@
         </div>
       </div>
       <div class="col-md-3">
-        <div class="alert alert-info border-0 shadow-sm mb-0">
+        <div class="alert-info border-0 shadow-sm mb-0">
           <div class="d-flex justify-content-between align-items-center">
             <div>
               <small class="d-block opacity-75 mb-1">
@@ -119,7 +119,7 @@
         </div>
       </div>
       <div class="col-md-3">
-        <div class="alert alert-warning border-0 shadow-sm mb-0">
+        <div class="alert-warning border-0 shadow-sm mb-0">
           <div class="d-flex justify-content-between align-items-center">
             <div>
               <small class="d-block opacity-75 mb-1">
@@ -138,7 +138,7 @@
         </div>
       </div>
       <div class="col-md-3">
-        <div class="alert alert-danger border-0 shadow-sm mb-0">
+        <div class="alert-danger border-0 shadow-sm mb-0">
           <div class="d-flex justify-content-between align-items-center">
             <div>
               <small class="d-block opacity-75 mb-1">
@@ -159,7 +159,7 @@
     </div>
 
     <!-- Info Tanggal -->
-    <div class="alert alert-light border mb-4 d-flex align-items-center gap-3">
+    <div class="alert-light border mb-4 d-flex align-items-center gap-3">
       <i class="bi bi-calendar3 fs-3 text-primary"></i>
       <div>
         <strong class="d-block">{{ \Carbon\Carbon::parse($tanggal)->isoFormat('dddd, D MMMM Y') }}</strong>
@@ -184,9 +184,9 @@
         <tbody>
           @php
           $kehadiranData = \App\Models\Kehadiran::with(['santri.kelas'])
-            ->whereDate('tanggal', $tanggal)
-            ->orderBy('created_at', 'desc')
-            ->paginate(20);
+          ->whereDate('tanggal', $tanggal)
+          ->orderBy('created_at', 'desc')
+          ->paginate(20);
           @endphp
 
           @forelse($kehadiranData as $index => $k)
@@ -210,10 +210,10 @@
             <td class="text-center">
               @php
               $statusConfig = [
-                'hadir' => ['color' => 'success', 'icon' => 'check-circle'],
-                'izin' => ['color' => 'info', 'icon' => 'envelope'],
-                'sakit' => ['color' => 'warning', 'icon' => 'heart-pulse'],
-                'alpa' => ['color' => 'danger', 'icon' => 'x-circle'],
+              'hadir' => ['color' => 'success', 'icon' => 'check-circle'],
+              'izin' => ['color' => 'info', 'icon' => 'envelope'],
+              'sakit' => ['color' => 'warning', 'icon' => 'heart-pulse'],
+              'alpa' => ['color' => 'danger', 'icon' => 'x-circle'],
               ];
               $config = $statusConfig[$k->status] ?? ['color' => 'secondary', 'icon' => 'dash'];
               @endphp
@@ -249,24 +249,24 @@
             <td class="text-center">
               <div class="btn-group btn-group-sm shadow-sm" role="group">
                 @canEdit('kehadiran')
-                <a href="{{ route('admin.kehadiran.edit', $k->id) }}" 
-                   class="btn btn-warning"
-                   data-bs-toggle="tooltip"
-                   title="Edit">
+                <a href="{{ route('admin.kehadiran.edit', $k->id) }}"
+                  class="btn btn-warning"
+                  data-bs-toggle="tooltip"
+                  title="Edit">
                   <i class="bi bi-pencil"></i>
                 </a>
                 @endcanEdit
 
                 @canDelete('kehadiran')
-                <form action="{{ route('admin.kehadiran.destroy', $k->id) }}" 
-                      method="POST"
-                      class="d-inline">
-                  @csrf 
+                <form action="{{ route('admin.kehadiran.destroy', $k->id) }}"
+                  method="POST"
+                  class="d-inline">
+                  @csrf
                   @method('DELETE')
-                  <button type="submit" 
-                          class="btn btn-danger"
-                          data-bs-toggle="tooltip"
-                          title="Hapus">
+                  <button type="submit"
+                    class="btn btn-danger"
+                    data-bs-toggle="tooltip"
+                    title="Hapus">
                     <i class="bi bi-trash"></i>
                   </button>
                 </form>
@@ -281,13 +281,13 @@
                 <i class="bi bi-inbox fs-1 d-block mb-3 opacity-50"></i>
                 <h5>Belum ada data kehadiran</h5>
                 <p class="mb-3">Belum ada kehadiran tercatat untuk tanggal ini</p>
-                @canInputKehadiran
-                <a href="{{ auth()->user()->isAdmin() ? route('admin.kehadiran.create') : route('ustadz.kehadiran.create') }}" 
-                   class="btn btn-primary">
+                @adminOrUstadz
+                <a href="{{ auth()->user()->isAdmin() ? route('admin.kehadiran.create') : route('ustadz.kehadiran.create') }}"
+                  class="btn btn-primary">
                   <i class="bi bi-plus-circle me-2"></i>
                   Input Kehadiran
                 </a>
-                @endcanInputKehadiran
+                @endadminOrUstadz
               </div>
             </td>
           </tr>
@@ -297,7 +297,8 @@
     </div>
 
     <!-- Pagination -->
-    @include('components.pagination', ['paginator' => $kehadiranData])
+    {{ $kehadiranData->links('components.pagination') }}
+
   </div>
 </div>
 @endsection

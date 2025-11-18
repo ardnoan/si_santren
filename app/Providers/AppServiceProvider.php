@@ -4,16 +4,9 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Blade;
-/**
- * Class AppServiceProvider
- * Implementasi: Dependency Inversion Principle
- * Binding semua dependencies
- */
+
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
     public function register(): void
     {
         // Register Repositories
@@ -56,35 +49,64 @@ class AppServiceProvider extends ServiceProvider
         );
     }
 
-    /**
-     * Bootstrap any application services.
-     */
     public function boot(): void
     {
-        //
-         // @admin ... @endadmin
+        // ================================================
+        // SIMPLE ROLE-BASED BLADE DIRECTIVES
+        // ================================================
+        
+        // @admin ... @endadmin
         Blade::if('admin', function () {
-            return auth()->check() && auth()->user()->isAdmin();
+            return auth()->check() && auth()->user()->role === 'admin';
         });
         
-        // @ustadz ... @endust adz
+        // @ustadz ... @endustadz
         Blade::if('ustadz', function () {
-            return auth()->check() && auth()->user()->isUstadz();
+            return auth()->check() && auth()->user()->role === 'ustadz';
         });
         
         // @santri ... @endsantri
         Blade::if('santri', function () {
-            return auth()->check() && auth()->user()->isSantri();
+            return auth()->check() && auth()->user()->role === 'santri';
         });
+        
+        // @bendahara ... @endbendahara
+        Blade::if('bendahara', function () {
+            return auth()->check() && auth()->user()->role === 'bendahara';
+        });
+        
+        // @pemimpin ... @endpemimpin
+        Blade::if('pemimpin', function () {
+            return auth()->check() && auth()->user()->role === 'pemimpin';
+        });
+
+        // ================================================
+        // KOMBINASI ROLES
+        // ================================================
         
         // @adminOrUstadz ... @endadminOrUstadz
         Blade::if('adminOrUstadz', function () {
-            return auth()->check() && (auth()->user()->isAdmin() || auth()->user()->isUstadz());
+            return auth()->check() && in_array(auth()->user()->role, ['admin', 'ustadz']);
         });
         
-        // @role('admin') ... @endrole
-        Blade::if('role', function ($role) {
-            return auth()->check() && auth()->user()->role === $role;
+        // @adminOrBendahara ... @endadminOrBendahara
+        Blade::if('adminOrBendahara', function () {
+            return auth()->check() && in_array(auth()->user()->role, ['admin', 'bendahara']);
+        });
+        
+        // @adminOrPemimpin ... @endadminOrPemimpin
+        Blade::if('adminOrPemimpin', function () {
+            return auth()->check() && in_array(auth()->user()->role, ['admin', 'pemimpin']);
+        });
+        
+        // @staffPesantren (admin, ustadz, bendahara) ... @endstaffPesantren
+        Blade::if('staffPesantren', function () {
+            return auth()->check() && in_array(auth()->user()->role, ['admin', 'ustadz', 'bendahara']);
+        });
+        
+        // @management (admin, pemimpin) ... @endmanagement
+        Blade::if('management', function () {
+            return auth()->check() && in_array(auth()->user()->role, ['admin', 'pemimpin']);
         });
     }
 }

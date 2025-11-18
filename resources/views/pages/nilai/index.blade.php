@@ -19,13 +19,13 @@
         <p class="text-muted mb-0 small">Monitor dan kelola nilai akademik</p>
       </div>
 
-      @canInputNilai
+      @adminOrUstadz
       <a href="{{ auth()->user()->isAdmin() ? route('admin.nilai.create') : route('ustadz.nilai.create') }}" 
          class="btn btn-primary shadow-sm">
         <i class="bi bi-plus-circle me-2"></i>
         <span>Input Nilai</span>
       </a>
-      @endcanInputNilai
+      @endadminOrUstadz
     </div>
 
     <!-- Filter -->
@@ -274,13 +274,13 @@
                 <i class="bi bi-inbox fs-1 d-block mb-3 opacity-50"></i>
                 <h5>Belum ada data nilai</h5>
                 <p class="mb-3">Data nilai akan muncul setelah diinput</p>
-                @canInputNilai
+                @adminOrUstadz
                 <a href="{{ auth()->user()->isAdmin() ? route('admin.nilai.create') : route('ustadz.nilai.create') }}" 
                    class="btn btn-primary">
                   <i class="bi bi-plus-circle me-2"></i>
                   Input Nilai
                 </a>
-                @endcanInputNilai
+                @endadminOrUstadz
               </div>
             </td>
           </tr>

@@ -19,7 +19,7 @@
         <p class="text-muted mb-0 small">Monitor dan kelola transaksi pembayaran</p>
       </div>
 
-      @canManagePembayaran
+      @admin
       <div class="d-flex gap-2">
         <a href="{{ route('admin.pembayaran.create') }}" class="btn btn-primary shadow-sm">
           <i class="bi bi-plus-circle me-2"></i>
@@ -30,7 +30,7 @@
           <span>Laporan</span>
         </a>
       </div>
-      @endcanManagePembayaran
+      @endadmin
     </div>
 
     <!-- Filter & Search -->
@@ -257,7 +257,7 @@
             </td>
             <td class="text-center">
               <div class="btn-group btn-group-sm shadow-sm" role="group">
-                @canManagePembayaran
+                @admin
                 @if($p->bukti_transfer)
                 <a href="{{ asset('storage/' . $p->bukti_transfer) }}" 
                    target="_blank" 
@@ -285,7 +285,7 @@
                     <i class="bi bi-trash"></i>
                   </button>
                 </form>
-                @endcanManagePembayaran
+                @endadmin
               </div>
             </td>
           </tr>
@@ -296,12 +296,12 @@
                 <i class="bi bi-inbox fs-1 d-block mb-3 opacity-50"></i>
                 <h5>Belum ada data pembayaran</h5>
                 <p class="mb-3">Data pembayaran akan muncul di sini</p>
-                @canManagePembayaran
+                @admin
                 <a href="{{ route('admin.pembayaran.create') }}" class="btn btn-primary">
                   <i class="bi bi-plus-circle me-2"></i>
                   Input Pembayaran Pertama
                 </a>
-                @endcanManagePembayaran
+                @endadmin
               </div>
             </td>
           </tr>
