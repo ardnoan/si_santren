@@ -35,7 +35,7 @@ class User extends Authenticatable
     ];
 
     // === RELATIONSHIPS (OOP: Association) ===
-    
+
     public function santri()
     {
         return $this->hasOne(Santri::class);
@@ -47,7 +47,7 @@ class User extends Authenticatable
     }
 
     // === METHODS (OOP: Encapsulation) ===
-    
+
     /**
      * Check if user is admin
      */
@@ -71,6 +71,17 @@ class User extends Authenticatable
     {
         return $this->role === 'santri';
     }
+
+    public function isBendahara(): bool
+    {
+        return $this->role === 'bendahara';
+    }
+
+    public function isPemimpin(): bool
+    {
+        return $this->role === 'pemimpin';
+    }
+
 
     /**
      * Update last login timestamp
@@ -98,22 +109,43 @@ class User extends Authenticatable
         $this->is_active = false;
         return $this->save();
     }
+    public function pengeluaran()
+    {
+        return $this->hasMany(Pengeluaran::class, 'bendahara_id');
+    }
+
+    public function pengeluaranApproved()
+    {
+        return $this->hasMany(Pengeluaran::class, 'approved_by');
+    }
+
+    public function kas()
+    {
+        return $this->hasMany(Kas::class);
+    }
+
+    public function jadwalKegiatanDiampu()
+    {
+        return $this->hasMany(JadwalKegiatan::class, 'penanggung_jawab');
+    }
 
     /**
      * Get full role name
      */
     public function getRoleNameAttribute(): string
     {
-        return match($this->role) {
+        return match ($this->role) {
             'admin' => 'Administrator',
             'ustadz' => 'Ustadz/Pengajar',
             'santri' => 'Santri',
+            'bendahara' => 'Bendahara',
+            'pemimpin' => 'Pemimpin',
             default => 'Unknown'
         };
     }
 
     // === SCOPES ===
-    
+
     public function scopeActive($query)
     {
         return $query->where('is_active', true);

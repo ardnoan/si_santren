@@ -54,59 +54,93 @@ class AppServiceProvider extends ServiceProvider
         // ================================================
         // SIMPLE ROLE-BASED BLADE DIRECTIVES
         // ================================================
-        
+
         // @admin ... @endadmin
         Blade::if('admin', function () {
             return auth()->check() && auth()->user()->role === 'admin';
         });
-        
+
         // @ustadz ... @endustadz
         Blade::if('ustadz', function () {
             return auth()->check() && auth()->user()->role === 'ustadz';
         });
-        
+
         // @santri ... @endsantri
         Blade::if('santri', function () {
             return auth()->check() && auth()->user()->role === 'santri';
         });
-        
+
         // @bendahara ... @endbendahara
         Blade::if('bendahara', function () {
             return auth()->check() && auth()->user()->role === 'bendahara';
         });
-        
+
+        // @pemimpin ... @endpemimpin
+        Blade::if('pemimpin', function () {
+            return auth()->check() && auth()->user()->role === 'pemimpin';
+        });
+        // @bendahara ... @endbendahara
+        Blade::if('bendahara', function () {
+            return auth()->check() && auth()->user()->role === 'bendahara';
+        });
+
         // @pemimpin ... @endpemimpin
         Blade::if('pemimpin', function () {
             return auth()->check() && auth()->user()->role === 'pemimpin';
         });
 
+
         // ================================================
         // KOMBINASI ROLES
         // ================================================
-        
+
         // @adminOrUstadz ... @endadminOrUstadz
         Blade::if('adminOrUstadz', function () {
             return auth()->check() && in_array(auth()->user()->role, ['admin', 'ustadz']);
         });
-        
+
         // @adminOrBendahara ... @endadminOrBendahara
         Blade::if('adminOrBendahara', function () {
             return auth()->check() && in_array(auth()->user()->role, ['admin', 'bendahara']);
         });
-        
+
         // @adminOrPemimpin ... @endadminOrPemimpin
         Blade::if('adminOrPemimpin', function () {
             return auth()->check() && in_array(auth()->user()->role, ['admin', 'pemimpin']);
         });
-        
+
         // @staffPesantren (admin, ustadz, bendahara) ... @endstaffPesantren
         Blade::if('staffPesantren', function () {
             return auth()->check() && in_array(auth()->user()->role, ['admin', 'ustadz', 'bendahara']);
         });
-        
+
         // @management (admin, pemimpin) ... @endmanagement
         Blade::if('management', function () {
             return auth()->check() && in_array(auth()->user()->role, ['admin', 'pemimpin']);
+        });
+        // @adminOrBendahara ... @endadminOrBendahara (sudah ada)
+        Blade::if('adminOrBendahara', function () {
+            return auth()->check() && in_array(auth()->user()->role, ['admin', 'bendahara']);
+        });
+
+        // @adminOrPemimpin ... @endadminOrPemimpin (sudah ada)
+        Blade::if('adminOrPemimpin', function () {
+            return auth()->check() && in_array(auth()->user()->role, ['admin', 'pemimpin']);
+        });
+
+        // @bendaharaOrPemimpin ... @endbendaharaOrPemimpin
+        Blade::if('bendaharaOrPemimpin', function () {
+            return auth()->check() && in_array(auth()->user()->role, ['bendahara', 'pemimpin']);
+        });
+
+        // @management (admin, pemimpin) ... @endmanagement (sudah ada)
+        Blade::if('management', function () {
+            return auth()->check() && in_array(auth()->user()->role, ['admin', 'pemimpin']);
+        });
+
+        // @keuangan (admin, bendahara, pemimpin) ... @endkeuangan
+        Blade::if('keuangan', function () {
+            return auth()->check() && in_array(auth()->user()->role, ['admin', 'bendahara', 'pemimpin']);
         });
     }
 }

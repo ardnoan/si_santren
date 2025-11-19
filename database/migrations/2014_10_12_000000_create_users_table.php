@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('username', 64)->unique();
             $table->string('email')->unique()->nullable();
             $table->string('password');
-            $table->enum('role', ['admin', 'ustadz', 'santri'])->default('santri');
+            $table->enum('role', ['admin', 'ustadz', 'santri', 'bendahara', 'pemimpin'])->default('santri');
             $table->boolean('is_active')->default(true);
             $table->timestamp('last_login')->nullable();
             $table->rememberToken();

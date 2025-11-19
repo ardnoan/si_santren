@@ -175,10 +175,86 @@ class DatabaseSeeder extends Seeder
                 ]);
             }
         }
+        // ====== USER BENDAHARA ======
+        $bendahara = \App\Models\User::create([
+            'username' => 'bendahara',
+            'email' => 'bendahara@sisantren.com',
+            'password' => Hash::make('bendahara123'),
+            'role' => 'bendahara',
+            'is_active' => true,
+        ]);
+
+        // ====== USER PEMIMPIN ======
+        $pemimpin = \App\Models\User::create([
+            'username' => 'pemimpin',
+            'email' => 'pemimpin@sisantren.com',
+            'password' => Hash::make('pemimpin123'),
+            'role' => 'pemimpin',
+            'is_active' => true,
+        ]);
+
+        // ====== JADWAL KEGIATAN (SAMPLE) ======
+        $kegiatanList = [
+            [
+                'nama_kegiatan' => 'Shalat Subuh Berjamaah',
+                'jenis' => 'ibadah',
+                'frekuensi' => 'harian',
+                'hari' => 'Setiap Hari',
+                'jam_mulai' => '04:30:00',
+                'jam_selesai' => '05:00:00',
+                'tempat' => 'Masjid',
+                'penanggung_jawab' => $ustadz->id,
+                'is_wajib' => true,
+                'is_active' => true,
+            ],
+            [
+                'nama_kegiatan' => 'Tahfidz Al-Quran',
+                'jenis' => 'ibadah',
+                'frekuensi' => 'harian',
+                'hari' => 'Setiap Hari',
+                'jam_mulai' => '06:00:00',
+                'jam_selesai' => '07:00:00',
+                'tempat' => 'Ruang Tahfidz',
+                'penanggung_jawab' => $ustadz->id,
+                'is_wajib' => true,
+                'is_active' => true,
+            ],
+            [
+                'nama_kegiatan' => 'Kajian Fiqih',
+                'jenis' => 'akademik',
+                'frekuensi' => 'mingguan',
+                'hari' => 'Jumat',
+                'jam_mulai' => '19:30:00',
+                'jam_selesai' => '21:00:00',
+                'tempat' => 'Aula',
+                'penanggung_jawab' => $ustadz->id,
+                'is_wajib' => false,
+                'is_active' => true,
+            ],
+            [
+                'nama_kegiatan' => 'Piket Kebersihan',
+                'jenis' => 'kebersihan',
+                'frekuensi' => 'harian',
+                'hari' => 'Setiap Hari',
+                'jam_mulai' => '05:30:00',
+                'jam_selesai' => '06:00:00',
+                'tempat' => 'Area Pesantren',
+                'penanggung_jawab' => null,
+                'is_wajib' => true,
+                'is_active' => true,
+            ],
+        ];
+
+        foreach ($kegiatanList as $k) {
+            \App\Models\JadwalKegiatan::create($k);
+        }
+
 
         echo "\n✅ Seeder selesai dijalankan!\n";
         echo "Admin: admin / admin123\n";
         echo "Ustadz: ustadz1 / ustadz123\n";
         echo "Santri: santri1–50 / santri123\n";
+        echo "\nBendahara: bendahara / bendahara123\n";
+        echo "Pemimpin: pemimpin / pemimpin123\n";
     }
 }
