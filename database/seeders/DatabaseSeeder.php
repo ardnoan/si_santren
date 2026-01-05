@@ -16,16 +16,14 @@ class DatabaseSeeder extends Seeder
     {
         $faker = Faker::create('id_ID');
 
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        DB::table('users')->truncate();
-        DB::table('kelas')->truncate();
-        DB::table('mata_pelajarans')->truncate();
-        DB::table('santris')->truncate();
-        DB::table('kehadirans')->truncate();
-        DB::table('pembayarans')->truncate();
-        DB::table('nilais')->truncate();
-        DB::table('jadwal_pelajarans')->truncate();
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        DB::table('users')->delete();
+        DB::table('kelas')->delete();
+        DB::table('mata_pelajarans')->delete();
+        DB::table('santris')->delete();
+        DB::table('kehadirans')->delete();
+        DB::table('pembayarans')->delete();
+        DB::table('nilais')->delete();
+        DB::table('jadwal_pelajarans')->delete();
 
         // ====== USER ADMIN ======
         $admin = \App\Models\User::create([
