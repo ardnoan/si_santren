@@ -39,12 +39,12 @@ class PengeluaranController extends Controller
                            ->orderBy('created_at', 'desc')
                            ->paginate(20);
         
-        return view('bendahara.pengeluaran.index', compact('pengeluaran'));
+        return view('pengeluaran.index', compact('pengeluaran'));
     }
     
     public function create()
     {
-        return view('bendahara.pengeluaran.form');
+        return view('pengeluaran.form');
     }
     
     public function store(Request $request)
@@ -73,7 +73,7 @@ class PengeluaranController extends Controller
             DB::commit();
             
             return redirect()
-                ->route('bendahara.pengeluaran.index')
+                ->route('pengeluaran.index')
                 ->with('success', 'Data pengeluaran berhasil dicatat. Menunggu approval.');
         } catch (\Exception $e) {
             DB::rollBack();
@@ -92,7 +92,7 @@ class PengeluaranController extends Controller
     public function show($id)
     {
         $pengeluaran = Pengeluaran::with(['bendahara', 'approver'])->findOrFail($id);
-        return view('bendahara.pengeluaran.show', compact('pengeluaran'));
+        return view('pengeluaran.show', compact('pengeluaran'));
     }
     
     public function edit($id)
@@ -104,7 +104,7 @@ class PengeluaranController extends Controller
             return back()->with('error', 'Tidak dapat mengedit pengeluaran yang sudah di-approve/reject.');
         }
         
-        return view('bendahara.pengeluaran.form', compact('pengeluaran'));
+        return view('pengeluaran.form', compact('pengeluaran'));
     }
     
     public function update(Request $request, $id)
@@ -141,7 +141,7 @@ class PengeluaranController extends Controller
             DB::commit();
             
             return redirect()
-                ->route('bendahara.pengeluaran.index')
+                ->route('pengeluaran.index')
                 ->with('success', 'Data pengeluaran berhasil diperbarui.');
         } catch (\Exception $e) {
             DB::rollBack();
@@ -173,7 +173,7 @@ class PengeluaranController extends Controller
             DB::commit();
             
             return redirect()
-                ->route('bendahara.pengeluaran.index')
+                ->route('pengeluaran.index')
                 ->with('success', 'Data pengeluaran berhasil dihapus.');
         } catch (\Exception $e) {
             DB::rollBack();

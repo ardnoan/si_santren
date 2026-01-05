@@ -49,7 +49,7 @@ class KasController extends Controller
             ->bulanIni()
             ->sum('jumlah');
         
-        return view('bendahara.kas.index', compact(
+        return view('kas.index', compact(
             'kas',
             'saldoTerkini',
             'pemasukanBulanIni',
@@ -60,6 +60,6 @@ class KasController extends Controller
     public function show($id)
     {
         $kas = Kas::with(['user', 'referensi'])->findOrFail($id);
-        return view('bendahara.kas.show', compact('kas'));
+        return view('kas.show', compact('kas'));
     }
 }

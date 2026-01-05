@@ -60,6 +60,10 @@ class LoginController extends Controller
                 return redirect()->route('ustadz.dashboard');
             case 'santri':
                 return redirect()->route('santri.dashboard');
+            case 'bendahara':
+                return redirect()->route('bendahara.dashboard');
+            case 'pemimpin':
+                return redirect()->route('pemimpin.dashboard');
             default:
                 Auth::logout();
                 return redirect()->route('login')->with('error', 'Role tidak valid');

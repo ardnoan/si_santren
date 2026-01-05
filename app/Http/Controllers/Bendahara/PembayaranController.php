@@ -46,7 +46,7 @@ class PembayaranController extends Controller
         $totalPending = Pembayaran::where('status', 'pending')->count();
         $totalPendingNominal = Pembayaran::where('status', 'pending')->sum('jumlah');
         
-        return view('bendahara.pembayaran.index', compact(
+        return view('pembayaran.index', compact(
             'pembayaran',
             'totalPending',
             'totalPendingNominal'

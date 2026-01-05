@@ -1,5 +1,5 @@
 <?php
-// FILE: routes/web.php (COMPLETE VERSION)
+// FILE: routes/web.php (COMPLETE FIXED VERSION)
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\SantriController;
@@ -21,6 +21,7 @@ use App\Http\Controllers\Pemimpin\LaporanController;
 use App\Http\Controllers\Pemimpin\PembayaranController as PemimpinPembayaranController;
 use App\Http\Controllers\Pemimpin\SantriController as PemimpinSantriController;
 use App\Http\Controllers\Pemimpin\StatistikController;
+use App\Http\Controllers\Pemimpin\PengeluaranController as PemimpinPengeluaranController;
 
 // ============================================
 // ROOT REDIRECT
@@ -241,6 +242,10 @@ Route::middleware(['auth', 'role:bendahara'])->prefix('bendahara')->name('bendah
     Route::get('pengeluaran/{id}/edit', [PengeluaranController::class, 'edit'])->name('pengeluaran.edit');
     Route::put('pengeluaran/{id}', [PengeluaranController::class, 'update'])->name('pengeluaran.update');
     Route::delete('pengeluaran/{id}', [PengeluaranController::class, 'destroy'])->name('pengeluaran.destroy');
+
+    // Santri (Read Only) - NEW!
+    Route::get('santri', [SantriController::class, 'index'])->name('santri.index');
+    Route::get('santri/{id}', [SantriController::class, 'show'])->name('santri.show');
 });
 
 // ============================================
@@ -266,68 +271,10 @@ Route::middleware(['auth', 'role:pemimpin'])->prefix('pemimpin')->name('pemimpin
     Route::get('pembayaran', [PemimpinPembayaranController::class, 'index'])->name('pembayaran.index');
 
     // Pengeluaran - Approval
-    Route::get('pengeluaran', [PengeluaranController::class, 'index'])->name('pengeluaran.index');
-    Route::get('pengeluaran/{id}', [PengeluaranController::class, 'show'])->name('pengeluaran.show');
-    Route::post('pengeluaran/{id}/approve', function ($id) {
-        try {
-            $pengeluaran = \App\Models\Pengeluaran::findOrFail($id);
-            
-            if ($pengeluaran->status !== 'pending') {
-                return back()->with('error', 'Pengeluaran ini sudah diproses.');
-            }
-            
-            DB::beginTransaction();
-            
-            // Update status
-            $pengeluaran->update([
-                'status' => 'approved',
-                'approved_by' => auth()->id(),
-                'approved_at' => now(),
-            ]);
-            
-            // Catat ke kas
-            $saldoSebelum = \App\Models\Kas::getSaldoTerkini();
-            
-            \App\Models\Kas::create([
-                'tanggal' => now(),
-                'jenis' => 'keluar',
-                'kategori' => $pengeluaran->kategori,
-                'jumlah' => $pengeluaran->jumlah,
-                'saldo' => $saldoSebelum - $pengeluaran->jumlah,
-                'keterangan' => 'Pengeluaran: ' . $pengeluaran->keterangan,
-                'referensi_tipe' => \App\Models\Pengeluaran::class,
-                'referensi_id' => $pengeluaran->id,
-                'user_id' => auth()->id(),
-            ]);
-            
-            DB::commit();
-            
-            return back()->with('success', 'Pengeluaran berhasil disetujui dan dicatat ke kas.');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return back()->with('error', 'Gagal approve: ' . $e->getMessage());
-        }
-    })->name('pengeluaran.approve');
-    
-    Route::post('pengeluaran/{id}/reject', function ($id) {
-        try {
-            $pengeluaran = \App\Models\Pengeluaran::findOrFail($id);
-            
-            if ($pengeluaran->status !== 'pending') {
-                return back()->with('error', 'Pengeluaran ini sudah diproses.');
-            }
-            
-            $pengeluaran->update([
-                'status' => 'rejected',
-                'approved_by' => auth()->id(),
-                'approved_at' => now(),
-            ]);
-            
-            return back()->with('success', 'Pengeluaran berhasil ditolak.');
-        } catch (\Exception $e) {
-            return back()->with('error', 'Gagal reject: ' . $e->getMessage());
-        }
-    })->name('pengeluaran.reject');
+    Route::get('pengeluaran', [PemimpinPengeluaranController::class, 'index'])->name('pengeluaran.index');
+    Route::get('pengeluaran/{id}', [PemimpinPengeluaranController::class, 'show'])->name('pengeluaran.show');
+    Route::post('pengeluaran/{id}/approve', [PemimpinPengeluaranController::class, 'approve'])->name('pengeluaran.approve');
+    Route::post('pengeluaran/{id}/reject', [PemimpinPengeluaranController::class, 'reject'])->name('pengeluaran.reject');
 });
 
 // ============================================
