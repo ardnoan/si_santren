@@ -163,6 +163,18 @@
                                 <code class="text-primary">santri1</code> /
                                 <code class="text-primary">santri123</code>
                             </div>
+                            <div>
+                                <i class="bi bi-person-fill text-primary me-2"></i>
+                                <strong>Bendahara:</strong>
+                                <code class="text-primary">bendahara</code> /
+                                <code class="text-primary">bendahara123</code>
+                            </div>
+                            <div>
+                                <i class="bi bi-person-fill text-primary me-2"></i>
+                                <strong>Pemimpin:</strong>
+                                <code class="text-primary">pemimpin</code> /
+                                <code class="text-primary">pemimpin123</code>
+                            </div>
                         </small>
                     </div>
                 </div>
