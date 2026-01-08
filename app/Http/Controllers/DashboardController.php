@@ -1,5 +1,4 @@
 <?php
-// FILE: app/Http/Controllers/DashboardController.php - FIXED VERSION
 
 namespace App\Http\Controllers;
 
@@ -19,7 +18,6 @@ class DashboardController extends Controller
     {
         $user = auth()->user();
         
-        // Route berdasarkan role
         if ($user->isAdmin()) {
             return $this->adminDashboard();
         } elseif ($user->isUstadz()) {
@@ -37,12 +35,10 @@ class DashboardController extends Controller
     
     private function adminDashboard()
     {
-        // Total statistik
         $totalSantri = Santri::count();
         $totalSantriAktif = Santri::aktif()->count();
         $totalKelas = Kelas::count();
         
-        // Pembayaran
         $totalPemasukan = Pembayaran::where('status', 'lunas')->sum('jumlah');
         $pemasukaBulanIni = Pembayaran::where('status', 'lunas')
             ->whereMonth('tanggal_bayar', Carbon::now()->month)
@@ -50,14 +46,12 @@ class DashboardController extends Controller
             ->sum('jumlah');
         $pembayaranPending = Pembayaran::where('status', 'pending')->count();
         
-        // Kehadiran hari ini
         $kehadiranToday = Kehadiran::whereDate('tanggal', Carbon::today())
             ->selectRaw('status, COUNT(*) as total')
             ->groupBy('status')
             ->pluck('total', 'status')
             ->toArray();
         
-        // Santri per kelas
         $santriPerKelas = Kelas::withCount('santris')
             ->orderBy('nama_kelas')
             ->get()
@@ -68,7 +62,6 @@ class DashboardController extends Controller
                 ];
             });
         
-        // Statistik gender
         $santriLaki = Santri::aktif()->byGender('L')->count();
         $santriPerempuan = Santri::aktif()->byGender('P')->count();
         
@@ -88,18 +81,16 @@ class DashboardController extends Controller
     
     private function ustadzDashboard()
     {
-        // Statistik untuk ustadz
+        // FIX: tambahkan variable totalSantri
         $totalSantri = Santri::aktif()->count();
         $totalKelas = Kelas::count();
         
-        // Kehadiran hari ini
         $kehadiranToday = Kehadiran::whereDate('tanggal', Carbon::today())
             ->selectRaw('status, COUNT(*) as total')
             ->groupBy('status')
             ->pluck('total', 'status')
             ->toArray();
         
-        // Santri per kelas
         $santriPerKelas = Kelas::withCount('santris')
             ->orderBy('nama_kelas')
             ->get()
@@ -110,7 +101,6 @@ class DashboardController extends Controller
                 ];
             });
         
-        // Kelas yang diampu
         $kelasDiampu = Kelas::where('wali_kelas', auth()->id())->count();
         
         return view('dashboard', compact(
@@ -124,31 +114,22 @@ class DashboardController extends Controller
     
     private function bendaharaDashboard()
     {
-        // Saldo Kas Terkini
         $saldoKas = Kas::getSaldoTerkini();
         
-        // Pemasukan Bulan Ini
         $pemasukanBulanIni = Pembayaran::where('status', 'lunas')
             ->whereMonth('tanggal_bayar', Carbon::now()->month)
             ->whereYear('tanggal_bayar', Carbon::now()->year)
             ->sum('jumlah');
         
-        // Pengeluaran Bulan Ini
         $pengeluaranBulanIni = Pengeluaran::where('status', 'approved')
             ->whereMonth('tanggal', Carbon::now()->month)
             ->whereYear('tanggal', Carbon::now()->year)
             ->sum('jumlah');
         
-        // Pembayaran Pending
         $pembayaranPending = Pembayaran::where('status', 'pending')->count();
-        
-        // Pending Approval (untuk quick info)
         $pendingApproval = Pengeluaran::pending()->count();
         
-        // Data untuk Chart: Cash Flow 7 hari terakhir
         $cashFlowData = $this->getCashFlowData();
-        
-        // Data untuk Chart: Pengeluaran per kategori bulan ini
         $pengeluaranData = $this->getPengeluaranData();
         
         return view('dashboard', compact(
@@ -164,31 +145,22 @@ class DashboardController extends Controller
     
     private function pemimpinDashboard()
     {
-        // Total Santri
         $totalSantri = Santri::aktif()->count();
-        
-        // Saldo Kas
         $saldoKas = Kas::getSaldoTerkini();
         
-        // Pemasukan Bulan Ini
         $pemasukanBulanIni = Pembayaran::where('status', 'lunas')
             ->whereMonth('tanggal_bayar', Carbon::now()->month)
             ->whereYear('tanggal_bayar', Carbon::now()->year)
             ->sum('jumlah');
         
-        // Pengeluaran Bulan Ini
         $pengeluaranBulanIni = Pengeluaran::where('status', 'approved')
             ->whereMonth('tanggal', Carbon::now()->month)
             ->whereYear('tanggal', Carbon::now()->year)
             ->sum('jumlah');
         
-        // Pending Approval
         $pendingApproval = Pengeluaran::pending()->count();
         
-        // Chart Data: Trend Keuangan 6 Bulan
         $trendKeuangan = $this->getTrendKeuangan();
-        
-        // Chart Data: Kategori Pengeluaran
         $kategoriPengeluaran = $this->getKategoriPengeluaran();
         
         return view('dashboard', compact(
@@ -211,7 +183,6 @@ class DashboardController extends Controller
                 ->with('error', 'Data santri tidak ditemukan');
         }
         
-        // Statistik kehadiran
         $totalKehadiran = $santri->kehadiran()->count();
         $kehadiranBulanIni = $santri->kehadiran()
             ->whereMonth('tanggal', Carbon::now()->month)
@@ -224,7 +195,6 @@ class DashboardController extends Controller
             ->whereYear('tanggal', Carbon::now()->year)
             ->count();
         
-        // Pembayaran
         $totalPembayaran = $santri->pembayaran()
             ->where('status', 'lunas')
             ->sum('jumlah');
@@ -239,10 +209,8 @@ class DashboardController extends Controller
             ->where('status', 'pending')
             ->count();
         
-        // Nilai rata-rata
         $nilaiRataRata = $santri->nilai()->avg('nilai_akhir');
         
-        // Data untuk chart - kehadiran 7 hari terakhir
         $kehadiranBulanIni7Hari = $santri->kehadiran()
             ->whereBetween('tanggal', [Carbon::now()->subDays(6), Carbon::now()])
             ->orderBy('tanggal', 'asc')
@@ -263,8 +231,6 @@ class DashboardController extends Controller
             'kehadiranBulanIni7Hari'
         ));
     }
-    
-    // Helper methods untuk chart data
     
     private function getCashFlowData()
     {
@@ -301,7 +267,7 @@ class DashboardController extends Controller
         $values = [];
         
         foreach ($data as $item) {
-            $labels[] = ucfirst($item->kategori);
+            $labels[] = ucfirst(str_replace('_', ' ', $item->kategori));
             $values[] = $item->total;
         }
         

@@ -18,8 +18,15 @@ class PembayaranController extends Controller
         if ($request->status) {
             $query->where('status', $request->status);
         } else {
-            // Default: show pending first
-            $query->orderByRaw("FIELD(status, 'pending', 'lunas', 'dibatalkan')");
+            // PostgreSQL compatible ordering - gunakan CASE WHEN
+            $query->orderByRaw("
+                CASE 
+                    WHEN status = 'pending' THEN 1
+                    WHEN status = 'lunas' THEN 2
+                    WHEN status = 'dibatalkan' THEN 3
+                    ELSE 4
+                END
+            ");
         }
         
         // Filter by jenis
@@ -42,11 +49,11 @@ class PembayaranController extends Controller
         
         $pembayaran = $query->orderBy('created_at', 'desc')->paginate(20);
         
-        // Statistics
+        // Statistics - FIX: tambahkan semua variabel yang dibutuhkan
         $totalPending = Pembayaran::where('status', 'pending')->count();
         $totalPendingNominal = Pembayaran::where('status', 'pending')->sum('jumlah');
         
-        return view('pembayaran.index', compact(
+        return view('pages.pembayaran.index', compact(
             'pembayaran',
             'totalPending',
             'totalPendingNominal'
@@ -71,7 +78,7 @@ class PembayaranController extends Controller
             // Update status
             $pembayaran->update([
                 'status' => $validated['status'],
-                'admin_id' => auth()->id(), // Update verifikator
+                'admin_id' => auth()->id(),
             ]);
             
             // Jika disetujui (lunas), catat ke kas

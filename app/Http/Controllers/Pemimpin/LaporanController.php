@@ -47,6 +47,39 @@ class LaporanController extends Controller
             ];
         });
         
+        // FIX: Tambahkan rincian pemasukan per jenis
+        $rincianPemasukan = $pembayaran->groupBy('jenis_pembayaran')->map(function($items) {
+            return [
+                'jumlah' => $items->sum('jumlah'),
+                'count' => $items->count(),
+            ];
+        });
+        
+        // FIX: Gabungkan semua transaksi untuk timeline
+        $transaksi = collect()
+            ->merge($pembayaran->map(function($item) {
+                return [
+                    'tanggal' => $item->tanggal_bayar,
+                    'jenis' => 'Pemasukan',
+                    'kategori' => $item->jenis_pembayaran_label,
+                    'keterangan' => $item->santri->nama_lengkap ?? '-',
+                    'jumlah' => $item->jumlah,
+                    'tipe' => 'masuk'
+                ];
+            }))
+            ->merge($pengeluaran->map(function($item) {
+                return [
+                    'tanggal' => $item->tanggal,
+                    'jenis' => 'Pengeluaran',
+                    'kategori' => $item->kategori_label,
+                    'keterangan' => $item->keterangan,
+                    'jumlah' => $item->jumlah,
+                    'tipe' => 'keluar'
+                ];
+            }))
+            ->sortByDesc('tanggal')
+            ->values();
+        
         return view('pages.laporan.index', compact(
             'dari',
             'sampai',
@@ -56,7 +89,9 @@ class LaporanController extends Controller
             'totalPengeluaran',
             'selisih',
             'saldoTerkini',
-            'pengeluaranPerKategori'
+            'pengeluaranPerKategori',
+            'rincianPemasukan',
+            'transaksi'
         ));
     }
     
