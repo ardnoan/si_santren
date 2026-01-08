@@ -37,6 +37,6 @@ class PembayaranController extends Controller
         
         $pembayaran = $query->orderBy('tanggal_bayar', 'desc')->paginate(20);
         
-        return view('pemimpin.pembayaran.index', compact('pembayaran'));
+        return view('pages.pembayaran.index', compact('pembayaran'));
     }
 }

@@ -47,7 +47,7 @@ class LaporanController extends Controller
             ];
         });
         
-        return view('pemimpin.laporan.index', compact(
+        return view('pages.laporan.index', compact(
             'dari',
             'sampai',
             'pembayaran',

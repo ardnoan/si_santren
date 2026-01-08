@@ -18,8 +18,15 @@ class PengeluaranController extends Controller
         if ($request->status) {
             $query->where('status', $request->status);
         } else {
-            // Default: show pending first
-            $query->orderByRaw("FIELD(status, 'pending', 'approved', 'rejected')");
+            // Default: show pending first (PostgreSQL compatible)
+            $query->orderByRaw("
+                CASE 
+                    WHEN status = 'pending' THEN 1
+                    WHEN status = 'approved' THEN 2
+                    WHEN status = 'rejected' THEN 3
+                    ELSE 4
+                END
+            ");
         }
 
         // Filter by kategori

@@ -32,12 +32,12 @@ class SantriController extends Controller
         
         $santri = $query->orderBy('nama_lengkap')->paginate(20);
         
-        return view('pemimpin.santri.index', compact('santri'));
+        return view('pages.santri.index', compact('santri'));
     }
     
     public function show($id)
     {
         $santri = Santri::with(['kelas', 'user'])->findOrFail($id);
-        return view('pemimpin.santri.show', compact('santri'));
+        return view('pages.santri.profile', compact('santri'));
     }
 }

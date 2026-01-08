@@ -59,7 +59,7 @@ class StatistikController extends Controller
             ];
         }
         
-        return view('pemimpin.statistik.index', compact(
+        return view('pages.statistik.index', compact(
             'statsSantri',
             'statsKehadiran',
             'statsNilai',
