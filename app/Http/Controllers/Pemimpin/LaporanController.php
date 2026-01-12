@@ -39,29 +39,31 @@ class LaporanController extends Controller
         $selisih = $totalPemasukan - $totalPengeluaran;
         $saldoTerkini = Kas::getSaldoTerkini();
         
-        // Breakdown per kategori pengeluaran
-        $pengeluaranPerKategori = $pengeluaran->groupBy('kategori')->map(function($items) {
-            return [
-                'jumlah' => $items->sum('jumlah'),
+        // FIX: Rincian pemasukan per jenis
+        $rincianPemasukan = $pembayaran->groupBy('jenis_pembayaran')->map(function($items, $key) {
+            return (object)[
+                'kategori' => ucfirst(str_replace('_', ' ', $key)),
+                'total' => $items->sum('jumlah'),
                 'count' => $items->count(),
             ];
         });
         
-        // FIX: Tambahkan rincian pemasukan per jenis
-        $rincianPemasukan = $pembayaran->groupBy('jenis_pembayaran')->map(function($items) {
-            return [
-                'jumlah' => $items->sum('jumlah'),
+        // FIX: Rincian pengeluaran per kategori (sesuaikan nama variable)
+        $rincianPengeluaran = $pengeluaran->groupBy('kategori')->map(function($items, $key) {
+            return (object)[
+                'kategori' => ucfirst(str_replace('_', ' ', $key)),
+                'total' => $items->sum('jumlah'),
                 'count' => $items->count(),
             ];
         });
         
-        // FIX: Gabungkan semua transaksi untuk timeline
+        // Gabungkan semua transaksi untuk timeline
         $transaksi = collect()
             ->merge($pembayaran->map(function($item) {
                 return [
                     'tanggal' => $item->tanggal_bayar,
                     'jenis' => 'Pemasukan',
-                    'kategori' => $item->jenis_pembayaran_label,
+                    'kategori' => ucfirst(str_replace('_', ' ', $item->jenis_pembayaran)),
                     'keterangan' => $item->santri->nama_lengkap ?? '-',
                     'jumlah' => $item->jumlah,
                     'tipe' => 'masuk'
@@ -71,7 +73,7 @@ class LaporanController extends Controller
                 return [
                     'tanggal' => $item->tanggal,
                     'jenis' => 'Pengeluaran',
-                    'kategori' => $item->kategori_label,
+                    'kategori' => ucfirst(str_replace('_', ' ', $item->kategori)),
                     'keterangan' => $item->keterangan,
                     'jumlah' => $item->jumlah,
                     'tipe' => 'keluar'
@@ -89,8 +91,8 @@ class LaporanController extends Controller
             'totalPengeluaran',
             'selisih',
             'saldoTerkini',
-            'pengeluaranPerKategori',
             'rincianPemasukan',
+            'rincianPengeluaran', // FIX: variable name sesuai view
             'transaksi'
         ));
     }
