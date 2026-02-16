@@ -80,7 +80,7 @@
               @endif
             </td>
             <td class="text-center">
-              <div class="btn-group btn-group-sm">
+              <div class="btn-info">
                 <a href="{{ auth()->user()->isBendahara() ? route('bendahara.pengeluaran.show', $p->id) : route('pemimpin.pengeluaran.show', $p->id) }}" 
                    class="btn btn-info">
                   <i class="bi bi-eye"></i>

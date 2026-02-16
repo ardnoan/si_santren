@@ -39,7 +39,19 @@ class PengeluaranController extends Controller
                            ->orderBy('created_at', 'desc')
                            ->paginate(20);
         
-        return view('pages.pengeluaran.index', compact('pengeluaran'));
+        // ✅ PERBAIKAN: Tambahkan variable statistics yang missing
+        $totalPengeluaran = Pengeluaran::where('status', 'approved')->sum('jumlah');
+        $countPending = Pengeluaran::where('status', 'pending')->count();
+        $countApproved = Pengeluaran::where('status', 'approved')->count();
+        $countRejected = Pengeluaran::where('status', 'rejected')->count();
+        
+        return view('pages.pengeluaran.index', compact(
+            'pengeluaran',
+            'totalPengeluaran',
+            'countPending',
+            'countApproved',
+            'countRejected'
+        ));
     }
     
     public function create()
@@ -73,7 +85,7 @@ class PengeluaranController extends Controller
             DB::commit();
             
             return redirect()
-                ->route('pages.pengeluaran.index')
+                ->route('bendahara.pengeluaran.index')
                 ->with('success', 'Data pengeluaran berhasil dicatat. Menunggu approval.');
         } catch (\Exception $e) {
             DB::rollBack();
@@ -141,7 +153,7 @@ class PengeluaranController extends Controller
             DB::commit();
             
             return redirect()
-                ->route('pages.pengeluaran.index')
+                ->route('bendahara.pengeluaran.index')
                 ->with('success', 'Data pengeluaran berhasil diperbarui.');
         } catch (\Exception $e) {
             DB::rollBack();
@@ -173,7 +185,7 @@ class PengeluaranController extends Controller
             DB::commit();
             
             return redirect()
-                ->route('pages.pengeluaran.index')
+                ->route('bendahara.pengeluaran.index')
                 ->with('success', 'Data pengeluaran berhasil dihapus.');
         } catch (\Exception $e) {
             DB::rollBack();

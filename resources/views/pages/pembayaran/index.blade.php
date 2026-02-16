@@ -256,7 +256,7 @@
               </span>
             </td>
             <td class="text-center">
-              <div class="btn-group btn-group-sm shadow-sm" role="group">
+              <div class="btn-info" role="group">
                 @admin
                 @if($p->bukti_transfer)
                 <a href="{{ asset('storage/' . $p->bukti_transfer) }}" 

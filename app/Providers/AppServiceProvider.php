@@ -79,19 +79,9 @@ class AppServiceProvider extends ServiceProvider
         Blade::if('pemimpin', function () {
             return auth()->check() && auth()->user()->role === 'pemimpin';
         });
-        // @bendahara ... @endbendahara
-        Blade::if('bendahara', function () {
-            return auth()->check() && auth()->user()->role === 'bendahara';
-        });
-
-        // @pemimpin ... @endpemimpin
-        Blade::if('pemimpin', function () {
-            return auth()->check() && auth()->user()->role === 'pemimpin';
-        });
-
 
         // ================================================
-        // KOMBINASI ROLES
+        // KOMBINASI ROLES (2 ROLES)
         // ================================================
 
         // @adminOrUstadz ... @endadminOrUstadz
@@ -109,6 +99,15 @@ class AppServiceProvider extends ServiceProvider
             return auth()->check() && in_array(auth()->user()->role, ['admin', 'pemimpin']);
         });
 
+        // @bendaharaOrPemimpin ... @endbendaharaOrPemimpin
+        Blade::if('bendaharaOrPemimpin', function () {
+            return auth()->check() && in_array(auth()->user()->role, ['bendahara', 'pemimpin']);
+        });
+
+        // ================================================
+        // KOMBINASI ROLES (3+ ROLES)
+        // ================================================
+
         // @staffPesantren (admin, ustadz, bendahara) ... @endstaffPesantren
         Blade::if('staffPesantren', function () {
             return auth()->check() && in_array(auth()->user()->role, ['admin', 'ustadz', 'bendahara']);
@@ -118,29 +117,133 @@ class AppServiceProvider extends ServiceProvider
         Blade::if('management', function () {
             return auth()->check() && in_array(auth()->user()->role, ['admin', 'pemimpin']);
         });
-        // @adminOrBendahara ... @endadminOrBendahara (sudah ada)
-        Blade::if('adminOrBendahara', function () {
-            return auth()->check() && in_array(auth()->user()->role, ['admin', 'bendahara']);
-        });
-
-        // @adminOrPemimpin ... @endadminOrPemimpin (sudah ada)
-        Blade::if('adminOrPemimpin', function () {
-            return auth()->check() && in_array(auth()->user()->role, ['admin', 'pemimpin']);
-        });
-
-        // @bendaharaOrPemimpin ... @endbendaharaOrPemimpin
-        Blade::if('bendaharaOrPemimpin', function () {
-            return auth()->check() && in_array(auth()->user()->role, ['bendahara', 'pemimpin']);
-        });
-
-        // @management (admin, pemimpin) ... @endmanagement (sudah ada)
-        Blade::if('management', function () {
-            return auth()->check() && in_array(auth()->user()->role, ['admin', 'pemimpin']);
-        });
 
         // @keuangan (admin, bendahara, pemimpin) ... @endkeuangan
         Blade::if('keuangan', function () {
             return auth()->check() && in_array(auth()->user()->role, ['admin', 'bendahara', 'pemimpin']);
+        });
+
+        // ================================================
+        // PERMISSION-BASED DIRECTIVES
+        // ================================================
+
+        // @canCreate('resource')
+        Blade::if('canCreate', function ($resource) {
+            if (!auth()->check()) {
+                return false;
+            }
+
+            $user = auth()->user();
+
+            // Admin bisa create semua
+            if ($user->role === 'admin') {
+                return true;
+            }
+
+            // Ustadz bisa create: kehadiran, nilai, jadwal_pelajaran
+            if ($user->role === 'ustadz') {
+                return in_array($resource, ['kehadiran', 'nilai', 'jadwal_pelajaran']);
+            }
+
+            // Bendahara bisa create: pembayaran, pengeluaran, kas
+            if ($user->role === 'bendahara') {
+                return in_array($resource, ['pembayaran', 'pengeluaran', 'kas']);
+            }
+
+            return false;
+        });
+
+        // @canEdit('resource')
+        Blade::if('canEdit', function ($resource) {
+            if (!auth()->check()) {
+                return false;
+            }
+
+            $user = auth()->user();
+
+            // Admin bisa edit semua
+            if ($user->role === 'admin') {
+                return true;
+            }
+
+            // Ustadz bisa edit: kehadiran, nilai, jadwal_pelajaran
+            if ($user->role === 'ustadz') {
+                return in_array($resource, ['kehadiran', 'nilai', 'jadwal_pelajaran']);
+            }
+
+            // Bendahara bisa edit: pembayaran, pengeluaran, kas
+            if ($user->role === 'bendahara') {
+                return in_array($resource, ['pembayaran', 'pengeluaran', 'kas']);
+            }
+
+            return false;
+        });
+
+        // @canDelete('resource')
+        Blade::if('canDelete', function ($resource) {
+            if (!auth()->check()) {
+                return false;
+            }
+
+            $user = auth()->user();
+
+            // Hanya admin yang bisa delete
+            return $user->role === 'admin';
+        });
+
+        // @canView('resource')
+        Blade::if('canView', function ($resource) {
+            if (!auth()->check()) {
+                return false;
+            }
+
+            $user = auth()->user();
+
+            // Admin & Pemimpin bisa view semua
+            if (in_array($user->role, ['admin', 'pemimpin'])) {
+                return true;
+            }
+
+            // Ustadz bisa view: kehadiran, nilai, santri, kelas
+            if ($user->role === 'ustadz') {
+                return in_array($resource, ['kehadiran', 'nilai', 'santri', 'kelas', 'mata_pelajaran', 'jadwal_pelajaran']);
+            }
+
+            // Bendahara bisa view: pembayaran, pengeluaran, kas
+            if ($user->role === 'bendahara') {
+                return in_array($resource, ['pembayaran', 'pengeluaran', 'kas', 'santri']);
+            }
+
+            // Santri bisa view data mereka sendiri
+            if ($user->role === 'santri') {
+                return in_array($resource, ['nilai', 'pembayaran', 'kehadiran']);
+            }
+
+            return false;
+        });
+
+        // @canApprove (khusus untuk approval pengeluaran, dll)
+        Blade::if('canApprove', function () {
+            return auth()->check() && auth()->user()->role === 'pemimpin';
+        });
+
+        // ================================================
+        // UTILITY DIRECTIVES
+        // ================================================
+
+        // @role('admin') ... @endrole
+        Blade::if('role', function ($role) {
+            return auth()->check() && auth()->user()->role === $role;
+        });
+
+        // @hasRole(['admin', 'ustadz']) ... @endhasRole
+        Blade::if('hasRole', function ($roles) {
+            if (!auth()->check()) {
+                return false;
+            }
+            
+            $roles = is_array($roles) ? $roles : [$roles];
+            return in_array(auth()->user()->role, $roles);
         });
     }
 }

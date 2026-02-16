@@ -22,7 +22,7 @@ $countLunas = $pembayaran->where('status', 'lunas')->count();
     <div class="card border-0 shadow-sm rounded-3 h-100">
       <div class="card-body p-4 text-center">
         <i class="bi bi-cash-stack fs-1 text-success mb-2"></i>
-        <div class="display-6 fw-bold text-success">{{ number_format($totalLunas / 1000000, 1) }}M</div>
+        <div class="display-6 fw-bold text-success">{{ number_format($totalLunas / 1000000, 1)}}K</div>
         <small class="text-muted">Total Lunas</small>
       </div>
     </div>
@@ -229,7 +229,7 @@ $countLunas = $pembayaran->where('status', 'lunas')->count();
     </div>
 
     <!-- Pagination -->
-    @include('components.pagination', ['paginator' => $pembayaran])
+    {{ $pembayaran->links('components.pagination') }}
   </div>
 </div>
 

@@ -11,15 +11,15 @@
 $santri = auth()->user()->santri;
 $bulanIni = \Carbon\Carbon::now();
 $kehadiranBulanIni = $santri->kehadiran()
-  ->whereMonth('tanggal', $bulanIni->month)
-  ->whereYear('tanggal', $bulanIni->year)
-  ->get();
+->whereMonth('tanggal', $bulanIni->month)
+->whereYear('tanggal', $bulanIni->year)
+->get();
 
 $stats = [
-  'hadir' => $kehadiranBulanIni->where('status', 'hadir')->count(),
-  'izin' => $kehadiranBulanIni->where('status', 'izin')->count(),
-  'sakit' => $kehadiranBulanIni->where('status', 'sakit')->count(),
-  'alpa' => $kehadiranBulanIni->where('status', 'alpa')->count(),
+'hadir' => $kehadiranBulanIni->where('status', 'hadir')->count(),
+'izin' => $kehadiranBulanIni->where('status', 'izin')->count(),
+'sakit' => $kehadiranBulanIni->where('status', 'sakit')->count(),
+'alpa' => $kehadiranBulanIni->where('status', 'alpa')->count(),
 ];
 $totalHari = $kehadiranBulanIni->count();
 $persentaseHadir = $totalHari > 0 ? round(($stats['hadir'] / $totalHari) * 100) : 0;
@@ -147,10 +147,10 @@ $persentaseHadir = $totalHari > 0 ? round(($stats['hadir'] / $totalHari) * 100) 
             <td class="text-center">
               @php
               $statusConfig = [
-                'hadir' => ['color' => 'success', 'icon' => 'check-circle'],
-                'izin' => ['color' => 'info', 'icon' => 'envelope'],
-                'sakit' => ['color' => 'warning', 'icon' => 'heart-pulse'],
-                'alpa' => ['color' => 'danger', 'icon' => 'x-circle'],
+              'hadir' => ['color' => 'success', 'icon' => 'check-circle'],
+              'izin' => ['color' => 'info', 'icon' => 'envelope'],
+              'sakit' => ['color' => 'warning', 'icon' => 'heart-pulse'],
+              'alpa' => ['color' => 'danger', 'icon' => 'x-circle'],
               ];
               $config = $statusConfig[$k->status] ?? ['color' => 'secondary', 'icon' => 'dash'];
               @endphp
@@ -203,7 +203,7 @@ $persentaseHadir = $totalHari > 0 ? round(($stats['hadir'] / $totalHari) * 100) 
     </div>
 
     <!-- Pagination -->
-    @include('components.pagination', ['paginator' => $kehadiran])
+    {{ $kehadiran->links('components.pagination') }}
   </div>
 </div>
 

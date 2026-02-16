@@ -19,13 +19,13 @@
         <p class="text-muted mb-0 small">Monitor dan kelola kehadiran harian</p>
       </div>
 
-      @adminOrUstadz
-      <a href="{{ auth()->user()->isAdmin() ? route('admin.kehadiran.create') : route('ustadz.kehadiran.create') }}"
+      @canCreate('kehadiran')
+      <a href="{{ auth()->user()->role === 'admin' ? route('admin.kehadiran.create') : route('ustadz.kehadiran.create') }}"
         class="btn btn-primary shadow-sm">
         <i class="bi bi-plus-circle me-2"></i>
         <span>Input Kehadiran</span>
       </a>
-      @endadminOrUstadz
+      @endcanCreate
     </div>
 
     <!-- Date Filter -->
@@ -81,7 +81,7 @@
 
     <div class="row g-3 mb-4">
       <div class="col-md-3">
-        <div class="alert-success border-0 shadow-sm mb-0">
+        <div class="alert alert-success border-0 shadow-sm mb-0">
           <div class="d-flex justify-content-between align-items-center">
             <div>
               <small class="d-block opacity-75 mb-1">
@@ -100,7 +100,7 @@
         </div>
       </div>
       <div class="col-md-3">
-        <div class="alert-info border-0 shadow-sm mb-0">
+        <div class="alert alert-info border-0 shadow-sm mb-0">
           <div class="d-flex justify-content-between align-items-center">
             <div>
               <small class="d-block opacity-75 mb-1">
@@ -119,7 +119,7 @@
         </div>
       </div>
       <div class="col-md-3">
-        <div class="alert-warning border-0 shadow-sm mb-0">
+        <div class="alert alert-warning border-0 shadow-sm mb-0">
           <div class="d-flex justify-content-between align-items-center">
             <div>
               <small class="d-block opacity-75 mb-1">
@@ -138,7 +138,7 @@
         </div>
       </div>
       <div class="col-md-3">
-        <div class="alert-danger border-0 shadow-sm mb-0">
+        <div class="alert alert-danger border-0 shadow-sm mb-0">
           <div class="d-flex justify-content-between align-items-center">
             <div>
               <small class="d-block opacity-75 mb-1">
@@ -159,7 +159,7 @@
     </div>
 
     <!-- Info Tanggal -->
-    <div class="alert-light border mb-4 d-flex align-items-center gap-3">
+    <div class="alert alert-light border mb-4 d-flex align-items-center gap-3">
       <i class="bi bi-calendar3 fs-3 text-primary"></i>
       <div>
         <strong class="d-block">{{ \Carbon\Carbon::parse($tanggal)->isoFormat('dddd, D MMMM Y') }}</strong>
@@ -178,7 +178,9 @@
             <th class="text-center" style="width: 10%;">Status</th>
             <th style="width: 15%;">Waktu</th>
             <th style="width: 28%;">Keterangan</th>
+            @hasRole(['admin', 'ustadz'])
             <th class="text-center" style="width: 10%;">Aksi</th>
+            @endhasRole
           </tr>
         </thead>
         <tbody>
@@ -246,8 +248,9 @@
               <small class="text-muted opacity-50">Tidak ada keterangan</small>
               @endif
             </td>
+            @hasRole(['admin', 'ustadz'])
             <td class="text-center">
-              <div class="btn-group btn-group-sm shadow-sm" role="group">
+              <div class="btn-info" role="group">
                 @canEdit('kehadiran')
                 <a href="{{ route('admin.kehadiran.edit', $k->id) }}"
                   class="btn btn-warning"
@@ -260,7 +263,8 @@
                 @canDelete('kehadiran')
                 <form action="{{ route('admin.kehadiran.destroy', $k->id) }}"
                   method="POST"
-                  class="d-inline">
+                  class="d-inline"
+                  onsubmit="return confirm('Yakin ingin menghapus data kehadiran ini?')">
                   @csrf
                   @method('DELETE')
                   <button type="submit"
@@ -273,6 +277,7 @@
                 @endcanDelete
               </div>
             </td>
+            @endhasRole
           </tr>
           @empty
           <tr>
@@ -281,13 +286,13 @@
                 <i class="bi bi-inbox fs-1 d-block mb-3 opacity-50"></i>
                 <h5>Belum ada data kehadiran</h5>
                 <p class="mb-3">Belum ada kehadiran tercatat untuk tanggal ini</p>
-                @adminOrUstadz
-                <a href="{{ auth()->user()->isAdmin() ? route('admin.kehadiran.create') : route('ustadz.kehadiran.create') }}"
+                @canCreate('kehadiran')
+                <a href="{{ auth()->user()->role === 'admin' ? route('admin.kehadiran.create') : route('ustadz.kehadiran.create') }}"
                   class="btn btn-primary">
                   <i class="bi bi-plus-circle me-2"></i>
                   Input Kehadiran
                 </a>
-                @endadminOrUstadz
+                @endcanCreate
               </div>
             </td>
           </tr>
@@ -297,8 +302,24 @@
     </div>
 
     <!-- Pagination -->
-    {{ $kehadiranData->links('components.pagination') }}
+    <div class="d-flex justify-content-between align-items-center mt-4">
+      <div class="text-muted small">
+        Menampilkan {{ $kehadiranData->firstItem() ?? 0 }} - {{ $kehadiranData->lastItem() ?? 0 }} 
+        dari {{ $kehadiranData->total() }} data
+      </div>
+      {{ $kehadiranData->links() }}
+    </div>
 
   </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+// Initialize tooltips
+var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+  return new bootstrap.Tooltip(tooltipTriggerEl)
+});
+</script>
+@endpush

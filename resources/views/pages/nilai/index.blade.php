@@ -236,7 +236,7 @@
               </span>
             </td>
             <td class="text-center">
-              <div class="btn-group btn-group-sm shadow-sm" role="group">
+              <div class="btn-info" role="group">
                 <a href="{{ route('admin.nilai.santri', $n->santri_id) }}" 
                    class="btn btn-info"
                    data-bs-toggle="tooltip"
